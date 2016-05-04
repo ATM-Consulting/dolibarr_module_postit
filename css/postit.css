@@ -1,0 +1,29 @@
+.postit {
+	border-radius: 0 0 0 0 !important;
+	border:1px solid #D2D246 !important;
+
+}
+
+.yellowPaper {
+	
+	background: #FEFE01 none repeat scroll 0 0 !important;
+}
+
+.yellowPaperTemporary {
+	
+	background:#FDFDE5 none repeat scroll 0 0 !important;
+}
+
+
+.postit .ui-dialog-titlebar, .postit .ui-dialog-content, .postit .ui-widget-content {
+	background: none repeat scroll 0 0 !important;
+	border-radius: none !important;
+	border:0 none !important;
+}
+.postit .ui-dialog-titlebar {
+	background: #FDFDE5 repeat scroll 0 0 !important;
+	height:10px !important;
+}
+.postit  .ui-dialog-titlebar-close {
+  visibility: hidden;
+}
