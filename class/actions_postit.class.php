@@ -99,7 +99,7 @@ class Actionspostit
 					$a = $('#addNote');
 					pos = $a.offset();
 					console.log(pos);
-					$div = $('<div class="yellowPaperTemporary postit"><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div>');
+					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><div rel="delete"><?php echo addslashes(img_delete()) ?></div><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div></div>');
 					
 					$div.css('width',  100);
 					$div.css('height', 200);
@@ -108,8 +108,10 @@ class Actionspostit
 					
 					if(postit) {
 						$div.attr('id-post-it', postit.rowid);
-						if(postit.position_top<0)postit.position_top = 0;
-						if(postit.position_left<0)postit.position_left = 0;
+						if(postit.position_top<=0)postit.position_top = 0;
+						if(postit.position_left<=0)postit.position_left = 0;
+						if(postit.position_width<=0)postit.position_width= 100;
+						if(postit.position_height<=0)postit.position_height = 200;
 
 						$div.find('[rel=postit-title]').html(postit.title);
 						$div.find('[rel=postit-comment]').html(postit.comment);
@@ -160,6 +162,25 @@ class Actionspostit
 
 					});
 					
+					$div.find('[rel=delete]').click(function() {
+					
+							var $div = $(this).closest('div.postit');
+							var idPostit = $div.attr('id-post-it');
+							console.log($div,idPostit);
+							$.ajax({
+								url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+								,data: {
+									put:'delete'
+									,id:idPostit
+									
+								}
+								,method:'post'
+							}).done(function(idPostit) {
+								$div.remove();
+							});
+							
+						
+					});
 					
 					$('body').append($div);
 					
@@ -177,7 +198,7 @@ class Actionspostit
 									,fk_object:<?php echo $object->id ?>
 									,type_object:"<?php echo $object->element ?>"
 									,top:ui.position.top
-									,left:	ui.position.left
+									,left:ui.position.left
 								}
 								,method:'post'
 							}).done(function(idPostit) {

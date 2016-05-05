@@ -64,6 +64,20 @@
 			
 			break;
 		
+		case 'delete':
+			$p=new TPostIt;
+			if($p->load($PDOdb, GETPOST('id'))) {
+				$p->delete($PDOdb);
+				echo 'ok';
+			}
+			else{
+				echo 'ko';
+			}
+			
+			
+			
+			break;
+		
 		default:
 			
 			break;

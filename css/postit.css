@@ -9,16 +9,30 @@
 	position:absolute;
 	padding:3px;
 }
+.postit div[rel=content] {
+	position:relative;
+	height:100%;
+}
 
+.postit div[rel=delete] {
+	position: absolute;
+	bottom:0;
+	left:0;
+	display:none;	
+	cursor: hand;
+}
+.postit:hover div[rel=delete] {
+	display:block;
+}
 .postit [rel=postit-title] {
 	font-weight:bold;
 	
 }
-.postit div[rel] {
+.postit div[rel=content] div[rel=title],.postit div[rel=content] div[rel=comment] {
 	position:relative;
 	margin-bottom:2px;
 }
-.postit div[rel]:empty {
+.postit div[rel=content] div[rel=title]:empty,.postit div[rel=content] div[rel=comment]:empty {
 	min-height: 20px;
 	border:1px dashed #eee;
 	
