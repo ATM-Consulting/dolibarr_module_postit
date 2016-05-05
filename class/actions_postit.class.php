@@ -59,11 +59,12 @@ class Actionspostit
 	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
-	function printTopRightMenu($parameters, &$object, &$action, $hookmanager)
+	//function printTopRightMenu($parameters, &$object, &$action, $hookmanager)
+	function formObjectOptions($parameters, &$object, &$action, $hookmanager)
 	{
 		$error = 0; // Error counter
 		
-		if (in_array('toprightmenu', explode(':', $parameters['context'])))
+		if (in_array('globalcard', explode(':', $parameters['context'])))
 		{
 			global $langs;
 				
@@ -73,12 +74,34 @@ class Actionspostit
 			<script language="javascript">
 				$(document).ready(function() {
 					$a = $('<?php echo $a ?>');
-					$('div.login_block_other').append($a);					
+					$('div.login_block_other').append($a);	
+					
+					$.ajax({
+						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+						,data: {
+							get:'postit-of-object'
+							,fk_object:<?php echo $object->id ?>
+							,type_object:"<?php echo $object->element ?>"
+						
+						}
+						,dataType:"json"
+					}).done(function(Tab) {
+						
+						for(x in Tab) {
+							id = Tab[x];
+							addNote(id);
+						}
+						
+					});
+									
 				});
 				
-				function addNote() {
+				function addNote(idPostit) {
 					
 					$div = $('<div><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div>');
+					
+					if(idPostit) $div.attr('id-post-it', idPostit);
+					
 					$div.find('[rel=postit-title]').click(function() {
 						console.log('title');
 					});
@@ -92,25 +115,25 @@ class Actionspostit
 						,height:200
 						,dialogClass:'yellowPaperTemporary postit'
 						,closeOnEscape: false
-						,handle: '.ui-dialog-titlebar, .ui-dialog-content'
+						,position: { at : "center bottom", of:"div.login_block_other" }
 						,dragStop:function(event, ui) {
 							
+							var $div = $(this);
 							var idPostit = $(this).attr('id-post-it');
 							
-						/*	var h = $( this ).height();
-							var w = $( this ).widht();
-							*/
 							$.ajax({
 								url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 								,data: {
 									put:'postit'
 									,id:idPostit
+									,fk_object:<?php echo $object->id ?>
+									,type_object:"<?php echo $object->element ?>"
 									,top:ui.position.top
-									,width:	ui.position.left
+									,left:	ui.position.left
 								}
 								,method:'post'
-							}).done(function() {
-								
+							}).done(function(idPostit) {
+								$div.attr('id-post-it', idPostit);
 							});
 							
 						}

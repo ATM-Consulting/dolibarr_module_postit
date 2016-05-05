@@ -25,5 +25,5 @@
 	height:10px !important;
 }
 .postit  .ui-dialog-titlebar-close {
-  visibility: hidden;
+  display: none;
 }
