@@ -90,6 +90,7 @@ class modpostit extends DolibarrModules
 		$this->module_parts = array(
 			'hooks'=>array('toprightmenu','globalcard')
 			,'css'=>array('/postit/css/postit.css')
+			,'js'=>array('/postit/lib/jquery.editable.min.js')
 		);
 
 		// Data directories to create when module is enabled.

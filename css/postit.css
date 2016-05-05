@@ -1,29 +1,49 @@
-.postit {
-	border-radius: 0 0 0 0 !important;
-	border:1px solid #D2D246 !important;
-
+@font-face {
+    font-family: dakotaHand;
+    src: url(handwriting-dakota.ttf);
 }
 
-.yellowPaper {
+.postit {
+	font-family : dakotaHand;
+	border-radius: 0 0 0 0;
+	position:absolute;
+	padding:3px;
+}
+
+.postit [rel=postit-title] {
+	font-weight:bold;
 	
-	background: #FEFE01 none repeat scroll 0 0 !important;
+}
+.postit div[rel] {
+	position:relative;
+	margin-bottom:2px;
+}
+.postit div[rel]:empty {
+	min-height: 20px;
+	border:1px dashed #eee;
+	
+}
+.yellowPaper {
+	border:1px solid #D2D246;
+
+	background: #FEFE01 none repeat scroll 0 0;
 }
 
 .yellowPaperTemporary {
+	border:1px solid #D2D246;
 	
-	background:#FDFDE5 none repeat scroll 0 0 !important;
+	background:#FDFDE5 none repeat scroll 0 0;
+}
+
+.bluePaper {
+	border:1px solid #4BB5C1;
+
+	background:#7FC6BC none repeat scroll 0 0;
+}
+
+.greenPaper {
+	border:1px solid #96CA2D;
+	background:#B5E655 none repeat scroll 0 0;
 }
 
 
-.postit .ui-dialog-titlebar, .postit .ui-dialog-content, .postit .ui-widget-content {
-	background: none repeat scroll 0 0 !important;
-	border-radius: none !important;
-	border:0 none !important;
-}
-.postit .ui-dialog-titlebar {
-	background: #FDFDE5 repeat scroll 0 0 !important;
-	height:10px !important;
-}
-.postit  .ui-dialog-titlebar-close {
-  display: none;
-}

@@ -68,7 +68,7 @@ class Actionspostit
 		{
 			global $langs;
 				
-			$a = '<a href="javascript:addNote()" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
+			$a = '<a id="addNote" href="javascript:addNote()" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
 			?>
 			<script language="javascript">
@@ -86,37 +86,85 @@ class Actionspostit
 						}
 						,dataType:"json"
 					}).done(function(Tab) {
-						
+						console.log(Tab);
 						for(x in Tab) {
-							id = Tab[x];
-							addNote(id);
+							addNote(Tab[x]);
 						}
 						
 					});
 									
 				});
 				
-				function addNote(idPostit) {
+				function addNote(postit) {
+					$a = $('#addNote');
+					pos = $a.offset();
+					console.log(pos);
+					$div = $('<div class="yellowPaperTemporary postit"><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div>');
 					
-					$div = $('<div><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div>');
+					$div.css('width',  100);
+					$div.css('height', 200);
+					$div.css('top', pos.top + 20);
+					$div.css('left', pos.left - 50);   
 					
-					if(idPostit) $div.attr('id-post-it', idPostit);
+					if(postit) {
+						$div.attr('id-post-it', postit.rowid);
+						if(postit.position_top<0)postit.position_top = 0;
+						if(postit.position_left<0)postit.position_left = 0;
+
+						$div.find('[rel=postit-title]').html(postit.title);
+						$div.find('[rel=postit-comment]').html(postit.comment);
+						
+						$div.css('top',  postit.position_top);
+						$div.css('left',  postit.position_left);
+						$div.css('width',  postit.position_width);
+						$div.css('height',  postit.position_height);
+					}
 					
-					$div.find('[rel=postit-title]').click(function() {
-						console.log('title');
+					var option = {type : "textarea", action : "click"};
+					//todo factorise
+					$div.find('[rel=postit-title]').editable("click", function(e){
+					  var $div = e.target.closest('div.postit');
+					  var idPostit = $div.attr('id-post-it');
+				  	  $.ajax({
+							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+							,data: {
+								put:'postit'
+								,id:idPostit
+								,fk_object:<?php echo $object->id ?>
+								,type_object:"<?php echo $object->element ?>"
+								,title:e.value
+							}
+							,method:'post'
+						}).done(function(idPostit) {
+							$div.attr('id-post-it', idPostit);
+						});
 					});
-					$div.find('[rel=postit-comment]').click(function() {
-						console.log('comment');
+					
+					$div.find('[rel=postit-comment]').editable(option, function(e){
+					  var $div = e.target.closest('div.postit');
+					  var idPostit = $div.attr('id-post-it');
+					
+				  	  $.ajax({
+							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+							,data: {
+								put:'postit'
+								,id:idPostit
+								,fk_object:<?php echo $object->id ?>
+								,type_object:"<?php echo $object->element ?>"
+								,comment:e.value
+							}
+							,method:'post'
+						}).done(function(idPostit) {
+							$div.attr('id-post-it', idPostit);
+						});
+
 					});
 					
-					$div.dialog({
-						title:""
-						,width:100
-						,height:200
-						,dialogClass:'yellowPaperTemporary postit'
-						,closeOnEscape: false
-						,position: { at : "center bottom", of:"div.login_block_other" }
-						,dragStop:function(event, ui) {
+					
+					$('body').append($div);
+					
+					$div.draggable({
+						stop:function(event, ui) {
 							
 							var $div = $(this);
 							var idPostit = $(this).attr('id-post-it');
@@ -137,8 +185,35 @@ class Actionspostit
 							});
 							
 						}
-						
-					})
+					});
+					
+					
+					$div.resizable({
+						stop:function(event, ui) {
+							
+							var $div = $(this);
+							var idPostit = $(this).attr('id-post-it');
+							
+							$.ajax({
+								url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+								,data: {
+									put:'postit'
+									,id:idPostit
+									,fk_object:<?php echo $object->id ?>
+									,type_object:"<?php echo $object->element ?>"
+									,top:ui.position.top
+									,left:	ui.position.left
+									,width:ui.size.width
+									,height:ui.size.height
+								}
+								,method:'post'
+							}).done(function(idPostit) {
+								$div.attr('id-post-it', idPostit);
+							});
+							
+						}
+					});
+					
 					
 				}
 				

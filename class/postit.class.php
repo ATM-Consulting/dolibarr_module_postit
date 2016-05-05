@@ -14,5 +14,23 @@ class TPostIt extends TObjetStd {
         parent::start();    
 		
     }
+
+	static function getPostit(&$PDOdb,$fk_object,$type_object,$fk_user) {
+		
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."postit WHERE fk_user=".$fk_user." AND fk_object=".$fk_object." AND type_object='".$type_object."'";
+		$Tab = TRequeteCore::_get_id_by_sql($PDOdb, $sql);
+		
+		$TPostit=array();
+		foreach($Tab as $id) {
+			
+			$p=new TPostIt;
+			$p->load($PDOdb, $id);
+			$TPostit[] = $p;
+			
+		}
+		
+		return $TPostit;
+		
+	}
 	
 }
