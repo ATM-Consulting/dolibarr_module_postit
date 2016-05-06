@@ -11,6 +11,7 @@
 	$left = (int)GETPOST('left');
 	$width = (int)GETPOST('width');
 	$height = (int)GETPOST('height');
+	$fk_postit = (int)GETPOST('fk_postit');
 	
 	$fk_object = (int)GETPOST('fk_object');
 	$type_object = GETPOST('type_object');
@@ -25,13 +26,18 @@
 			
 			$Tab = TPostIt::getPostit($PDOdb,$fk_object,$type_object,$user->id);
 			foreach($Tab as &$p) {
+				
+				$p->rightResponse = ($p->fk_user == $user->id) ? 0 : 1;
+				
 				if($user->rights->postit->allaction->write || ($user->rights->postit->myaction->write && $p->fk_user == $user->id) ) {
 					$p->rightToDelete = 1;	
-					$p->rightToSetStatus = 1;	
+					$p->rightToSetStatus = 1;
+					$p->rightEdit = 1;	
 				}
 				else{
 					$p->rightToDelete = 0;
 					$p->rightToSetStatus = 0;
+					$p->rightEdit = 0;
 				}
 			}
 			
@@ -61,7 +67,7 @@
 				$p->fk_object = $fk_object;
 				$p->type_object = $type_object;
 				$p->fk_user = $user->id;
-			
+				$p->fk_postit = $fk_postit;
 			}
 			if(!empty($width)) $p->position_width = $width;
 			if(!empty($height)) $p->position_height = $height;

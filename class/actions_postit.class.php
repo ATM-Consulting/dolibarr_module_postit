@@ -63,10 +63,8 @@ class Actionspostit
 		
 			$a = '<a id="addNote" href="javascript:addNote()" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
-			$aDelete='';
-			if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write ) {
-				$aDelete =' <span rel="delete">'.img_delete().'</span>';
-			}
+			$aDelete =' <span rel="delete">'.img_delete().'</span>';
+			$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
 			
 			?>
 			<script language="javascript">
@@ -155,6 +153,7 @@ class Actionspostit
 
 					$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");						
 					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
+					$div.find('[rel=actions]').append("<?php echo addslashes($aResponse); ?>");
 					
 					$div.css('width',  100);
 					$div.css('height', 200);
@@ -168,6 +167,7 @@ class Actionspostit
 						$div.attr('id-post-it', postit.rowid);
 						$div.attr('id','postit-'+postit.rowid);
 						$div.attr('author',postit.fk_user);
+						if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
 						
 						if(postit.position_top<=0)postit.position_top = 0;
 						if(postit.position_left<=0)postit.position_left = 0;
@@ -183,72 +183,41 @@ class Actionspostit
 						$div.css('height',  postit.position_height);
 						
 						setStatus(postit.rowid, postit.status);
-						console.log(postit.rightToSetStatus);
+						
 						if(!postit.rightToDelete) $div.find('[rel=delete]').remove();
 						if(!postit.rightToSetStatus) $div.find('[rel=status]').remove();
-					
+						if(!postit.rightResponse) $div.find('[rel=response]').remove();
+					}
+					else{
+						postit={
+							rightEdit : 1
+						}
 					}
 					
-					console.log($div);
+					console.log(postit);
 					
-					<?php
-					if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
+					
+					$div.find('[rel=response]').click(function() {
+						$div = $(this).closest('div.postit');
 						
-					?>
-					
-					//todo factorise
-					
-					$div.find('[rel=postit-title]').editable({
-						 event:'click'
-						 ,callback : function( data ) {
-							  var $div = data.$el.closest('div.postit');
-							  var idPostit = $div.attr('id-post-it');
-						        if( data.content ) {
-								    $.ajax({
-										url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-										,data: {
-											put:'postit'
-											,id:idPostit
-											,fk_object:<?php echo $fk_object ?>
-											,type_object:"<?php echo $type_object ?>"
-											,title:data.content
-										}
-										,method:'post'
-									}).done(function(idPostit) {
-										$div.attr('id-post-it', idPostit);
-									});
-			
-								}
-      					 }
-					     
-				    });
-					
-					$div.find('[rel=postit-comment]').editable({
-						event:'click'
-						 ,callback : function( data ) {
-							  var $div = data.$el.closest('div.postit');
-							  var idPostit = $div.attr('id-post-it');
-						        if( data.content ) {
-								    $.ajax({
-										url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-										,data: {
-											put:'postit'
-											,id:idPostit
-											,fk_object:<?php echo $fk_object ?>
-											,type_object:"<?php echo $type_object ?>"
-											,comment:data.content
-										}
-										,method:'post'
-									}).done(function(idPostit) {
-										$div.attr('id-post-it', idPostit);
-									});
-			
-								}
-      					 }
-					     
-				    });
+						var pos = $div.offset();
+						var idPostit = $div.attr('id-post-it');
 						
-						  					
+						addNote({
+							rowid:0
+							,fk_postit:idPostit
+							,fk_user:<?php echo $user->id ?>
+							,rightToDelete:1
+							,rightToSetStatus:1
+							,rightResponse:0
+							,rightEdit:1
+							,title:"<?php echo $langs->trans('NewResponse') ?>"
+							,comment:""
+							,position_top:pos.top+20
+							,position_left:pos.left+20
+						});
+					});
+					  					
 					$div.find('[rel=delete]').click(function() {
 						if(window.confirm("Vous êtes sûr ?")) {
 							var $div = $(this).closest('div.postit');
@@ -293,64 +262,130 @@ class Actionspostit
 					
 					});
 					
-					
-					
-					$div.draggable({
-						stop:function(event, ui) {
 							
-							var $div = $(this);
-							var idPostit = $(this).attr('id-post-it');
 							
-							$.ajax({
-								url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-								,data: {
-									put:'postit'
-									,id:idPostit
-									,fk_object:<?php echo $fk_object ?>
-									,type_object:"<?php echo $type_object ?>"
-									,top:ui.position.top
-									,left:ui.position.left
+				
+					//todo factorise
+					if(postit.rightEdit) {
+								$div.find('[rel=postit-title]').editable({
+									 event:'click'
+									 ,callback : function( data ) {
+										  var $div = data.$el.closest('div.postit');
+										  var idPostit = $div.attr('id-post-it');
+	  										var fk_postit= $(this).attr('fk-postit');
+
+									        if( data.content ) {
+											    $.ajax({
+													url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+													,data: {
+														put:'postit'
+														,id:idPostit
+														,fk_postit:fk_postit
+														,fk_object:<?php echo $fk_object ?>
+														,type_object:"<?php echo $type_object ?>"
+														,title:data.content
+													}
+													,method:'post'
+												}).done(function(idPostit) {
+													$div.attr('id-post-it', idPostit);
+												});
+						
+											}
+			      					 }
+								     
+							    });
+								
+								$div.find('[rel=postit-comment]').editable({
+									event:'click'
+									 ,callback : function( data ) {
+										  var $div = data.$el.closest('div.postit');
+										  var idPostit = $div.attr('id-post-it');
+									        if( data.content ) {
+											    $.ajax({
+													url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+													,data: {
+														put:'postit'
+														,id:idPostit
+														,fk_object:<?php echo $fk_object ?>
+														,type_object:"<?php echo $type_object ?>"
+														,comment:data.content
+													}
+													,method:'post'
+												}).done(function(idPostit) {
+													$div.attr('id-post-it', idPostit);
+												});
+						
+											}
+			      					 }
+								     
+							    });
+									
+								var containment = "window";
+								if($div.attr('fk-postit')) {
+								//	containment = '#postit-'+$div.attr('fk-postit');
+									$div.mouseenter(function() {
+										$parent = $('#postit-'+$div.attr('fk-postit'));
+										$parent.effect("highlight", {color:"#00ff00"}, 1000);
+									});
 								}
-								,method:'post'
-							}).done(function(idPostit) {
-								$div.attr('id-post-it', idPostit);
-							});
-							
-						}
-					});
-					
-					
-					$div.resizable({
-						stop:function(event, ui) {
-							
-							var $div = $(this);
-							var idPostit = $(this).attr('id-post-it');
-							
-							$.ajax({
-								url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-								,data: {
-									put:'postit'
-									,id:idPostit
-									,fk_object:<?php echo $fk_object ?>
-									,type_object:"<?php echo $type_object ?>"
-									,top:ui.position.top
-									,left:	ui.position.left
-									,width:ui.size.width
-									,height:ui.size.height
-								}
-								,method:'post'
-							}).done(function(idPostit) {
-								$div.attr('id-post-it', idPostit);
-							});
-							
-						}
-					});
-					<?php
-					}					
-					else {
-						echo '$div.find("[rel=actions]").remove();';	
+								
+								$div.draggable({
+									containment : containment
+									,stop:function(event, ui) {
+										
+										var $div = $(this);
+										var idPostit = $(this).attr('id-post-it');
+										var fk_postit= $(this).attr('fk-postit');
+										
+										$.ajax({
+											url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+											,data: {
+												put:'postit'
+												,id:idPostit
+												,fk_postit:fk_postit
+												,fk_object:<?php echo $fk_object ?>
+												,type_object:"<?php echo $type_object ?>"
+												,top:ui.position.top
+												,left:ui.position.left
+											}
+											,method:'post'
+										}).done(function(idPostit) {
+											$div.attr('id-post-it', idPostit);
+										});
+										
+									}
+								});
+								
+								
+								$div.resizable({
+									stop:function(event, ui) {
+										
+										var $div = $(this);
+										var idPostit = $(this).attr('id-post-it');
+										var fk_postit= $(this).attr('fk-postit');
+
+										$.ajax({
+											url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+											,data: {
+												put:'postit'
+												,id:idPostit
+												,fk_postit:fk_postit
+												,fk_object:<?php echo $fk_object ?>
+												,type_object:"<?php echo $type_object ?>"
+												,top:ui.position.top
+												,left:	ui.position.left
+												,width:ui.size.width
+												,height:ui.size.height
+											}
+											,method:'post'
+										}).done(function(idPostit) {
+											$div.attr('id-post-it', idPostit);
+										});
+										
+									}
+								});
+		
 					}
-					?>
 					
 				}
 				
