@@ -88,7 +88,7 @@ class modpostit extends DolibarrModules
 		//							'workflow' => array('WORKFLOW_MODULE1_YOURACTIONTYPE_MODULE2'=>array('enabled'=>'! empty($conf->module1->enabled) && ! empty($conf->module2->enabled)', 'picto'=>'yourpicto@postit')) // Set here all workflow context managed by module
 		//                        );
 		$this->module_parts = array(
-			'hooks'=>array('toprightmenu','globalcard')
+			'hooks'=>array('index','globalcard')
 			,'css'=>array('/postit/css/postit.css')
 			,'js'=>array('/postit/lib/jquery.editable.min.js')
 		);

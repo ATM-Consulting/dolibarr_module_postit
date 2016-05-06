@@ -28,11 +28,11 @@
 	font-weight:bold;
 	
 }
-.postit div[rel=content] div[rel=title],.postit div[rel=content] div[rel=comment] {
+.postit div[rel=content] div[rel=postit-title],.postit div[rel=content] div[rel=postit-comment] {
 	position:relative;
 	margin-bottom:2px;
 }
-.postit div[rel=content] div[rel=title]:empty,.postit div[rel=content] div[rel=comment]:empty {
+.postit div[rel=content] div[rel=postit-title]:empty,.postit div[rel=content] div[rel=postit-comment]:empty {
 	min-height: 20px;
 	border:1px dashed #eee;
 	

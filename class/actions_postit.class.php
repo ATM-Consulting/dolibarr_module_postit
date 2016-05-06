@@ -50,24 +50,12 @@ class Actionspostit
 	{
 	}
 
-	/**
-	 * Overloading the doActions function : replacing the parent's function with the one below
-	 *
-	 * @param   array()         $parameters     Hook metadatas (context, etc...)
-	 * @param   CommonObject    &$object        The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
-	 * @param   string          &$action        Current action (if set). Generally create or edit or null
-	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
-	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
-	 */
-	//function printTopRightMenu($parameters, &$object, &$action, $hookmanager)
-	function formObjectOptions($parameters, &$object, &$action, $hookmanager)
-	{
-		$error = 0; // Error counter
+	function note($fk_object, $type_object) {
 		
-		if (in_array('globalcard', explode(':', $parameters['context'])))
-		{
-			global $langs;
-				
+		global $langs;
+		
+			$langs->load('postit@postit');
+		
 			$a = '<a id="addNote" href="javascript:addNote()" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
 			?>
@@ -80,8 +68,8 @@ class Actionspostit
 						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 						,data: {
 							get:'postit-of-object'
-							,fk_object:<?php echo $object->id ?>
-							,type_object:"<?php echo $object->element ?>"
+							,fk_object:<?php echo $fk_object ?>
+							,type_object:"<?php echo $type_object ?>"
 						
 						}
 						,dataType:"json"
@@ -132,8 +120,8 @@ class Actionspostit
 							,data: {
 								put:'postit'
 								,id:idPostit
-								,fk_object:<?php echo $object->id ?>
-								,type_object:"<?php echo $object->element ?>"
+								,fk_object:<?php echo $fk_object ?>
+								,type_object:"<?php echo $type_object ?>"
 								,title:e.value
 							}
 							,method:'post'
@@ -151,8 +139,8 @@ class Actionspostit
 							,data: {
 								put:'postit'
 								,id:idPostit
-								,fk_object:<?php echo $object->id ?>
-								,type_object:"<?php echo $object->element ?>"
+								,fk_object:<?php echo $fk_object ?>
+								,type_object:"<?php echo $type_object ?>"
 								,comment:e.value
 							}
 							,method:'post'
@@ -195,8 +183,8 @@ class Actionspostit
 								,data: {
 									put:'postit'
 									,id:idPostit
-									,fk_object:<?php echo $object->id ?>
-									,type_object:"<?php echo $object->element ?>"
+									,fk_object:<?php echo $fk_object ?>
+									,type_object:"<?php echo $type_object ?>"
 									,top:ui.position.top
 									,left:ui.position.left
 								}
@@ -220,8 +208,8 @@ class Actionspostit
 								,data: {
 									put:'postit'
 									,id:idPostit
-									,fk_object:<?php echo $object->id ?>
-									,type_object:"<?php echo $object->element ?>"
+									,fk_object:<?php echo $fk_object ?>
+									,type_object:"<?php echo $type_object ?>"
 									,top:ui.position.top
 									,left:	ui.position.left
 									,width:ui.size.width
@@ -241,6 +229,37 @@ class Actionspostit
 				
 			</script>
 			<?php
+		
+	}
+
+	/**
+	 * Overloading the doActions function : replacing the parent's function with the one below
+	 *
+	 * @param   array()         $parameters     Hook metadatas (context, etc...)
+	 * @param   CommonObject    &$object        The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param   string          &$action        Current action (if set). Generally create or edit or null
+	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
+	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
+	 */
+	function addStatisticLine($parameters, &$object, &$action, $hookmanager) {
+		
+		if (in_array('index', explode(':', $parameters['context'])))
+		{
+			
+			$this->note(-1, 'global');
+	
+		}
+			
+	}
+	
+	function formObjectOptions($parameters, &$object, &$action, $hookmanager)
+	{
+		$error = 0; // Error counter
+		
+		if (in_array('globalcard', explode(':', $parameters['context'])) && $object->id>0)
+		{
+					
+			$this->note($object->id, $object->element);
 			
 		}
 
