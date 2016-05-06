@@ -52,17 +52,34 @@ class Actionspostit
 
 	function note($fk_object, $type_object) {
 		
-		global $langs;
+		global $langs, $user;
+		
+			if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
 		
 			$langs->load('postit@postit');
 		
 			$a = '<a id="addNote" href="javascript:addNote()" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
+			$aDelete='';
+			if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
+				$aDelete =' <div rel="delete">'.addslashes(img_delete()).'</div>';
+			}
+			
 			?>
 			<script language="javascript">
 				$(document).ready(function() {
+					
+					<?php
+					if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
+						
+					?>
+					
 					$a = $('<?php echo $a ?>');
 					$('div.login_block_other').append($a);	
+					<?php
+					}					
+					?>
+					
 					
 					$.ajax({
 						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
@@ -80,14 +97,22 @@ class Actionspostit
 						}
 						
 					});
+					
 									
 				});
 				
 				function addNote(postit) {
 					$a = $('#addNote');
+					
 					pos = $a.offset();
+					if(!pos) {
+						pos={};
+						pos.top=0;
+						pos.left=0;
+					}
+					
 					console.log(pos);
-					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><div rel="delete"><?php echo addslashes(img_delete()) ?></div><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div></div>');
+					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><?php echo $aDelete ?><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div></div>');
 					
 					$div.css('width',  100);
 					$div.css('height', 200);
@@ -109,6 +134,13 @@ class Actionspostit
 						$div.css('width',  postit.position_width);
 						$div.css('height',  postit.position_height);
 					}
+					
+					$('body').append($div);
+					
+					<?php
+					if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
+						
+					?>
 					
 					var option = {type : "textarea", action : "click"};
 					//todo factorise
@@ -170,7 +202,7 @@ class Actionspostit
 						
 					});
 					
-					$('body').append($div);
+					
 					
 					$div.draggable({
 						stop:function(event, ui) {
@@ -222,7 +254,9 @@ class Actionspostit
 							
 						}
 					});
-					
+					<?php
+					}					
+					?>
 					
 				}
 				
