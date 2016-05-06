@@ -153,16 +153,14 @@ class Actionspostit
 					
 					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><div rel="actions"></div><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div></div>');
 
-					if(postit.rightToDelete) {
-						$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");						
-					}
+					$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");						
+					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
 					
 					$div.css('width',  100);
 					$div.css('height', 200);
 					$div.css('top', pos.top + 20);
 					$div.css('left', pos.left - 50);   
 					
-					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
 					
 					$('body').append($div);
 				
@@ -183,7 +181,12 @@ class Actionspostit
 						$div.css('left',  postit.position_left);
 						$div.css('width',  postit.position_width);
 						$div.css('height',  postit.position_height);
+						
 						setStatus(postit.rowid, postit.status);
+						console.log(postit.rightToSetStatus);
+						if(!postit.rightToDelete) $div.find('[rel=delete]').remove();
+						if(!postit.rightToSetStatus) $div.find('[rel=status]').remove();
+					
 					}
 					
 					console.log($div);

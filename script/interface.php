@@ -27,9 +27,11 @@
 			foreach($Tab as &$p) {
 				if($user->rights->postit->allaction->write || ($user->rights->postit->myaction->write && $p->fk_user == $user->id) ) {
 					$p->rightToDelete = 1;	
+					$p->rightToSetStatus = 1;	
 				}
 				else{
 					$p->rightToDelete = 0;
+					$p->rightToSetStatus = 0;
 				}
 			}
 			
@@ -92,8 +94,8 @@
 			$p=new TPostIt;
 			if($p->load($PDOdb, GETPOST('id'))) {
 				$current = GETPOST('current');
-				if($current == 'private') $p->status = 'shared';
-				else if($current == 'shared') $p->status = 'public';
+				if($current == 'private') $p->status = 'public';// $p->status = 'shared';
+				//else if($current == 'shared') $p->status = 'public';
 				else $p->status = 'private';
 				$p->save($PDOdb);
 				
