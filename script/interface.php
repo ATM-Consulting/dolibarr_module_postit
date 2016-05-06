@@ -57,7 +57,7 @@
 			if(!empty($top)) $p->position_top = $top;
 			if(!empty($left)) $p->position_left= $left;
 			if(!empty($title)) $p->title = $title;
-			if(!empty($comment)) $p->comment= nl2br($comment);
+			if(!empty($comment)) $p->comment= $comment;
 			$p->save($PDOdb);
 			
 			echo $p->getId();

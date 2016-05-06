@@ -52,11 +52,14 @@ class Actionspostit
 
 	function note($fk_object, $type_object) {
 		
-		global $langs, $user;
+		global $langs, $user, $db;
 		
 			if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
 		
 			$langs->load('postit@postit');
+		
+			$form=new Form($db);
+			$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
 		
 			$a = '<a id="addNote" href="javascript:addNote()" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
@@ -79,7 +82,6 @@ class Actionspostit
 					<?php
 					}					
 					?>
-					
 					
 					$.ajax({
 						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
@@ -111,7 +113,6 @@ class Actionspostit
 						pos.left=0;
 					}
 					
-					console.log(pos);
 					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><?php echo $aDelete ?><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div></div>');
 					
 					$div.css('width',  100);
@@ -142,46 +143,59 @@ class Actionspostit
 						
 					?>
 					
-					var option = {type : "textarea", action : "click"};
 					//todo factorise
-					$div.find('[rel=postit-title]').editable("click", function(e){
-					  var $div = e.target.closest('div.postit');
-					  var idPostit = $div.attr('id-post-it');
-				  	  $.ajax({
-							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-							,data: {
-								put:'postit'
-								,id:idPostit
-								,fk_object:<?php echo $fk_object ?>
-								,type_object:"<?php echo $type_object ?>"
-								,title:e.value
-							}
-							,method:'post'
-						}).done(function(idPostit) {
-							$div.attr('id-post-it', idPostit);
-						});
-					});
 					
-					$div.find('[rel=postit-comment]').editable(option, function(e){
-					  var $div = e.target.closest('div.postit');
-					  var idPostit = $div.attr('id-post-it');
+					$div.find('[rel=postit-title]').editable({
+						 event:'click'
+						 ,callback : function( data ) {
+							  var $div = data.$el.closest('div.postit');
+							  var idPostit = $div.attr('id-post-it');
+						        if( data.content ) {
+								    $.ajax({
+										url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+										,data: {
+											put:'postit'
+											,id:idPostit
+											,fk_object:<?php echo $fk_object ?>
+											,type_object:"<?php echo $type_object ?>"
+											,title:data.content
+										}
+										,method:'post'
+									}).done(function(idPostit) {
+										$div.attr('id-post-it', idPostit);
+									});
+			
+								}
+      					 }
+					     
+				    });
 					
-				  	  $.ajax({
-							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-							,data: {
-								put:'postit'
-								,id:idPostit
-								,fk_object:<?php echo $fk_object ?>
-								,type_object:"<?php echo $type_object ?>"
-								,comment:e.value
-							}
-							,method:'post'
-						}).done(function(idPostit) {
-							$div.attr('id-post-it', idPostit);
-						});
-
-					});
-					
+					$div.find('[rel=postit-comment]').editable({
+						event:'click'
+						 ,callback : function( data ) {
+							  var $div = data.$el.closest('div.postit');
+							  var idPostit = $div.attr('id-post-it');
+						        if( data.content ) {
+								    $.ajax({
+										url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+										,data: {
+											put:'postit'
+											,id:idPostit
+											,fk_object:<?php echo $fk_object ?>
+											,type_object:"<?php echo $type_object ?>"
+											,comment:data.content
+										}
+										,method:'post'
+									}).done(function(idPostit) {
+										$div.attr('id-post-it', idPostit);
+									});
+			
+								}
+      					 }
+					     
+				    });
+						
+						  					
 					$div.find('[rel=delete]').click(function() {
 					
 							var $div = $(this).closest('div.postit');

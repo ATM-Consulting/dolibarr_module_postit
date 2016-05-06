@@ -8,6 +8,12 @@
 	border-radius: 0 0 0 0;
 	position:absolute;
 	padding:3px;
+	transform: rotate(-3deg);
+	
+	box-shadow: 5px 5px 5px 0px #666;
+}
+.postit:hover {
+	transform: none;
 }
 .postit div[rel=content] {
 	position:relative;
@@ -19,10 +25,11 @@
 	bottom:0;
 	left:0;
 	display:none;	
-	cursor: hand;
+	
 }
 .postit:hover div[rel=delete] {
 	display:block;
+	cursor: pointer;
 }
 .postit [rel=postit-title] {
 	font-weight:bold;
@@ -37,6 +44,13 @@
 	border:1px dashed #eee;
 	
 }
+/*
+.postit input, .postit textarea {
+	background: none;
+	border:0 none;
+	box-shadow: none;
+}
+*/
 .yellowPaper {
 	border:1px solid #D2D246;
 
