@@ -1,6 +1,6 @@
 @font-face {
-    font-family: dakotaHand;
-    src: url(handwriting-dakota.ttf);
+    font-family: "dakotaHand";
+    src: url("handwriting-dakota.ttf");
 }
 
 .postit {
@@ -8,7 +8,7 @@
 	border-radius: 0 0 0 0;
 	position:absolute;
 	padding:3px;
-	transform: rotate(-3deg);
+	transform: rotate(-2deg);
 	
 	box-shadow: 5px 5px 5px 0px #666;
 }
@@ -20,16 +20,23 @@
 	height:100%;
 }
 
-.postit div[rel=delete] {
+.postit div[rel=actions] {
 	position: absolute;
 	bottom:0;
 	left:0;
 	display:none;	
 	
 }
-.postit:hover div[rel=delete] {
+.postit:hover div[rel=actions] {
 	display:block;
+}
+.postit div[rel=actions] span {
 	cursor: pointer;
+	margin:right:10px;
+}
+.postit div[rel=actions] span img { 
+	width:18px;
+	height:18px;	
 }
 .postit [rel=postit-title] {
 	font-weight:bold;

@@ -24,6 +24,14 @@
 		case 'postit-of-object':
 			
 			$Tab = TPostIt::getPostit($PDOdb,$fk_object,$type_object,$user->id);
+			foreach($Tab as &$p) {
+				if($user->rights->postit->allaction->write || ($user->rights->postit->myaction->write && $p->fk_user == $user->id) ) {
+					$p->rightToDelete = 1;	
+				}
+				else{
+					$p->rightToDelete = 0;
+				}
+			}
 			
 			__out($Tab,'json');
 			
@@ -50,8 +58,9 @@
 			if(!$p->load($PDOdb, GETPOST('id'))) {
 				$p->fk_object = $fk_object;
 				$p->type_object = $type_object;
+				$p->fk_user = $user->id;
+			
 			}
-			$p->fk_user = $user->id;
 			if(!empty($width)) $p->position_width = $width;
 			if(!empty($height)) $p->position_height = $height;
 			if(!empty($top)) $p->position_top = $top;
@@ -75,6 +84,25 @@
 			}
 			
 			
+			
+			break;
+		
+		case 'change-status':
+			
+			$p=new TPostIt;
+			if($p->load($PDOdb, GETPOST('id'))) {
+				$current = GETPOST('current');
+				if($current == 'private') $p->status = 'shared';
+				else if($current == 'shared') $p->status = 'public';
+				else $p->status = 'private';
+				$p->save($PDOdb);
+				
+				echo $p->status;
+				
+			}
+			else{
+				echo 'ko';
+			}
 			
 			break;
 		

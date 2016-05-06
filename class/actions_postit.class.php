@@ -64,8 +64,8 @@ class Actionspostit
 			$a = '<a id="addNote" href="javascript:addNote()" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
 			$aDelete='';
-			if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
-				$aDelete =' <div rel="delete">'.addslashes(img_delete()).'</div>';
+			if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write ) {
+				$aDelete =' <span rel="delete">'.img_delete().'</span>';
 			}
 			
 			?>
@@ -103,8 +103,46 @@ class Actionspostit
 									
 				});
 				
+				function setStatus(id,status) {
+					
+					var fk_user = <?php echo $user->id ?>;
+					
+					if(status=='')status='private';
+					
+					var $el = $('div#postit-'+id); 
+					$el.attr('status',status);
+					var author = parseInt( $el.attr('author') );
+					console.log(author,fk_user);
+					var $el2 = $el.find('[rel=status]');
+					
+					if(status == 'public') {
+						$el2.html("<?php echo addslashes(img_picto('', 'public.png@postit')); ?>");
+						
+						if(author!=fk_user) {
+							$el.removeClass('yellowPaper greenPaper');
+							$el.addClass('bluePaper');
+						}
+					}
+					else if(status == 'shared') {
+						$el2.html("<?php echo addslashes(img_picto('', 'shared.png@postit')); ?>");
+
+						if(author!=fk_user) {
+							$el.removeClass('yellowPaper bluePaper');
+							$el.addClass('greenPaper');
+						}
+					}
+					else {
+						$el2.html("<?php echo addslashes(img_picto('', 'private.png@postit')); ?>");
+						$el.removeClass('bluePaper greenPaper');
+						$el.addClass('yellowPaper');
+					
+					}
+					
+					
+				}
+				
 				function addNote(postit) {
-					$a = $('#addNote');
+					var $a = $('#addNote');
 					
 					pos = $a.offset();
 					if(!pos) {
@@ -113,15 +151,26 @@ class Actionspostit
 						pos.left=0;
 					}
 					
-					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><?php echo $aDelete ?><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div></div>');
+					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><div rel="actions"></div><div rel="postit-title"><?php echo $langs->trans('NewNote') ?></div><div rel="postit-comment"><?php echo $langs->trans('NoteComment') ?></div></div></div>');
+
+					if(postit.rightToDelete) {
+						$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");						
+					}
 					
 					$div.css('width',  100);
 					$div.css('height', 200);
 					$div.css('top', pos.top + 20);
 					$div.css('left', pos.left - 50);   
 					
+					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
+					
+					$('body').append($div);
+				
 					if(postit) {
 						$div.attr('id-post-it', postit.rowid);
+						$div.attr('id','postit-'+postit.rowid);
+						$div.attr('author',postit.fk_user);
+						
 						if(postit.position_top<=0)postit.position_top = 0;
 						if(postit.position_left<=0)postit.position_left = 0;
 						if(postit.position_width<=0)postit.position_width= 100;
@@ -134,9 +183,10 @@ class Actionspostit
 						$div.css('left',  postit.position_left);
 						$div.css('width',  postit.position_width);
 						$div.css('height',  postit.position_height);
+						setStatus(postit.rowid, postit.status);
 					}
 					
-					$('body').append($div);
+					console.log($div);
 					
 					<?php
 					if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
@@ -197,7 +247,7 @@ class Actionspostit
 						
 						  					
 					$div.find('[rel=delete]').click(function() {
-					
+						if(window.confirm("Vous êtes sûr ?")) {
 							var $div = $(this).closest('div.postit');
 							var idPostit = $div.attr('id-post-it');
 							console.log($div,idPostit);
@@ -213,7 +263,31 @@ class Actionspostit
 								$div.remove();
 							});
 							
+						}
+					});
+					
+					
+						  					
+					$div.find('[rel=status]').click(function() {
+					
+						var $div = $(this).closest('div.postit');
+						var idPostit = $div.attr('id-post-it');
+						var status = $div.attr('status');
+						console.log('current',status);
+						$.ajax({
+							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+							,data: {
+								put:'change-status'
+								,id:idPostit
+								,current:status
+								
+							}
+							,method:'post'
+						}).done(function(status) {
+							setStatus(idPostit,status)
+						});
 						
+					
 					});
 					
 					
@@ -270,6 +344,9 @@ class Actionspostit
 					});
 					<?php
 					}					
+					else {
+						echo '$div.find("[rel=actions]").remove();';	
+					}
 					?>
 					
 				}
