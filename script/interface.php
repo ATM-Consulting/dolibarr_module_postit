@@ -4,6 +4,8 @@
 	
 	dol_include_once('/postit/class/postit.class.php');
 	
+	$langs->load('postit@postit');
+	
 	$put = GETPOST('put');
 	$get = GETPOST('get');
 	
@@ -39,6 +41,11 @@
 					$p->rightToSetStatus = 0;
 					$p->rightEdit = 0;
 				}
+				
+				${'u'.$p->fk_user}=new User($db);
+				${'u'.$p->fk_user}->fetch($p->fk_user);
+				$p->author = ${'u'.$p->fk_user}->getFullName($langs);
+				
 			}
 			
 			__out($Tab,'json');
@@ -67,7 +74,19 @@
 				$p->fk_object = $fk_object;
 				$p->type_object = $type_object;
 				$p->fk_user = $user->id;
-				$p->fk_postit = $fk_postit;
+				
+				if($fk_postit>0) {
+					$parent=new TPostIt;
+					if($parent->load($PDOdb, $fk_postit)) {
+						$p->fk_postit = $fk_postit;
+						$p->title = $langs->trans('NewResponse') ;
+						$p->comment = '';
+										
+						$p->position_top = $parent->position_top + 30;
+						$p->position_left = $parent->position_left + 30;
+					}
+				}
+				
 			}
 			if(!empty($width)) $p->position_width = $width;
 			if(!empty($height)) $p->position_height = $height;
@@ -77,7 +96,24 @@
 			if(!empty($comment)) $p->comment= $comment;
 			$p->save($PDOdb);
 			
-			echo $p->getId();
+			$p->rightResponse = ($p->fk_user == $user->id) ? 0 : 1;
+			
+			if($user->rights->postit->allaction->write || ($user->rights->postit->myaction->write && $p->fk_user == $user->id) ) {
+				$p->rightToDelete = 1;	
+				$p->rightToSetStatus = 1;
+				$p->rightEdit = 1;	
+			}
+			else{
+				$p->rightToDelete = 0;
+				$p->rightToSetStatus = 0;
+				$p->rightEdit = 0;
+			}
+			
+			$u=new User($db);
+			$u->fetch($p->fk_user);
+			$p->author = $u->getFullName($langs);
+			
+			__out($p, 'json');
 			
 			break;
 		
@@ -100,9 +136,19 @@
 			$p=new TPostIt;
 			if($p->load($PDOdb, GETPOST('id'))) {
 				$current = GETPOST('current');
-				if($current == 'private') $p->status = 'public';// $p->status = 'shared';
-				//else if($current == 'shared') $p->status = 'public';
-				else $p->status = 'private';
+				
+				if($p->fk_object == -1) {
+					if($current == 'private') $p->status = 'public';
+					else $p->status = 'private';
+						
+				}
+				else{
+					if($current == 'private') $p->status = 'public';
+					else if($current == 'public') $p->status = 'shared';
+					else $p->status = 'private';
+					
+				}
+				
 				$p->save($PDOdb);
 				
 				echo $p->status;

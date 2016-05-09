@@ -14,6 +14,8 @@ class TPostIt extends TObjetStd {
         parent::_init_vars('title,color');
         parent::start(); 
 		
+		$this->title = $langs->trans('NewNote');
+		$this->comment = $langs->trans('NoteComment');
 		//status = private, shared, public
 		$this->status='private';
 		
@@ -22,8 +24,8 @@ class TPostIt extends TObjetStd {
 	static function getPostit(&$PDOdb,$fk_object,$type_object,$fk_user) {
 		
 		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."postit 
-		WHERE (fk_user=".$fk_user." OR fk_user_todo=".$fk_user." OR status='public')
-		AND fk_object=".$fk_object." AND type_object='".$type_object."' ORDER BY rowid";
+		WHERE (fk_user=".$fk_user." OR fk_user_todo=".$fk_user." OR status='public' OR status='shared')
+		AND (fk_object=".$fk_object." OR status='shared') AND type_object='".$type_object."' ORDER BY rowid";
 		$Tab = TRequeteCore::_get_id_by_sql($PDOdb, $sql);
 		
 		$TPostit=array();
