@@ -102,9 +102,9 @@ class Actionspostit
 				});
 				
 				function setStatus(id,status) {
-					
+					status = status.trim();
 					var fk_user = <?php echo $user->id ?>;
-					
+					console.log('setStatus',status);
 					if(status=='')status='private';
 					
 					var $el = $('div#postit-'+id); 
