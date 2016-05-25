@@ -5,7 +5,6 @@
 	dol_include_once('/postit/class/postit.class.php');
 	
 	$langs->load('postit@postit');
-	
 	$put = GETPOST('put');
 	$get = GETPOST('get');
 	
