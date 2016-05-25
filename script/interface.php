@@ -138,10 +138,8 @@
 				$current = trim(GETPOST('current'));
 				
 				if($p->fk_object == -1) {
-//var_dump($_REQUEST, $p->fk_object,$current == 'private');
 					if($current == 'private') $p->status = 'public';
 					else $p->status = 'private';
-//				var_dump($p->status);		
 				}
 				else{
 					if($current == 'private') $p->status = 'public';
