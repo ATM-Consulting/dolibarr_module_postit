@@ -91,7 +91,6 @@ class Actionspostit
 						}
 						,dataType:"json"
 					}).done(function(Tab) {
-						console.log(Tab);
 						for(x in Tab) {
 							addNote(Tab[x]);
 						}
@@ -104,13 +103,12 @@ class Actionspostit
 				function setStatus(id,status) {
 					status = status.trim();
 					var fk_user = <?php echo $user->id ?>;
-					console.log('setStatus',status);
+					
 					if(status=='')status='private';
 					
 					var $el = $('div#postit-'+id); 
 					$el.attr('status',status);
 					var author = parseInt( $el.attr('author') );
-					console.log(author,fk_user);
 					var $el2 = $el.find('[rel=status]');
 					
 					if(status == 'public') {
@@ -175,7 +173,6 @@ class Actionspostit
 						,dataType:'json'
 					}).done(function(postit) {
 						addNote(postit);
-						console.log(postit);
 					});
 				}
 				
@@ -240,8 +237,6 @@ class Actionspostit
 						
 					}
 					
-					console.log(postit);
-					
 					
 					$div.find('[rel=response]').click(function() {
 						$div = $(this).closest('div.postit');
@@ -256,7 +251,6 @@ class Actionspostit
 						if(window.confirm("Vous êtes sûr ?")) {
 							var $div = $(this).closest('div.postit');
 							var idPostit = $div.attr('id-post-it');
-							console.log($div,idPostit);
 							$.ajax({
 								url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 								,data: {
@@ -279,7 +273,7 @@ class Actionspostit
 						var $div = $(this).closest('div.postit');
 						var idPostit = $div.attr('id-post-it');
 						var status = $div.attr('status');
-						console.log('current',status);
+						
 						$.ajax({
 							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 							,data: {
