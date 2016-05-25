@@ -101,7 +101,7 @@ class Actionspostit
 				});
 				
 				function setStatus(id,status) {
-					status = status.trim();
+					//status = status.trim();
 					var fk_user = <?php echo $user->id ?>;
 					
 					if(status=='')status='private';
