@@ -12,3 +12,11 @@ Read=Lire des notes
 Write=Coller, modifier ou répondre à une note
 Admin=Avoir tous les droits sur ses notes ou celles des autres
 NewResponse=Réponse à la note précédente
+
+PublicNote=État actuel : publique
+SharedNote=État actuel : partagé
+PrivateNote=État actuel : privé
+
+shortPublicNote=(état publique)
+shortSharedNote=(état partagé)
+shortPrivateNote=(état privé)
