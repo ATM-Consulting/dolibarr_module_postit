@@ -112,7 +112,7 @@ class Actionspostit
 					var $el2 = $el.find('[rel=status]');
 					
 					if(status == 'public') {
-						$el2.html("<?php echo addslashes(img_picto('', 'public.png@postit')); ?>");
+						$el2.html("<?php echo addslashes(img_picto($langs->trans('PublicNote'), 'public.png@postit')); ?>");
 						
 						//if(author!=fk_user) {
 							$el.removeClass('yellowPaper greenPaper');
@@ -120,7 +120,7 @@ class Actionspostit
 						//}
 					}
 					else if(status == 'shared') {
-						$el2.html("<?php echo addslashes(img_picto('', 'shared.png@postit')); ?>");
+						$el2.html("<?php echo addslashes(img_picto($langs->trans('SharedNote'), 'shared.png@postit')); ?>");
 
 						//if(author!=fk_user) {
 							$el.removeClass('yellowPaper bluePaper');
@@ -128,13 +128,19 @@ class Actionspostit
 						//}
 					}
 					else {
-						$el2.html("<?php echo addslashes(img_picto('', 'private.png@postit')); ?>");
+						$el2.html("<?php echo addslashes(img_picto($langs->trans('PrivateNote'), 'private.png@postit')); ?>");
 						$el.removeClass('bluePaper greenPaper');
 						$el.addClass('yellowPaper');
 					
 					}
 					
+					var txtPublic = '<?php echo $langs->transnoentitiesnoconv('shortPublicNote'); ?>';
+					var txtShared = '<?php echo $langs->transnoentitiesnoconv('shortSharedNote'); ?>';
+					var txtPrivate = '<?php echo $langs->transnoentitiesnoconv('shortPrivateNote'); ?>';
 					
+					if (status == 'public') $el.find('span.statusText').text(txtPublic);
+					else if (status == 'shared') $el.find('span.statusText').text(txtShared);
+					else $el.find('span.statusText').text(txtPrivate);
 				}
 				
 				function saveNote($div, data) {
@@ -191,6 +197,7 @@ class Actionspostit
 					$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");						
 					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
 					$div.find('[rel=actions]').append("<?php echo addslashes($aResponse); ?>");
+					$div.find('[rel=actions]').append("<span class='statusText' style='font-size:11px;'></span>");
 					
 					$div.css('width',  100);
 					$div.css('height', 200);
