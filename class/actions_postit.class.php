@@ -255,7 +255,7 @@ class Actionspostit
 					});
 					  					
 					$div.find('[rel=delete]').click(function() {
-						if(window.confirm("Vous êtes sûr ?")) {
+						if(window.confirm("<?php echo str_replace('"', '\\"', $langs->transnoentities('AreYouSureYouWantToDeleteThisNote')); ?>")) {
 							var $div = $(this).closest('div.postit');
 							var idPostit = $div.attr('id-post-it');
 							$.ajax({

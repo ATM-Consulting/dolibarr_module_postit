@@ -20,3 +20,5 @@ PrivateNote=État actuel : privé
 shortPublicNote=(état publique)
 shortSharedNote=(état partagé)
 shortPrivateNote=(état privé)
+
+AreYouSureYouWantToDeleteThisNote=Êtes-vous sûr(e) de vouloir supprimer cette note ?
