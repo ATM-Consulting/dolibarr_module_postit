@@ -1,0 +1,24 @@
+Module104852Name = StickIt!
+Module104852Desc = Consente di lasciare post-it sul cruscotto (pagina principale)
+
+ATMAbout = Ce module a été développé par <a href="http://www.atm-consulting.fr" target="_blank">ATM Consulting</a><br>Vous pouvez retrouver la documentation sur notre <a href="http://wiki.atm-consulting.fr/index.php/Accueil" target="_blank">wiki</a><br><br>Pour toute question technique ou retour, contactez-nous sur <a href="mailto:support@atm-consulting.fr">support@atm-consulting.fr</a><br><br>Pour toute question commerciale, contactez-nous sur <a href="mailto:contact@atm-consulting.fr">contact@atm-consulting.fr</a> ou au +33 9 77 19 50 70<br><br>Retrouvez nos autres modules sur <a href="http://www.dolistore.com/search.php?orderby=position&orderway=desc&search_query=atm&submit_search=Rechercher" target="_blank">Dolistore</a>
+
+StickIt!Setup = Configurazione del modulo StickIt!
+StickIt!About = A proposito del modulo StickIt!
+
+NewNote=Titolo nota
+NoteComment=Descrizione nota
+Read=Leggere le note
+Write=Incollare, modificare o rispondere ad una nota
+Admin=Avere tutti i diritti per le proprie note e per quelle di altri
+NewResponse=Rispondi alla nota precedente
+ParamLabel=Nessuna impostazione necessaria
+PublicNote= Stato corrente : pubblico
+SharedNote=Stato corrente : condiviso
+PrivateNote=Stato corrente : privato
+
+shortPublicNote=(stato pubblico)
+shortSharedNote=(stato condiviso)
+shortPrivateNote=(stato privato)
+
+AreYouSureYouWantToDeleteThisNote=Sei sicuro di voler eliminare questa nota?
