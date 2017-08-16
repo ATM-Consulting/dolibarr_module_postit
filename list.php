@@ -44,12 +44,24 @@ if($user->id > 0) {
     dol_fiche_head($head, 'postit', $langs->trans("User"), 0, 'user');
 }
 
+// création de la liste des auteurs pour la recherche dans la liste
+$userSql = 'SELECT DISTINCT u.rowid as id, u.lastname as name FROM '.MAIN_DB_PREFIX.'user u LEFT JOIN '.MAIN_DB_PREFIX.'postit p ON p.fk_user = u.rowid WHERE p.status = \'public\' OR p.status = \'shared\'';
+$result = $db->query($userSql);
+if($result){
+    $authors = array();
+    while($obj = $db->fetch_object($result)){
+        $authors[$obj->id] = $obj->name;
+    }
+    $authors[$user->id] = $user->lastname;
+
+}
+
 // TODO ajouter les champs de son objet que l'on souhaite afficher
 $sql = 'SELECT DISTINCT t.rowid, t.fk_user, t.title, t.comment, t.status, t.fk_object, t.type_object, \'\' as Page';
 
 $sql.= ' FROM '.MAIN_DB_PREFIX.'postit t ';
 
-$sql.= ' WHERE fk_user='.$user->id . ' OR t.status=\'public\' OR t.status=\'shared\'';
+$sql.= ' WHERE fk_user='.$user->id . ' OR t.status!=\'private\'';
 
 $formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_postit', 'GET');
 
@@ -62,13 +74,11 @@ echo $r->render($PDOdb, $sql, array(
         'nbLine' => $nbLine
     )
     ,'subQuery' => array()
-    ,'link' => array(
-        // 'label'=>'<a href="card.php?id=@rowid@">@val@</a>'
-        // 'Page' => '<a href="#">lien</a>'
-    )
+    ,'link' => array()
     ,'type' => array()
     ,'search' => array(
-        'title' => array('recherche' => true, 'table' => 't', 'field' => 'title')
+        'fk_user' => array('recherche' => $authors, 'to_translate' => true)
+        ,'title' => array('recherche' => true, 'table' => 't', 'field' => 'title')
         ,'comment' => array('recherche' => true, 'table' => 't', 'field' => 'comment')
         ,'status' => array('recherche' => array('private' => $langs->trans('private'), 'public' => $langs->trans('public'), 'shared' =>$langs->trans('shared')) , 'to_translate' => true) // select html, la clé = le status de l'objet, 'to_translate' à true si nécessaire
     )
