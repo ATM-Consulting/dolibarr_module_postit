@@ -77,7 +77,7 @@ echo $r->render($PDOdb, $sql, array(
     ,'link' => array()
     ,'type' => array()
     ,'search' => array(
-        // 'fk_user' => array('recherche' => $authors, 'to_translate' => true)
+        // 'fk_user' => array('recherche' => $authors, 'to_translate' => true)  // problème avec la requête : quelque soit l'user demandé, les postit du user courant apparaissent toujours...
         'title' => array('recherche' => true, 'table' => 't', 'field' => 'title')
         ,'comment' => array('recherche' => true, 'table' => 't', 'field' => 'comment')
         ,'status' => array('recherche' => array('private' => $langs->trans('private'), 'public' => $langs->trans('public'), 'shared' =>$langs->trans('shared')) , 'to_translate' => true) // select html, la clé = le status de l'objet, 'to_translate' à true si nécessaire
