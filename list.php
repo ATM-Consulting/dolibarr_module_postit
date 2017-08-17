@@ -15,6 +15,9 @@ $langs->load('postit@postit');
 $PDOdb = new TPDOdb;
 $object = new TPostIt;
 
+$action = GETPOST('action', 'alpha');
+$id = GETPOST('id', 'int');
+
 $hookmanager->initHooks(array('postitlist'));
 
 /*
@@ -26,8 +29,11 @@ $reshook=$hookmanager->executeHooks('doActions',$parameters,$object);    // Note
 if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 
 if (empty($reshook))
-{
-    // do action from GETPOST ...
+{   
+    if($action == 'del_postit' && $user->rights->postit->myaction->write){
+        $object->load($PDOdb, $id);
+        $object->delete($PDOdb);
+    }
 }
 
 
@@ -45,23 +51,21 @@ if($user->id > 0) {
 }
 
 // création de la liste des auteurs pour la recherche dans la liste
-$userSql = 'SELECT DISTINCT u.rowid as id, u.lastname as name FROM '.MAIN_DB_PREFIX.'user u LEFT JOIN '.MAIN_DB_PREFIX.'postit p ON p.fk_user = u.rowid WHERE p.status = \'public\' OR p.status = \'shared\'';
+$userSql = 'SELECT DISTINCT u.rowid as id, u.lastname, u.firstname FROM '.MAIN_DB_PREFIX.'user u INNER JOIN '.MAIN_DB_PREFIX.'postit p ON (p.fk_user = u.rowid)';
 $result = $db->query($userSql);
 if($result){
     $authors = array();
     while($obj = $db->fetch_object($result)){
-        $authors[$obj->id] = $obj->name;
+        $authors[$obj->id] = dolGetFirstLastname($obj->firstname, $obj->lastname);
     }
-    $authors[$user->id] = $user->lastname;
+    $authors[$user->id] = dolGetFirstLastname($user->firstname,$user->lastname);
 
 }
 
-// TODO ajouter les champs de son objet que l'on souhaite afficher
-$sql = 'SELECT DISTINCT t.rowid, t.fk_user, t.title, t.comment, t.status, \'\' as Page';
 
+$sql = 'SELECT DISTINCT t.rowid, t.fk_user, t.title, t.comment, t.status, \'\' as Page, \'\' as Action';
 $sql.= ' FROM '.MAIN_DB_PREFIX.'postit t';
-
-$sql.= ' WHERE t.fk_user='.$user->id . ' OR t.status!=\'private\'';
+$sql.= ' WHERE (t.fk_user='.$user->id . ' OR t.status!=\'private\')';
 
 $formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_postit', 'GET');
 
@@ -77,8 +81,8 @@ echo $r->render($PDOdb, $sql, array(
     ,'link' => array()
     ,'type' => array()
     ,'search' => array(
-        // 'fk_user' => array('recherche' => $authors, 'to_translate' => true)  // problème avec la requête : quelque soit l'user demandé, les postit du user courant apparaissent toujours...
-        'title' => array('recherche' => true, 'table' => 't', 'field' => 'title')
+        'fk_user' => array('recherche' => $authors)  // problème avec la requête : quelque soit l'user demandé, les postit du user courant apparaissent toujours...
+        ,'title' => array('recherche' => true, 'table' => 't', 'field' => 'title')
         ,'comment' => array('recherche' => true, 'table' => 't', 'field' => 'comment')
         ,'status' => array('recherche' => array('private' => $langs->trans('private'), 'public' => $langs->trans('public'), 'shared' =>$langs->trans('shared')) , 'to_translate' => true) // select html, la clé = le status de l'objet, 'to_translate' à true si nécessaire
     )
@@ -102,10 +106,10 @@ echo $r->render($PDOdb, $sql, array(
         ,'status' => $langs->trans('Status')
     )
     ,'eval'=>array(
-    //    'fk_user' => '_getUserNomUrl(@val@)' // Si on a un fk_user dans notre requête
         'fk_user' => '_getAuthor(@val@)',
         'status' => '_getLibStatut("@val@")',
-        'Page' => '_getPageLink(@rowid@)'
+        'Page' => '_getPageLink(@rowid@)',
+        'Action' => '_getLineAction(@rowid@)'
     )
 ));
 
@@ -163,6 +167,11 @@ function _getPageLink($id)
     return $link;
 }
 
+/**
+ * Function qui renvoie le lien vers le profil utilisateur de l'auteur
+ * @param $id de l'auteur de la note
+ * @return string
+ */
 function _getAuthor($id){
     global $db;
     
@@ -170,4 +179,18 @@ function _getAuthor($id){
     $u->fetch($id);
     
     return $u->getNomUrl();
+}
+
+
+function _getLineAction($id){
+    global $db, $user;
+    
+    $sql = "SELECT fk_user FROM ".MAIN_DB_PREFIX.'postit t WHERE rowid='.$id;
+    $res = $db->query($sql);
+    if($res){
+        $obj = $db->fetch_object($res);
+        if(($obj->fk_user == $user->id) && !empty($user->rights->postit->myaction->write)){
+            return '<a href="?action=del_postit&id='.$id.'">' . img_picto('delete','delete').'</a>';
+        }
+    }
 }
