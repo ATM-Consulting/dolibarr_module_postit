@@ -53,3 +53,4 @@ function postitAdminPrepareHead()
 
     return $head;
 }
+
