@@ -109,7 +109,8 @@ echo $r->render($PDOdb, $sql, array(
         'fk_user' => '_getAuthor(@val@)',
         'status' => '_getLibStatut("@val@")',
         'Page' => '_getPageLink(@rowid@)',
-        'Action' => '_getLineAction(@rowid@)'
+        'Action' => '_getLineAction(@rowid@)',
+        'comment' => '_truncComm(@rowid@)'
     )
 ));
 
@@ -181,7 +182,23 @@ function _getAuthor($id){
     return $u->getNomUrl();
 }
 
+function _truncComm($id){
+    global $db;
+    
+    $sql = "SELECT comment FROM ".MAIN_DB_PREFIX.'postit t WHERE rowid='.$id;
+    $res = $db->query($sql);
+    if($res){
+        $obj = $db->fetch_object($res);
+        return dol_trunc($obj->comment);
+    }
+        
+}
 
+/**
+ * renvoie un lien de suppression si l'utilisateur a les droits
+ * @param $id du postit courant
+ * @return string
+ */
 function _getLineAction($id){
     global $db, $user;
     
