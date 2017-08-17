@@ -57,11 +57,11 @@ if($result){
 }
 
 // TODO ajouter les champs de son objet que l'on souhaite afficher
-$sql = 'SELECT DISTINCT t.rowid, t.fk_user, t.title, t.comment, t.status, t.fk_object, t.type_object, \'\' as Page';
+$sql = 'SELECT DISTINCT t.rowid, t.fk_user, t.title, t.comment, t.status, \'\' as Page';
 
-$sql.= ' FROM '.MAIN_DB_PREFIX.'postit t ';
+$sql.= ' FROM '.MAIN_DB_PREFIX.'postit t';
 
-$sql.= ' WHERE fk_user='.$user->id . ' OR t.status!=\'private\'';
+$sql.= ' WHERE t.fk_user='.$user->id . ' OR t.status!=\'private\'';
 
 $formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_postit', 'GET');
 
@@ -77,14 +77,14 @@ echo $r->render($PDOdb, $sql, array(
     ,'link' => array()
     ,'type' => array()
     ,'search' => array(
-        'fk_user' => array('recherche' => $authors, 'to_translate' => true)
-        ,'title' => array('recherche' => true, 'table' => 't', 'field' => 'title')
+        // 'fk_user' => array('recherche' => $authors, 'to_translate' => true)
+        'title' => array('recherche' => true, 'table' => 't', 'field' => 'title')
         ,'comment' => array('recherche' => true, 'table' => 't', 'field' => 'comment')
         ,'status' => array('recherche' => array('private' => $langs->trans('private'), 'public' => $langs->trans('public'), 'shared' =>$langs->trans('shared')) , 'to_translate' => true) // select html, la clé = le status de l'objet, 'to_translate' à true si nécessaire
     )
     ,'translate' => array()
     ,'hide' => array(
-        'rowid', 'fk_object', 'type_object'
+        'rowid'
     )
     ,'liste' => array(
         'titre' => $langs->trans('PostitList')
