@@ -158,10 +158,15 @@ function _getPageLink($id)
             $link = '<a href="'.dol_buildpath('/',1).'">'.$langs->trans('Home').'</a>';
         } else {
             // sinon on instancie un objet du type voulu, on le récupère et on génère son url
-            $o = new $obj->type_object($db);
-            if($o->fetch($obj->fk_object)){
-                $link = $link = $o->getNomUrl();
-            }
+			if (!class_exists($obj->type_object)) include_once DOL_DOCUMENT_ROOT.'/'.strtolower($obj->type_object).'/class/'.strtolower($obj->type_object).'.class.php';
+			
+			if (class_exists($obj->type_object))
+			{
+				$o = new $obj->type_object($db);
+				if($o->fetch($obj->fk_object)){
+					$link = $link = $o->getNomUrl();
+				}
+			}
         } 
     }
     
