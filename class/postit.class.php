@@ -11,6 +11,8 @@ class TPostIt extends TObjetStd {
 		parent::add_champs('type_object,status',array('index'=>true));
 		parent::add_champs('comment',array('type'=>'text'));
 		
+		parent::add_champs('hidden', array('type' => 'int'));
+		
         parent::_init_vars('title,color');
         parent::start(); 
 		

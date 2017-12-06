@@ -29,3 +29,5 @@ shared = Partagé
 
 PostitList = Liste de PostIt
 Home = Accueil
+
+UnhidePostit = Rendre tous les post-it visibles

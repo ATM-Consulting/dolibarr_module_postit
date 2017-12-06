@@ -157,6 +157,26 @@
 			}
 			
 			break;
+			
+		case 'hide':
+			$p = new TPostIt;
+			if($p->load($PDOdb, GETPOST('id'))) {
+				$p->hidden = 1;
+				$p->save($PDOdb);
+				
+				echo ok;
+			}
+			else{
+				echo 'ko';
+			}
+			break;
+			
+		case 'unhide':
+			$sql = 'UPDATE '.MAIN_DB_PREFIX.'postit SET hidden=0';
+			
+			$PDOdb->Execute($sql);
+			
+			break;
 		
 		default:
 			
