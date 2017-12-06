@@ -34,6 +34,7 @@ require_once '../lib/postit.lib.php';
 
 // Translations
 $langs->load("postit@postit");
+$langs->load("admin");
 
 // Access control
 if (! $user->admin) {
@@ -77,7 +78,7 @@ if (preg_match('/del_(.*)/',$action,$reg))
 /*
  * View
  */
-$page_name = "postitSetup";
+$page_name = "StickIt!Setup";
 llxHeader('', $langs->trans($page_name));
 
 // Subheader
