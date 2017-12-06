@@ -102,7 +102,7 @@ print '<table class="noborder" width="100%">';
 print '<tr class="liste_titre">';
 print '<td>'.$langs->trans("Parameters").'</td>'."\n";
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
+print '<td align="left" width="100">'.$langs->trans("Value").'</td>'."\n";
 
 
 // Example with a yes / no select
@@ -110,7 +110,7 @@ $var=!$var;
 print '<tr '.$bc[$var].'>';
 print '<td>'.$langs->trans("ParamLabel").'</td>';
 print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="300">';
+print '<td align="left" width="300">';
 print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
 print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 print '<input type="hidden" name="action" value="set_CONSTNAME">';
@@ -118,6 +118,21 @@ print $form->selectyesno("CONSTNAME",$conf->global->CONSTNAME,1);
 print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
 print '</form>';
 print '</td></tr>';
+
+print '<tr class="pair"><td>' . $langs->trans("AllowToHidePostIt") . '</td>';
+print '<td align="center" width="20">&nbsp;</td>';
+print '<td align="left">';
+if ($conf->use_javascript_ajax) {
+	print ajax_constantonoff('ALLOW_TO_HIDE_POSTIT');
+} else {
+	$arrval = array (
+			'0' => $langs->trans("No"),
+			'1' => $langs->trans("Yes")
+	);
+	print $form->selectarray("ALLOW_TO_HIDE_POSTIT", $arrval, $conf->global->ALLOW_TO_HIDE_POSTIT);
+}
+
+print '</td>';
 
 print '</table>';
 

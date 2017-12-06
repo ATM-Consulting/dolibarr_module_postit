@@ -13,11 +13,11 @@ Write=Coller, modifier ou répondre à une note
 Admin=Avoir tous les droits sur ses notes ou celles des autres
 NewResponse=Réponse à la note précédente
 
-PublicNote=État actuel : publique
+PublicNote=État actuel : public
 SharedNote=État actuel : partagé
 PrivateNote=État actuel : privé
 
-shortPublicNote=(état publique)
+shortPublicNote=(état public)
 shortSharedNote=(état partagé)
 shortPrivateNote=(état privé)
 
@@ -31,3 +31,4 @@ PostitList = Liste de PostIt
 Home = Accueil
 
 UnhidePostit = Rendre tous les post-it visibles
+AllowToHidePostIt = Permettre de cacher des post-it
