@@ -123,16 +123,7 @@ print '</td></tr>';
 print '<tr class="pair"><td>' . $langs->trans("AllowToHidePostIt") . '</td>';
 print '<td align="center" width="20">&nbsp;</td>';
 print '<td align="left">';
-if ($conf->use_javascript_ajax) {
-	print ajax_constantonoff('ALLOW_TO_HIDE_POSTIT');
-} else {
-	$arrval = array (
-			'0' => $langs->trans("No"),
-			'1' => $langs->trans("Yes")
-	);
-	print $form->selectarray("ALLOW_TO_HIDE_POSTIT", $arrval, $conf->global->ALLOW_TO_HIDE_POSTIT);
-}
-
+print ajax_constantonoff('ALLOW_TO_HIDE_POSTIT');
 print '</td>';
 
 print '</table>';

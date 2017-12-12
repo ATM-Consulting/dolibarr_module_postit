@@ -43,4 +43,10 @@ class TPostIt extends TObjetStd {
 		
 	}
 	
+	static function setAllPostitVisible(&$PDOdb) {
+		$sql = 'UPDATE '.MAIN_DB_PREFIX.'postit SET hidden=0';
+		
+		$PDOdb->Execute($sql);
+	}
+	
 }
