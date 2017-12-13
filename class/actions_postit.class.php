@@ -52,7 +52,7 @@ class Actionspostit
 
 	function note($fk_object, $type_object) {
 		
-		global $langs, $user, $db;
+		global $langs, $user, $db, $conf;
 		
 			if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
 		
@@ -60,11 +60,14 @@ class Actionspostit
 		
 			$form=new Form($db);
 			$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
-		
-			$a = '<a id="addNote" href="javascript:createNote(0)" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
+
+			$a = '';
+			if(! empty($conf->global->ALLOW_TO_HIDE_POSTIT)) $a .= '<a rel="unhide" style="text-decoration: none; font-weight: bold; position: absolute; left:0px; top:50px; display:block;" href="javascript:">'.img_picto('', DOL_URL_ROOT.'/theme/md/img/switch_on_old.png', '', true).' '.$langs->trans('UnhidePostit').' </a>&nbsp;';
+			$a .= '<a id="addNote" href="javascript:createNote(0)" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
 			$aDelete =' <span rel="delete">'.img_delete().'</span>';
 			$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
+			if(! empty($conf->global->ALLOW_TO_HIDE_POSTIT)) $aHide = '<span rel="hide">&nbsp;'.img_picto('', DOL_URL_ROOT.'/theme/md/img/switch_off_old.png', '', true).'</span>';
 			
 			?>
 			<script language="javascript">
@@ -198,6 +201,11 @@ class Actionspostit
 					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
 					$div.find('[rel=actions]').append("<?php echo addslashes($aResponse); ?>");
 					$div.find('[rel=actions]').append("<span class='statusText' style='font-size:11px;'></span>");
+					<?php
+					if(! empty($conf->global->ALLOW_TO_HIDE_POSTIT)) {
+						print '$div.find(\'[rel=actions]\').append("'.addslashes($aHide).'")';
+					}
+					?>
 					
 					$div.css('width',  100);
 					$div.css('height', 200);
@@ -221,10 +229,10 @@ class Actionspostit
 						$div.find('[rel=postit-title]').html(postit.title);
 						$div.find('[rel=postit-comment]').html(postit.comment);
 						
-						$div.css('top',  postit.position_top);
-						$div.css('left',  postit.position_left);
-						$div.css('width',  postit.position_width);
-						$div.css('height',  postit.position_height);
+						$div.css('top', postit.position_top);
+						$div.css('left', postit.position_left);
+						$div.css('width', postit.position_width);
+						$div.css('height', postit.position_height);
 						$div.find('[rel=postit-author]').html(postit.author);
 						
 						setStatus(postit.rowid, postit.status);
@@ -236,6 +244,7 @@ class Actionspostit
 						if(!postit.rightToDelete) $div.find('[rel=delete]').remove();
 						if(!postit.rightToSetStatus) $div.find('[rel=status]').remove();
 						if(!postit.rightResponse) $div.find('[rel=response]').remove();
+						if(postit.hidden) $div.css('display', 'none');
 					}
 					else{
 						postit={
@@ -272,8 +281,6 @@ class Actionspostit
 							
 						}
 					});
-					
-					
 						  					
 					$div.find('[rel=status]').click(function() {
 					
@@ -291,15 +298,47 @@ class Actionspostit
 							}
 							,method:'post'
 						}).done(function(status) {
-							setStatus(idPostit,status)
+							setStatus(idPostit,status);
 						});
-						
-					
 					});
 					
-							
-							
-				
+					<?php
+					if(! empty($conf->global->ALLOW_TO_HIDE_POSTIT)) {
+					?>
+					$div.find('[rel=hide]').click(function() {
+					
+						var $div = $(this).closest('div.postit');
+						var idPostit = $div.attr('id-post-it');
+						
+						$.ajax({
+							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+							,data: {
+								put:'hide'
+								,id:idPostit
+								
+							}
+							,method:'post'
+						}).done(function() {
+							$('#postit-'+idPostit).css('display', 'none');
+						});
+					});
+						
+					$('a[rel=unhide]').click(function() {
+						
+						$.ajax({
+							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+							,data: {
+								put:'unhide'
+								
+							}
+							,method:'post'
+						}).done(function() {
+							$('.postit').css('display', '');
+						});
+					});
+					<?php
+					}
+					?>
 					//todo factorise
 					if(postit.rightEdit) {
 								$div.find('[rel=postit-title]').editable({
@@ -366,7 +405,6 @@ class Actionspostit
 					}
 					
 				}
-				
 				
 			</script>
 			<?php

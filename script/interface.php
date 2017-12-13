@@ -157,6 +157,23 @@
 			}
 			
 			break;
+			
+		case 'hide':
+			$p = new TPostIt;
+			if($p->load($PDOdb, GETPOST('id'))) {
+				$p->hidden = 1;
+				$p->save($PDOdb);
+				
+				echo ok;
+			}
+			else{
+				echo 'ko';
+			}
+			break;
+			
+		case 'unhide':
+			TPostIt::setAllPostitVisible($PDOdb);
+			break;
 		
 		default:
 			
