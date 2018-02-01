@@ -16,8 +16,11 @@ if(!defined('INC_FROM_DOLIBARR')) {
 
 dol_include_once('/postit/class/postit.class.php');
 
-$PDOdb=new TPDOdb;
+global $db;
 
-$o=new TPostIt($db);
-$o->init_db_by_vars($PDOdb);
+$o=new PostIt($db);
+$o->init_db_by_vars();
 
+$db->query("ALTER TABLE ".MAIN_DB_PREFIX."postit CHANGE rowid rowid int(11) NOT NULL AUTO_INCREMENT FIRST");
+
+$db->query("UPDATE".MAIN_DB_PREFIX."postit SET date_creation=date_cre,tms=date_maj WHERE date_creation IS NULL");
