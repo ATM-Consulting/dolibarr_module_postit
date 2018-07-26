@@ -52,8 +52,8 @@ class Actionspostit
 
 	function note($fk_object, $type_object) {
 		
-		global $langs, $user, $db;
-		
+		global $langs, $user, $db, $conf;
+
 			if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
 		
 			$langs->load('postit@postit');
@@ -61,7 +61,7 @@ class Actionspostit
 			$form=new Form($db);
 			$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
 		
-			$a = '<a id="addNote" href="javascript:createNote(0)" style="position:absolute; left:-30px; top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
+			$a = '<a id="addNote" href="javascript:createNote(0)" style="position:absolute; '.($conf->theme === 'eldy' ? 'left:-30px;' : '').' top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
 			
 			$aDelete =' <span rel="delete">'.img_delete().'</span>';
 			$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
@@ -200,9 +200,10 @@ class Actionspostit
 					$div.find('[rel=actions]').append("<span class='statusText' style='font-size:11px;'></span>");
 					
 					$div.css('width',  100);
+					<?php if($conf->theme !== 'eldy') print '$div.css("z-index", 100);' ?>
 					$div.css('height', 200);
 					$div.css('top', pos.top + 20);
-					$div.css('left', pos.left - 50);   
+					$div.css('left', pos.left <?php $conf->theme === 'eldy' ? print '-50' : ''; ?>);   
 					
 					
 					$('body').append($div);
