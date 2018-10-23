@@ -1,25 +1,43 @@
 @font-face {
     font-family: "dakotaHand";
-    src: url("handwriting-dakota.ttf");
+    src: url("handwriting-dakota.ttf")  format('truetype');
 }
 
 .postit {
-	font-family : dakotaHand;
-	border-radius: 0 0 0 0;
+	font-family:   'chilanka', 'dakotaHand', cursive;
+
 	position:absolute;
 	padding:3px;
 	transform: rotate(-2deg);
 	overflow:hidden;
-	box-shadow: 5px 5px 5px 0px #666;
+	
+
+	text-decoration:none;
+	color:#000;
+	background:#ffc;
+	display:block;
+	height:10em;
+	width:10em;
+	padding:1em;
+
+	-moz-box-shadow:2px 2px 7px rgba(0,0,0,.5);
+	-webkit-box-shadow: 2px 2px 7px rgba(0,0,0,.5);
+	box-shadow: 2px 2px 7px rgba(0,0,0,.5);
+
+	-moz-transition:-moz-transform .15s linear;
+	-o-transition:-o-transform .15s linear;
+	-webkit-transition:-webkit-transform .15s linear;
+
 }
 .postit:hover {
-	transform: none;
+	transform: rotate(0)  scale(1.1);
 }
 .postit div[rel=content] {
 	position:relative;
 	height:100%;
 	
 }
+
 
 .postit div[rel=actions] {
 	position: absolute;
@@ -33,7 +51,7 @@
 }
 .postit div[rel=actions] span {
 	cursor: pointer;
-	margin:right:10px;
+	margin-right:10px;
 }
 .postit div[rel=actions] span img { 
 	width:18px;
@@ -57,6 +75,10 @@
 	border:1px dashed #eee;
 	
 }
+.postit[rel=status]{
+	margin-left: 10px;
+}
+
 /*
 .postit input, .postit textarea {
 	background: none;
@@ -65,25 +87,25 @@
 }
 */
 .yellowPaper {
-	border:1px solid #D2D246;
-
 	background: #FEFE01 none repeat scroll 0 0;
 }
 
 .yellowPaperTemporary {
-	border:1px solid #D2D246;
-	
-	background:#FDFDE5 none repeat scroll 0 0;
+	background: #ffff88; /* Old browsers */
+	background: -moz-linear-gradient(-45deg, #ffff88 81%, #ffff88 82%, #ffff88 82%, #ffffc6 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(81%,#ffff88), color-stop(82%,#ffff88), color-stop(82%,#ffff88), color-stop(100%,#ffffc6)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(-45deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(-45deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(-45deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* IE10+ */
+	background: linear-gradient(135deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff88', endColorstr='#ffffc6',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 .bluePaper {
-	border:1px solid #4BB5C1;
-
 	background:#7FC6BC none repeat scroll 0 0;
 }
 
 .greenPaper {
-	border:1px solid #96CA2D;
 	background:#B5E655 none repeat scroll 0 0;
 }
 

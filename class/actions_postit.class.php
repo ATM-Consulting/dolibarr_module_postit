@@ -159,7 +159,7 @@ class Actionspostit
 						,data: data
 						,method:'post'
 					}).done(function(postit) {
-						$div.attr('id-post-it', postit.rowid);
+						$div.attr('id-post-it', postit.id);
 					});
 					
 					
@@ -209,8 +209,8 @@ class Actionspostit
 					$('body').append($div);
 				
 					if(postit) {
-						$div.attr('id-post-it', postit.rowid);
-						$div.attr('id','postit-'+postit.rowid);
+						$div.attr('id-post-it', postit.id);
+						$div.attr('id','postit-'+postit.id);
 						$div.attr('author',postit.fk_user);
 						if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
 						
@@ -228,7 +228,7 @@ class Actionspostit
 						$div.css('height',  postit.position_height);
 						$div.find('[rel=postit-author]').html(postit.author);
 						
-						setStatus(postit.rowid, postit.status);
+						setStatus(postit.id, postit.status);
 						
 						if(postit.fk_user==<?php echo $user->id ?>) {
 								$div.find('[rel=postit-author]').remove();

@@ -22,3 +22,10 @@ shortSharedNote=(état partagé)
 shortPrivateNote=(état privé)
 
 AreYouSureYouWantToDeleteThisNote=Êtes-vous sûr(e) de vouloir supprimer cette note ?
+
+private = Privé
+public = Public
+shared = Partagé
+
+PostitList = Liste de PostIt
+Home = Accueil

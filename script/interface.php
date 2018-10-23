@@ -13,6 +13,7 @@
 	$width = (int)GETPOST('width');
 	$height = (int)GETPOST('height');
 	$fk_postit = (int)GETPOST('fk_postit');
+	$id = (int)GETPOST('id');
 	
 	$fk_object = (int)GETPOST('fk_object');
 	$type_object = GETPOST('type_object');
@@ -20,12 +21,10 @@
 	$title = GETPOST('title');
 	$comment = GETPOST('comment');
 
-	$PDOdb = new TPDOdb;
-		
 	switch ($get) {
 		case 'postit-of-object':
 			
-			$Tab = TPostIt::getPostit($PDOdb,$fk_object,$type_object,$user->id);
+			$Tab = PostIt::getPostit($fk_object,$type_object,$user->id);
 			foreach($Tab as &$p) {
 				
 				$p->rightResponse = ($p->fk_user == $user->id) ? 0 : 1;
@@ -53,8 +52,8 @@
 		
 		case 'postit':
 			
-			$p=new TPostIt;
-			if(!$p->load($PDOdb, GETPOST('id'))) {
+			$p=new PostIt($db);
+			if($p->fetch($id)>0) {
 				__out($p,'json');
 			}
 			
@@ -68,15 +67,15 @@
 	switch ($put) {
 		case 'postit':
 			
-			$p=new TPostIt;
-			if(!$p->load($PDOdb, GETPOST('id'))) {
+			$p=new PostIt($db);
+			if($id == 0 || $p->fetch($id)<=0) {
 				$p->fk_object = $fk_object;
 				$p->type_object = $type_object;
 				$p->fk_user = $user->id;
 				
 				if($fk_postit>0) {
-					$parent=new TPostIt;
-					if($parent->load($PDOdb, $fk_postit)) {
+					$parent=new PostIt($db);
+					if($parent->fetch($fk_postit)) {
 						$p->fk_postit = $fk_postit;
 						$p->title = $langs->trans('NewResponse') ;
 						$p->comment = '';
@@ -87,14 +86,17 @@
 				}
 				
 			}
+			
 			if(!empty($width)) $p->position_width = $width;
 			if(!empty($height)) $p->position_height = $height;
 			if(!empty($top)) $p->position_top = $top;
 			if(!empty($left)) $p->position_left= $left;
 			if(!empty($title)) $p->title = $title;
 			if(!empty($comment)) $p->comment= $comment;
-			$p->save($PDOdb);
-			
+			$res = $p->id > 0 ? $p->update($user) : $p->create($user);
+			if($res<=0) {
+				var_dump($p);exit;
+			}
 			$p->rightResponse = ($p->fk_user == $user->id) ? 0 : 1;
 			
 			if($user->rights->postit->allaction->write || ($user->rights->postit->myaction->write && $p->fk_user == $user->id) ) {
@@ -117,9 +119,9 @@
 			break;
 		
 		case 'delete':
-			$p=new TPostIt;
-			if($p->load($PDOdb, GETPOST('id'))) {
-				$p->delete($PDOdb);
+			$p=new PostIt($db);
+			if($p->fetch(GETPOST('id'))) {
+				$p->delete($user);
 				echo 'ok';
 			}
 			else{
@@ -132,8 +134,8 @@
 		
 		case 'change-status':
 			
-			$p=new TPostIt;
-			if($p->load($PDOdb, GETPOST('id'))) {
+			$p=new PostIt($db);
+			if($p->fetch(GETPOST('id'))) {
 				$current = trim(GETPOST('current'));
 				
 				if($p->fk_object == -1) {
@@ -147,7 +149,7 @@
 					
 				}
 				
-				$p->save($PDOdb);
+				$p->update($user);
 				
 				echo trim($p->status);
 				
