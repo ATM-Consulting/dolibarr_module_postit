@@ -214,10 +214,10 @@ class Actionspostit
 						$div.attr('author',postit.fk_user);
 						if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
 						
-						if(postit.position_top<=0)postit.position_top = pos.top;
-						if(postit.position_left<=0)postit.position_left = pos.left;
-						if(postit.position_width<=0)postit.position_width= 100;
+						if(postit.position_width<=0)postit.position_width= 200;
 						if(postit.position_height<=0)postit.position_height = 200;
+						if(postit.position_top<=0)postit.position_top = pos.top + $('#id-top').height() + 10;
+						if(postit.position_left<=0)postit.position_left = pos.left - postit.position_width;
 
 						$div.find('[rel=postit-title]').html(postit.title);
 						$div.find('[rel=postit-comment]').html(postit.comment);
