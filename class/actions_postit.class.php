@@ -79,7 +79,6 @@ class Actionspostit
 			// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
 			if($conf->theme == 'evolution'){
 			    $a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
-			    
 			}
 			
 			$aDelete =' <span rel="delete">'.img_delete().'</span>';
