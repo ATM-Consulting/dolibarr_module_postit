@@ -317,7 +317,19 @@ class Actionspostit
 					
 					});
 					
+
+					
+					$div.draggable({
+						containment : containment
+						,stop:function(event, ui) {
 							
+							var $div = $(this);
+							if(postit.rightEdit) {
+								saveNote($div, {top: ui.position.top, left:ui.position.left});
+							}
+							
+						}
+					});
 							
 				
 					//todo factorise
@@ -360,18 +372,6 @@ class Actionspostit
 										$parent.css("box-shadow","5px 5px 5px 0px #666;");
 									});
 								}
-								
-								$div.draggable({
-									containment : containment
-									,stop:function(event, ui) {
-										
-										var $div = $(this);
-										
-										saveNote($div, {top: ui.position.top, left:ui.position.left});
-										
-										
-									}
-								});
 								
 								
 								$div.resizable({
