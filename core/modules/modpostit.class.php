@@ -142,7 +142,7 @@ class modpostit extends DolibarrModules
 		// 'thirdparty'       to add a tab in third party view
 		// 'user'             to add a tab in user view
         $this->tabs = array(
-            'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php'
+            'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php?id=__ID__'
         );
 
         // Dictionaries
