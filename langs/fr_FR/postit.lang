@@ -29,3 +29,9 @@ shared = Partagé
 
 PostitList = Liste de PostIt
 Home = Accueil
+
+POSTIT_COLOR_PRIVATE=Couleur de fond d'une note privée
+POSTIT_COLOR_PUBLIC=Couleur de fond d'une note publique
+POSTIT_COLOR_SHARED=Couleur de fond d'une note partagée
+
+

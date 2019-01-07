@@ -1,3 +1,30 @@
+<?php 
+
+//if (! defined('NOREQUIREUSER')) define('NOREQUIREUSER','1');	// Not disabled cause need to load personalized language
+//if (! defined('NOREQUIREDB'))   define('NOREQUIREDB','1');	// Not disabled to increase speed. Language code is found on url.
+if (! defined('NOREQUIRESOC'))    define('NOREQUIRESOC','1');
+//if (! defined('NOREQUIRETRAN')) define('NOREQUIRETRAN','1');	// Not disabled cause need to do translations
+if (! defined('NOCSRFCHECK'))     define('NOCSRFCHECK',1);
+if (! defined('NOTOKENRENEWAL'))  define('NOTOKENRENEWAL',1);
+//if (! defined('NOLOGIN'))         define('NOLOGIN',1);
+if (! defined('NOREQUIREMENU'))   define('NOREQUIREMENU',1);
+if (! defined('NOREQUIREHTML'))   define('NOREQUIREHTML',1);
+if (! defined('NOREQUIREAJAX'))   define('NOREQUIREAJAX','1');
+
+require __DIR__.'/../config.php';
+dol_include_once('/postit/class/postit.class.php');
+
+// Define css type
+header('Content-type: text/css');
+// Important: Following code is to avoid page request by browser and PHP CPU at
+// each Dolibarr page access.
+if (empty($dolibarr_nocache)) header('Cache-Control: max-age=3600, public, must-revalidate');
+else header('Cache-Control: no-cache');
+
+
+?>
+
+
 @font-face {
     font-family: "dakotaHand";
     src: url("handwriting-dakota.ttf")  format('truetype');
@@ -87,20 +114,20 @@
 }
 */
 .yellowPaper {
-	background: #FEFE01;
+	background: <?php print PostIt::getcolor('private', $user); ?>;
 }
 
 .yellowPaperTemporary {
-	background-color: #ffff88; /* Old browsers */
+	background-color: <?php print PostIt::getcolor('default', $user); ?>; /* Old browsers */
 	background-image: linear-gradient(135deg, rgba(255,255,255,0) , rgba(255,255,255,0) 90%, rgba(255,255,255,0.1) 93%,rgba(255,255,255,0.4) 100%); /* W3C */
 }
 
 .bluePaper {
-	background-color:#90c6ff; /*#7FC6BC;*/
+	background-color:<?php print PostIt::getcolor('public', $user); ?>; /*#7FC6BC;*/
 }
 
 .greenPaper {
-	background-color:#B5E655;
+	background-color:<?php print PostIt::getcolor('shared', $user); ?>;
 }
 
 

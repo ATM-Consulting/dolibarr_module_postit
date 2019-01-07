@@ -23,14 +23,13 @@
  * 				Put some comments here
  */
 // Dolibarr environment
-$res = @include("../../main.inc.php"); // From htdocs directory
-if (! $res) {
-    $res = @include("../../../main.inc.php"); // From "custom" directory
-}
 
+require __DIR__.'/../config.php';
 // Libraries
 require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
+dol_include_once('abricot/includes/lib/admin.lib.php');
 require_once '../lib/postit.lib.php';
+dol_include_once('postit/class/postit.class.php');
 
 // Translations
 $langs->load("postit@postit");
@@ -99,25 +98,18 @@ dol_fiche_head(
 $form=new Form($db);
 $var=false;
 print '<table class="noborder" width="100%">';
-print '<tr class="liste_titre">';
-print '<td>'.$langs->trans("Parameters").'</td>'."\n";
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="center" width="100">'.$langs->trans("Value").'</td>'."\n";
+
+print '<table class="noborder" width="100%">';
+setup_print_title("Parameters");
+if(empty($conf->global->POSTIT_COLOR_PRIVATE)){ $conf->global->POSTIT_COLOR_PRIVATE = PostIt::getcolor('private'); }
+setup_print_input_form_part('POSTIT_COLOR_PRIVATE', false, false, array('type'=>'color'));
+if(empty($conf->global->POSTIT_COLOR_PUBLIC)){ $conf->global->POSTIT_COLOR_PUBLIC = PostIt::getcolor('public'); }
+setup_print_input_form_part('POSTIT_COLOR_PUBLIC', false, false, array('type'=>'color'));
+if(empty($conf->global->POSTIT_COLOR_SHARED)){ $conf->global->POSTIT_COLOR_SHARED = PostIt::getcolor('shared'); }
+setup_print_input_form_part('POSTIT_COLOR_SHARED', false, false, array('type'=>'color'));
+print '</table>';
 
 
-// Example with a yes / no select
-$var=!$var;
-print '<tr '.$bc[$var].'>';
-print '<td>'.$langs->trans("ParamLabel").'</td>';
-print '<td align="center" width="20">&nbsp;</td>';
-print '<td align="right" width="300">';
-print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-print '<input type="hidden" name="action" value="set_CONSTNAME">';
-print $form->selectyesno("CONSTNAME",$conf->global->CONSTNAME,1);
-print '<input type="submit" class="button" value="'.$langs->trans("Modify").'">';
-print '</form>';
-print '</td></tr>';
 
 print '</table>';
 

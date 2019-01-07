@@ -37,6 +37,38 @@ class PostIt extends SeedObject {
 		$this->status='private';
 		
     }
+    
+    /**
+     * return sheet color according to user conf 
+     * @param var $code
+     * @param User $user
+     * @return Hex color
+     */
+    static function getcolor($code, $user = false){
+        global  $conf;
+        $default = '#FEFE01';
+        
+        $confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
+        
+        $Tcode = array(
+            'private' => !empty( $conf->global->POSTIT_COLOR_PRIVATE)? $conf->global->POSTIT_COLOR_PRIVATE : '#ffff88',
+            'public'  => !empty( $conf->global->POSTIT_COLOR_PUBLIC )? $conf->global->POSTIT_COLOR_PUBLIC  : '#90c6ff',
+            'shared'  => !empty( $conf->global->POSTIT_COLOR_SHARED )? $conf->global->POSTIT_COLOR_SHARED  : '#B5E655',
+        );
+        
+        if(!empty($user->conf->{$confkey}))
+        {
+            return $user->conf->{$confkey};
+        }
+        elseif(!empty($Tcode[$code]))
+        {
+            return $Tcode[$code];
+        }
+        else 
+        {
+            return $default;
+        }
+    }
 
 	static function getPostit($fk_object,$type_object,$fk_user) {
 		

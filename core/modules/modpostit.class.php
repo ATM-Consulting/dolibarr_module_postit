@@ -90,7 +90,7 @@ class modpostit extends DolibarrModules
 		//                        );
 		$this->module_parts = array(
 			'hooks'=>array('index','globalcard')
-			,'css'=>array('/postit/css/postit.css')
+			,'css'=>array('/postit/css/postit.css.php')
 			,'js'=>array('/postit/lib/jquery.editable.min.js')
 		);
 
