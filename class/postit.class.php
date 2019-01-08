@@ -46,12 +46,12 @@ class PostIt extends SeedObject {
      */
     static function getcolor($code, $user = false){
         global  $conf;
-        $default = '#FEFE01';
+        $default = '#ffff88';
         
         $confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
         
         $Tcode = array(
-            'private' => !empty( $conf->global->POSTIT_COLOR_PRIVATE)? $conf->global->POSTIT_COLOR_PRIVATE : '#ffff88',
+            'private' => !empty( $conf->global->POSTIT_COLOR_PRIVATE)? $conf->global->POSTIT_COLOR_PRIVATE : '#FEFE01',
             'public'  => !empty( $conf->global->POSTIT_COLOR_PUBLIC )? $conf->global->POSTIT_COLOR_PUBLIC  : '#90c6ff',
             'shared'  => !empty( $conf->global->POSTIT_COLOR_SHARED )? $conf->global->POSTIT_COLOR_SHARED  : '#B5E655',
         );
