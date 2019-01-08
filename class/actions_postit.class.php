@@ -79,7 +79,6 @@ class Actionspostit
 			// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
 			if($conf->theme == 'evolution'){
 			    $a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
-			    
 			}
 			
 			$aDelete =' <span rel="delete">'.img_delete().'</span>';
@@ -318,7 +317,19 @@ class Actionspostit
 					
 					});
 					
+
+					
+					$div.draggable({
+						containment : containment
+						,stop:function(event, ui) {
 							
+							var $div = $(this);
+							if(postit.rightEdit) {
+								saveNote($div, {top: ui.position.top, left:ui.position.left});
+							}
+							
+						}
+					});
 							
 				
 					//todo factorise
@@ -361,18 +372,6 @@ class Actionspostit
 										$parent.css("box-shadow","5px 5px 5px 0px #666;");
 									});
 								}
-								
-								$div.draggable({
-									containment : containment
-									,stop:function(event, ui) {
-										
-										var $div = $(this);
-										
-										saveNote($div, {top: ui.position.top, left:ui.position.left});
-										
-										
-									}
-								});
 								
 								
 								$div.resizable({

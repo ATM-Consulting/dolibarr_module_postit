@@ -90,7 +90,7 @@ class modpostit extends DolibarrModules
 		//                        );
 		$this->module_parts = array(
 			'hooks'=>array('index','globalcard')
-			,'css'=>array('/postit/css/postit.css')
+			,'css'=>array('/postit/css/postit.css.php')
 			,'js'=>array('/postit/lib/jquery.editable.min.js')
 		);
 
@@ -142,7 +142,7 @@ class modpostit extends DolibarrModules
 		// 'thirdparty'       to add a tab in third party view
 		// 'user'             to add a tab in user view
         $this->tabs = array(
-            'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php'
+            'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php?id=__ID__'
         );
 
         // Dictionaries
