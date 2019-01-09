@@ -113,21 +113,22 @@ else header('Cache-Control: no-cache');
 	box-shadow: none;
 }
 */
-.yellowPaper {
-	background: <?php print PostIt::getcolor('private', $user); ?>;
-}
 
 .yellowPaperTemporary {
 	background-color: <?php print PostIt::getcolor('default', $user); ?>; /* Old browsers */
 	background-image: linear-gradient(135deg, rgba(255,255,255,0) , rgba(255,255,255,0) 90%, rgba(255,255,255,0.1) 93%,rgba(255,255,255,0.4) 100%); /* W3C */
 }
 
+.yellowPaper {
+	background: <?php print PostIt::getcolor('private', $user); ?> !important;
+}
+
 .bluePaper {
-	background-color:<?php print PostIt::getcolor('public', $user); ?>; /*#7FC6BC;*/
+	background-color:<?php print PostIt::getcolor('public', $user); ?> !important; /*#7FC6BC;*/
 }
 
 .greenPaper {
-	background-color:<?php print PostIt::getcolor('shared', $user); ?>;
+	background-color:<?php print PostIt::getcolor('shared', $user); ?> !important;
 }
 
 
