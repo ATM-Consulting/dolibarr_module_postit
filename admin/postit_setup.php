@@ -99,19 +99,22 @@ $form=new Form($db);
 $var=false;
 print '<table class="noborder" width="100%">';
 
-print '<table class="noborder" width="100%">';
-setup_print_title("Parameters");
-if(empty($conf->global->POSTIT_COLOR_PRIVATE)){ $conf->global->POSTIT_COLOR_PRIVATE = PostIt::getcolor('private'); }
-setup_print_input_form_part('POSTIT_COLOR_PRIVATE', false, false, array('type'=>'color'));
-if(empty($conf->global->POSTIT_COLOR_PUBLIC)){ $conf->global->POSTIT_COLOR_PUBLIC = PostIt::getcolor('public'); }
-setup_print_input_form_part('POSTIT_COLOR_PUBLIC', false, false, array('type'=>'color'));
-if(empty($conf->global->POSTIT_COLOR_SHARED)){ $conf->global->POSTIT_COLOR_SHARED = PostIt::getcolor('shared'); }
-setup_print_input_form_part('POSTIT_COLOR_SHARED', false, false, array('type'=>'color'));
+if(!function_exists('setup_print_title')){
+    print '<div class="error" >'.$langs->trans('AbricotNeedUpdate').' : <a href="http://wiki.atm-consulting.fr/index.php/Accueil#Abricot" target="_blank"><i class="fa fa-info"></i> Wiki</a></div>';
+}
+else
+{
+    setup_print_title("Parameters");
+    if(empty($conf->global->POSTIT_COLOR_PRIVATE)){ $conf->global->POSTIT_COLOR_PRIVATE = PostIt::getcolor('private'); }
+    setup_print_input_form_part('POSTIT_COLOR_PRIVATE', false, false, array('type'=>'color'));
+    if(empty($conf->global->POSTIT_COLOR_PUBLIC)){ $conf->global->POSTIT_COLOR_PUBLIC = PostIt::getcolor('public'); }
+    setup_print_input_form_part('POSTIT_COLOR_PUBLIC', false, false, array('type'=>'color'));
+    if(empty($conf->global->POSTIT_COLOR_SHARED)){ $conf->global->POSTIT_COLOR_SHARED = PostIt::getcolor('shared'); }
+    setup_print_input_form_part('POSTIT_COLOR_SHARED', false, false, array('type'=>'color'));
+}
+
 print '</table>';
 
-
-
-print '</table>';
 
 llxFooter();
 

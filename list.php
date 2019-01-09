@@ -6,6 +6,7 @@ dol_include_once('abricot/includes/lib/admin.lib.php');
 
 require_once DOL_DOCUMENT_ROOT.'/core/lib/usergroups.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
+dol_include_once('core/lib/functions2.lib.php');
 
 // vérifie les droits en lecture
 if(empty($user->rights->postit->myaction->read)) accessforbidden();
@@ -92,72 +93,74 @@ if($postItUser->id > 0) {
 
 
 /* DISPLAY COLOR OPTIONS */
-if(!function_exists('setup_print_title')){
-    print '<div class="error" >'.$langs->trans('AbricotNeedUpdate').' : <a href="http://wiki.atm-consulting.fr/index.php/Accueil#Abricot" target="_blank"><i class="fa fa-info"></i> Wiki</a></div>';
-}
-else 
+if(function_exists('dol_set_user_param')) // A partir de la version 8 de Dolibarr
 {
-    print '<table class="noborder" width="100%">';
-    setup_print_title("Parameters");
-    
-    $Tcolors = array('private', 'public', 'shared');
-    
-    $form=new Form($db);
-    $title = false;
-    $desc ='';
-    $type='input';
-    $help = false;
-    
-    foreach ($Tcolors as $code)
-    {
-        $confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
-        
-        $metas = array(
-            'name' => $confkey,
-            'type'=>'color'
-        );
-        
-        
-        
-        $metas['value']  = PostIt::getcolor($code, $postItUser);
-        
-        $metascompil = '';
-        foreach ($metas as $key => $values)
-        {
-            $metascompil .= ' '.$key.'="'.$values.'" ';
-        }
-        
-        print '<tr class="oddeven" >';
-        print '<td>';
-        
-        if(!empty($help)){
-            print $form->textwithtooltip( ($title?$title:$langs->trans($confkey)) , $langs->trans($help),2,1,img_help(1,''));
-        }
-        else {
-            print $title?$title:$langs->trans($confkey);
-        }
-        
-        if(!empty($desc))
-        {
-            print '<br><small>'.$langs->trans($desc).'</small>';
-        }
-        
-        print '</td>';
-        print '<td align="center" width="20">&nbsp;</td>';
-        print '<td align="right" width="300">';
-        print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-        print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-        print '<input type="hidden" name="action" value="set_'.$confkey.'">';
-        print '<input '.$metascompil.'  />';
-        
-        print '<input type="submit" class="butAction" value="'.$langs->trans("Modify").'">';
-        print '</form>';
-        print '</td></tr>';
+    if(!function_exists('setup_print_title')){
+        print '<div class="error" >'.$langs->trans('AbricotNeedUpdate').' : <a href="http://wiki.atm-consulting.fr/index.php/Accueil#Abricot" target="_blank"><i class="fa fa-info"></i> Wiki</a></div>';
     }
-    
-    print '</table>';
+    else 
+    {
+        print '<table class="noborder" width="100%">';
+        setup_print_title("Parameters");
+        
+        $Tcolors = array('private', 'public', 'shared');
+        
+        $form=new Form($db);
+        $title = false;
+        $desc ='';
+        $type='input';
+        $help = false;
+        
+        foreach ($Tcolors as $code)
+        {
+            $confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
+            
+            $metas = array(
+                'name' => $confkey,
+                'type'=>'color'
+            );
+            
+            
+            
+            $metas['value']  = PostIt::getcolor($code, $postItUser);
+            
+            $metascompil = '';
+            foreach ($metas as $key => $values)
+            {
+                $metascompil .= ' '.$key.'="'.$values.'" ';
+            }
+            
+            print '<tr class="oddeven" >';
+            print '<td>';
+            
+            if(!empty($help)){
+                print $form->textwithtooltip( ($title?$title:$langs->trans($confkey)) , $langs->trans($help),2,1,img_help(1,''));
+            }
+            else {
+                print $title?$title:$langs->trans($confkey);
+            }
+            
+            if(!empty($desc))
+            {
+                print '<br><small>'.$langs->trans($desc).'</small>';
+            }
+            
+            print '</td>';
+            print '<td align="center" width="20">&nbsp;</td>';
+            print '<td align="right" width="300">';
+            print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+            print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+            print '<input type="hidden" name="action" value="set_'.$confkey.'">';
+            print '<input '.$metascompil.'  />';
+            
+            print '<input type="submit" class="butAction" value="'.$langs->trans("Modify").'">';
+            print '</form>';
+            print '</td></tr>';
+        }
+        
+        print '</table>';
+    }
 }
-
 
 
 
