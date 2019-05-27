@@ -59,7 +59,7 @@ class modpostit extends DolibarrModules
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Description of module postit";
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '1.3.0';
+		$this->version = '1.4.1';
 		// Key used in llx_const table to save module status enabled/disabled (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
 		// Where to store the module in setup page (0=common,1=interface,2=others,3=very specific)
@@ -90,7 +90,7 @@ class modpostit extends DolibarrModules
 		//                        );
 		$this->module_parts = array(
 			'hooks'=>array('index','globalcard')
-			,'css'=>array('/postit/css/postit.css')
+			,'css'=>array('/postit/css/postit.css.php')
 			,'js'=>array('/postit/lib/jquery.editable.min.js')
 		);
 
@@ -142,7 +142,7 @@ class modpostit extends DolibarrModules
 		// 'thirdparty'       to add a tab in third party view
 		// 'user'             to add a tab in user view
         $this->tabs = array(
-            'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php'
+            'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php?id=__ID__'
         );
 
         // Dictionaries

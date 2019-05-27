@@ -60,8 +60,26 @@ class Actionspostit
 		
 			$form=new Form($db);
 			$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
-		
-			$a = '<a id="addNote" href="javascript:createNote(0)" style="position:absolute; '.($conf->theme !== 'eldy' ? '' : 'left:-30px;').' top:0px; display:block;">'.img_picto('', 'post-it.png@postit',' style="width:32px; height:32px;" ').'</a>';
+			
+			$aStyle = 'position:absolute; top:0px; display:block; ';
+			$imgStyle = 'width:32px; height:32px;';
+			if($conf->theme == 'eldy')
+			{
+			    $aStyle .= " left:-30px; ";
+			}
+			elseif($conf->theme == 'evolution')
+			{
+			    // TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
+			    $aStyle = 'position:relative; display:inline-block; line-height: 50px; height: 50px';
+			    $imgStyle .= 'vertical-align:middle;';
+			}
+			
+			$a = '<a id="addNote" href="javascript:createNote(0)" style="'.$aStyle.'">'.img_picto('', 'post-it.png@postit',' style="'.$imgStyle.'" ').'</a>';
+			
+			// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
+			if($conf->theme == 'evolution'){
+			    $a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
+			}
 			
 			$aDelete =' <span rel="delete">'.img_delete().'</span>';
 			$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
@@ -204,9 +222,10 @@ class Actionspostit
 					$div.css('height', 200);
 					$div.css('top', pos.top + 20);
 					$div.css('left', pos.left <?php $conf->theme !== 'eldy' ? print '' : '-50'; ?>);   
-					
+					$div.hide();
 					
 					$('body').append($div);
+					$div.fadeIn(100);
 				
 					if(postit) {
 						$div.attr('id-post-it', postit.id);
@@ -298,7 +317,19 @@ class Actionspostit
 					
 					});
 					
+
+					
+					$div.draggable({
+						containment : containment
+						,stop:function(event, ui) {
 							
+							var $div = $(this);
+							if(postit.rightEdit) {
+								saveNote($div, {top: ui.position.top, left:ui.position.left});
+							}
+							
+						}
+					});
 							
 				
 					//todo factorise
@@ -341,18 +372,6 @@ class Actionspostit
 										$parent.css("box-shadow","5px 5px 5px 0px #666;");
 									});
 								}
-								
-								$div.draggable({
-									containment : containment
-									,stop:function(event, ui) {
-										
-										var $div = $(this);
-										
-										saveNote($div, {top: ui.position.top, left:ui.position.left});
-										
-										
-									}
-								});
 								
 								
 								$div.resizable({

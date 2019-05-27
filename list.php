@@ -2,9 +2,11 @@
 
 require 'config.php';
 dol_include_once('/postit/class/postit.class.php');
+dol_include_once('abricot/includes/lib/admin.lib.php');
 
 require_once DOL_DOCUMENT_ROOT.'/core/lib/usergroups.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
+dol_include_once('core/lib/functions2.lib.php');
 
 // vérifie les droits en lecture
 if(empty($user->rights->postit->myaction->read)) accessforbidden();
@@ -13,10 +15,19 @@ $langs->load('abricot@abricot');
 $langs->load('postit@postit');
 
 $PDOdb = new TPDOdb;
-$object = new TPostIt;
+$object = new PostIt($db);
+$postItUser = new User($db);
+
 
 $action = GETPOST('action', 'alpha');
 $id = GETPOST('id', 'int');
+
+if(empty($id)){
+    $id = $user->id;
+}
+
+if( $postItUser->fetch($id, '', '', 10) < 1 ){ exit; }
+
 
 $hookmanager->initHooks(array('postitlist'));
 
@@ -34,6 +45,35 @@ if (empty($reshook))
         $object->load($PDOdb, $id);
         $object->delete($PDOdb);
     }
+    
+    if (preg_match('/set_(.*)/',$action,$reg))
+    {
+        $code=$reg[1];
+        if (dol_set_user_param($db, $conf, $postItUser, array($code => GETPOST($code))))
+        {
+            header("Location: ".$_SERVER["PHP_SELF"]);
+            exit;
+        }
+        else
+        {
+            dol_print_error($db);
+        }
+    }
+    
+    if (preg_match('/del_(.*)/',$action,$reg))
+    {
+        $code=$reg[1];
+        if (dol_set_user_param($db, $conf, $postItUser, array($code => false)))
+        {
+            Header("Location: ".$_SERVER["PHP_SELF"]);
+            exit;
+        }
+        else
+        {
+            dol_print_error($db);
+        }
+    }
+    
 }
 
 
@@ -43,12 +83,88 @@ if (empty($reshook))
 
 llxHeader('',$langs->trans('PostitList'),'','');
 
-if($user->id > 0) {
+if($postItUser->id > 0) {
     
-    $head = user_prepare_head($user);
+    $head = user_prepare_head($postItUser);
 
     dol_fiche_head($head, 'postit', $langs->trans("User"), 0, 'user');
 }
+
+
+
+/* DISPLAY COLOR OPTIONS */
+if(function_exists('dol_set_user_param')) // A partir de la version 8 de Dolibarr
+{
+    if(!function_exists('setup_print_title')){
+        print '<div class="error" >'.$langs->trans('AbricotNeedUpdate').' : <a href="http://wiki.atm-consulting.fr/index.php/Accueil#Abricot" target="_blank"><i class="fa fa-info"></i> Wiki</a></div>';
+    }
+    else 
+    {
+        print '<table class="noborder" width="100%">';
+        setup_print_title("Parameters");
+        
+        $Tcolors = array('private', 'public', 'shared');
+        
+        $form=new Form($db);
+        $title = false;
+        $desc ='';
+        $type='input';
+        $help = false;
+        
+        foreach ($Tcolors as $code)
+        {
+            $confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
+            
+            $metas = array(
+                'name' => $confkey,
+                'type'=>'color'
+            );
+            
+            
+            
+            $metas['value']  = PostIt::getcolor($code, $postItUser);
+            
+            $metascompil = '';
+            foreach ($metas as $key => $values)
+            {
+                $metascompil .= ' '.$key.'="'.$values.'" ';
+            }
+            
+            print '<tr class="oddeven" >';
+            print '<td>';
+            
+            if(!empty($help)){
+                print $form->textwithtooltip( ($title?$title:$langs->trans($confkey)) , $langs->trans($help),2,1,img_help(1,''));
+            }
+            else {
+                print $title?$title:$langs->trans($confkey);
+            }
+            
+            if(!empty($desc))
+            {
+                print '<br><small>'.$langs->trans($desc).'</small>';
+            }
+            
+            print '</td>';
+            print '<td align="center" width="20">&nbsp;</td>';
+            print '<td align="right" width="300">';
+            print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
+            print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+            print '<input type="hidden" name="action" value="set_'.$confkey.'">';
+            print '<input '.$metascompil.'  />';
+            
+            print '<input type="submit" class="butAction" value="'.$langs->trans("Modify").'">';
+            print '</form>';
+            print '</td></tr>';
+        }
+        
+        print '</table>';
+    }
+}
+
+
+
+
 
 // création de la liste des auteurs pour la recherche dans la liste
 $userSql = 'SELECT DISTINCT u.rowid as id, u.lastname, u.firstname FROM '.MAIN_DB_PREFIX.'user u INNER JOIN '.MAIN_DB_PREFIX.'postit p ON (p.fk_user = u.rowid)';
@@ -65,7 +181,7 @@ if($result){
 
 $sql = 'SELECT DISTINCT t.rowid, t.fk_user, t.title, t.comment, t.status, \'\' as Page, \'\' as Action';
 $sql.= ' FROM '.MAIN_DB_PREFIX.'postit t';
-$sql.= ' WHERE (t.fk_user='.$user->id . ' OR t.status!=\'private\')';
+$sql.= ' WHERE (t.fk_user='.$postItUser->id . ' OR t.status!=\'private\')';
 
 $formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_postit', 'GET');
 
@@ -120,7 +236,7 @@ print $hookmanager->resPrint;
 
 $formcore->end_form();
 
-if($user->id > 0) {
+if($postItUser->id > 0) {
     dol_fiche_end();
 }
 
@@ -158,15 +274,45 @@ function _getPageLink($id)
             $link = '<a href="'.dol_buildpath('/',1).'">'.$langs->trans('Home').'</a>';
         } else {
             // sinon on instancie un objet du type voulu, on le récupère et on génère son url
-			if (!class_exists($obj->type_object)) include_once DOL_DOCUMENT_ROOT.'/'.strtolower($obj->type_object).'/class/'.strtolower($obj->type_object).'.class.php';
+            
+            $targetClass = $obj->type_object;
+            if($obj->type_object == 'invoice_supplier'){
+                $targetClass = 'FactureFournisseur';
+            }
+            if($obj->type_object == 'order_supplier'){
+                $targetClass = 'CommandeFournisseur';
+            }
+            if($obj->type_object == 'propal'){
+                $targetClass = 'Propal';
+            }
+            
+            
+            if (!class_exists($targetClass)){
+                $FileToLoad = DOL_DOCUMENT_ROOT.'/'.strtolower($obj->type_object).'/class/'.strtolower($obj->type_object).'.class.php';
+                if($obj->type_object == 'propal'){
+                    $FileToLoad = DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
+                }
+                elseif($obj->type_object == 'invoice_supplier'){
+                    $FileToLoad = DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
+                }
+                elseif($obj->type_object == 'order_supplier'){
+                    $FileToLoad = DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
+                }
+                
+                if(file_exists($FileToLoad)){
+                    include_once $FileToLoad;
+                }
+                // else{ var_dump(array($obj->type_object, $FileToLoad)); }
+            }
 			
-			if (class_exists($obj->type_object))
+            if (class_exists($targetClass))
 			{
-				$o = new $obj->type_object($db);
+			    $o = new $targetClass($db);
 				if($o->fetch($obj->fk_object)){
 					$link = $link = $o->getNomUrl();
 				}
 			}
+			
         } 
     }
     
