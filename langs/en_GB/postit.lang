@@ -1,3 +1,5 @@
+# postit langs en_GB
+
 Module104852Name = Post-it Notes
 Module104852Desc = Create Post-it notes on the homepage and around the site. ATM Abricot module must be installed before activating.
 
@@ -8,10 +10,10 @@ postitAbout = About Post-it
 
 NewNote = New Note
 NoteComment = Comments
-Read=Read Post-it notes
-Write=Paste, edit or reply to a Post-it note
-Admin=All admin rights to user's Post-it notes or those of others
-NewResponse=Reply to previous Post-it note
+Read = Read Post-it notes
+Write = Paste, edit or reply to a Post-it note
+Admin = All admin rights to user's Post-it notes or those of others
+NewResponse = Reply to previous Post-it note
 
 PublicNote = Public Note
 SharedNote = Shared Note
