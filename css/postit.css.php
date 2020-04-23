@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 //if (! defined('NOREQUIREUSER')) define('NOREQUIREUSER','1');	// Not disabled cause need to load personalized language
 //if (! defined('NOREQUIREDB'))   define('NOREQUIREDB','1');	// Not disabled to increase speed. Language code is found on url.
@@ -37,7 +37,7 @@ else header('Cache-Control: no-cache');
 	padding:3px;
 	transform: rotate(-2deg);
 	overflow:hidden;
-	
+
 
 	text-decoration:none;
 	color:#000;
@@ -62,7 +62,7 @@ else header('Cache-Control: no-cache');
 .postit div[rel=content] {
 	position:relative;
 	height:100%;
-	
+
 }
 
 
@@ -70,8 +70,8 @@ else header('Cache-Control: no-cache');
 	position: absolute;
 	bottom:0;
 	left:0;
-	display:none;	
-	
+	display:none;
+
 }
 .postit:hover div[rel=actions] {
 	display:block;
@@ -80,13 +80,13 @@ else header('Cache-Control: no-cache');
 	cursor: pointer;
 	margin-right:10px;
 }
-.postit div[rel=actions] span img { 
+.postit div[rel=actions] span img {
 	width:18px;
-	height:18px;	
+	height:18px;
 }
 .postit [rel=postit-title] {
 	font-weight:bold;
-	
+
 }
 .postit div[rel=content] div[rel=postit-author] {
 	text-align: right;
@@ -100,7 +100,7 @@ else header('Cache-Control: no-cache');
 .postit div[rel=content] div.ifempty:empty {
 	min-height: 20px;
 	border:1px dashed #eee;
-	
+
 }
 .postit[rel=status]{
 	margin-left: 10px;

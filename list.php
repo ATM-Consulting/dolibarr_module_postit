@@ -22,12 +22,9 @@ $postItUser = new User($db);
 $action = GETPOST('action', 'alpha');
 $id = GETPOST('id', 'int');
 
-if(empty($id)){
-    $id = $user->id;
+if($postItUser->fetch($user->id, '', '', 10) < 1 ){
+	accessforbidden();
 }
-
-if( $postItUser->fetch($id, '', '', 10) < 1 ){ exit; }
-
 
 $hookmanager->initHooks(array('postitlist'));
 
@@ -36,17 +33,17 @@ $hookmanager->initHooks(array('postitlist'));
  */
 
 $parameters=array();
-$reshook=$hookmanager->executeHooks('doActions',$parameters,$object);    // Note that $action and $object may have been modified by some hooks
+$reshook=$hookmanager->executeHooks('doActions', $parameters, $object);    // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 
 if (empty($reshook))
-{   
+{
     if($action == 'del_postit' && $user->rights->postit->myaction->write){
-        $object->load($PDOdb, $id);
-        $object->delete($PDOdb);
+        $object->fetch($id);
+        $object->delete($user);
     }
-    
-    if (preg_match('/set_(.*)/',$action,$reg))
+
+    if (preg_match('/set_(.*)/', $action, $reg))
     {
         $code=$reg[1];
         if (dol_set_user_param($db, $conf, $postItUser, array($code => GETPOST($code))))
@@ -59,8 +56,8 @@ if (empty($reshook))
             dol_print_error($db);
         }
     }
-    
-    if (preg_match('/del_(.*)/',$action,$reg))
+
+    if (preg_match('/del_(.*)/', $action, $reg))
     {
         $code=$reg[1];
         if (dol_set_user_param($db, $conf, $postItUser, array($code => false)))
@@ -73,7 +70,6 @@ if (empty($reshook))
             dol_print_error($db);
         }
     }
-    
 }
 
 
@@ -81,16 +77,13 @@ if (empty($reshook))
  * View
  */
 
-llxHeader('',$langs->trans('PostitList'),'','');
+llxHeader('', $langs->trans('PostitList'), '', '');
 
 if($postItUser->id > 0) {
-    
     $head = user_prepare_head($postItUser);
 
     dol_fiche_head($head, 'postit', $langs->trans("User"), 0, 'user');
 }
-
-
 
 /* DISPLAY COLOR OPTIONS */
 if(function_exists('dol_set_user_param')) // A partir de la version 8 de Dolibarr
@@ -98,53 +91,51 @@ if(function_exists('dol_set_user_param')) // A partir de la version 8 de Dolibar
     if(!function_exists('setup_print_title')){
         print '<div class="error" >'.$langs->trans('AbricotNeedUpdate').' : <a href="http://wiki.atm-consulting.fr/index.php/Accueil#Abricot" target="_blank"><i class="fa fa-info"></i> Wiki</a></div>';
     }
-    else 
+    else
     {
         print '<table class="noborder" width="100%">';
         setup_print_title("Parameters");
-        
+
         $Tcolors = array('private', 'public', 'shared');
-        
+
         $form=new Form($db);
         $title = false;
         $desc ='';
         $type='input';
         $help = false;
-        
+
         foreach ($Tcolors as $code)
         {
             $confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
-            
+
             $metas = array(
                 'name' => $confkey,
                 'type'=>'color'
             );
-            
-            
-            
+
             $metas['value']  = PostIt::getcolor($code, $postItUser);
-            
+
             $metascompil = '';
             foreach ($metas as $key => $values)
             {
                 $metascompil .= ' '.$key.'="'.$values.'" ';
             }
-            
+
             print '<tr class="oddeven" >';
             print '<td>';
-            
+
             if(!empty($help)){
-                print $form->textwithtooltip( ($title?$title:$langs->trans($confkey)) , $langs->trans($help),2,1,img_help(1,''));
+                print $form->textwithtooltip(($title?$title:$langs->trans($confkey)), $langs->trans($help), 2,  1, img_help(1, ''));
             }
             else {
                 print $title?$title:$langs->trans($confkey);
             }
-            
+
             if(!empty($desc))
             {
                 print '<br><small>'.$langs->trans($desc).'</small>';
             }
-            
+
             print '</td>';
             print '<td align="center" width="20">&nbsp;</td>';
             print '<td align="right" width="300">';
@@ -152,12 +143,12 @@ if(function_exists('dol_set_user_param')) // A partir de la version 8 de Dolibar
             print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
             print '<input type="hidden" name="action" value="set_'.$confkey.'">';
             print '<input '.$metascompil.'  />';
-            
+
             print '<input type="submit" class="butAction" value="'.$langs->trans("Modify").'">';
             print '</form>';
             print '</td></tr>';
         }
-        
+
         print '</table>';
     }
 }
@@ -174,7 +165,7 @@ if($result){
     while($obj = $db->fetch_object($result)){
         $authors[$obj->id] = dolGetFirstLastname($obj->firstname, $obj->lastname);
     }
-    $authors[$user->id] = dolGetFirstLastname($user->firstname,$user->lastname);
+    $authors[$user->id] = dolGetFirstLastname($user->firstname, $user->lastname);
 
 }
 
@@ -208,12 +199,12 @@ echo $r->render($PDOdb, $sql, array(
     )
     ,'liste' => array(
         'titre' => $langs->trans('PostitList')
-        ,'image' => img_picto('','title_generic.png', '', 0)
+        ,'image' => img_picto('', 'title_generic.png', '', 0)
         ,'picto_precedent' => '<'
         ,'picto_suivant' => '>'
         ,'noheader' => 0
         ,'messageNothing' => $langs->trans('NoPostit')
-        ,'picto_search' => img_picto('','search.png', '', 0)
+        ,'picto_search' => img_picto('', 'search.png', '', 0)
     )
     ,'title'=>array(
         'fk_user' => $langs->trans('Author')
@@ -243,38 +234,39 @@ if($postItUser->id > 0) {
 llxFooter('');
 
 /**
- * TODO remove if unused
+ * @param string $status status
+ * @return int|string
  */
-
 function _getLibStatut($status)
 {
     global $langs;
     $langs->load('postit@postit');
-    
+
     return $langs->trans($status);
 }
 
 /**
  * fonction qui retourne un lien vers la page où figure le postit spécifié
- * @param $id du postit
+ * @param int $id du postit
  * @return string lien vers la page du postit
  */
 function _getPageLink($id)
 {
     global $db, $langs;
-    
+
+	$link = '';
+
     $sql = "SELECT fk_object, type_object FROM ".MAIN_DB_PREFIX.'postit t WHERE rowid='.$id;
     $res = $db->query($sql);
     if($res){
         $obj = $db->fetch_object($res);
-        
-        $link = '';
+
         if($obj->type_object == 'global'){
             // global correspond à la page d'accueil
-            $link = '<a href="'.dol_buildpath('/',1).'">'.$langs->trans('Home').'</a>';
+            $link = '<a href="'.dol_buildpath('/', 1).'">'.$langs->trans('Home').'</a>';
         } else {
             // sinon on instancie un objet du type voulu, on le récupère et on génère son url
-            
+
             $targetClass = $obj->type_object;
             if($obj->type_object == 'invoice_supplier'){
                 $targetClass = 'FactureFournisseur';
@@ -285,8 +277,8 @@ function _getPageLink($id)
             if($obj->type_object == 'propal'){
                 $targetClass = 'Propal';
             }
-            
-            
+
+
             if (!class_exists($targetClass)){
                 $FileToLoad = DOL_DOCUMENT_ROOT.'/'.strtolower($obj->type_object).'/class/'.strtolower($obj->type_object).'.class.php';
                 if($obj->type_object == 'propal'){
@@ -298,13 +290,13 @@ function _getPageLink($id)
                 elseif($obj->type_object == 'order_supplier'){
                     $FileToLoad = DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
                 }
-                
+
                 if(file_exists($FileToLoad)){
                     include_once $FileToLoad;
                 }
                 // else{ var_dump(array($obj->type_object, $FileToLoad)); }
             }
-			
+
             if (class_exists($targetClass))
 			{
 			    $o = new $targetClass($db);
@@ -312,53 +304,59 @@ function _getPageLink($id)
 					$link = $link = $o->getNomUrl();
 				}
 			}
-			
-        } 
+
+        }
     }
-    
+
     return $link;
 }
 
 /**
  * Function qui renvoie le lien vers le profil utilisateur de l'auteur
- * @param $id de l'auteur de la note
+ * @param int $id de l'auteur de la note
  * @return string
  */
-function _getAuthor($id){
+function _getAuthor($id)
+{
     global $db;
-    
+
     $u = new User($db);
     $u->fetch($id);
-    
+
     return $u->getNomUrl();
 }
 
-function _truncComm($id){
+/**
+ * @param int $id du postit
+ * @return string
+ */
+function _truncComm($id)
+{
     global $db;
-    
+
     $sql = "SELECT comment FROM ".MAIN_DB_PREFIX.'postit t WHERE rowid='.$id;
     $res = $db->query($sql);
     if($res){
         $obj = $db->fetch_object($res);
         return dol_trunc($obj->comment);
     }
-        
 }
 
 /**
  * renvoie un lien de suppression si l'utilisateur a les droits
- * @param $id du postit courant
+ * @param int $id du postit courant
  * @return string
  */
-function _getLineAction($id){
+function _getLineAction($id)
+{
     global $db, $user;
-    
+
     $sql = "SELECT fk_user FROM ".MAIN_DB_PREFIX.'postit t WHERE rowid='.$id;
     $res = $db->query($sql);
     if($res){
         $obj = $db->fetch_object($res);
         if(($obj->fk_user == $user->id) && !empty($user->rights->postit->myaction->write)){
-            return '<a href="?action=del_postit&id='.$id.'">' . img_picto('delete','delete').'</a>';
+            return '<a href="?action=del_postit&id='.$id.'">' . img_picto('delete', 'delete').'</a>';
         }
     }
 }
