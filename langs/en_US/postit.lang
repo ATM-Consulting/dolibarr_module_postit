@@ -5,3 +5,7 @@ ATMAbout = This module has been developed by <a href="http://www.atm-consulting.
 
 postitSetup = postit module setup
 postitAbout = About postit
+
+private = private
+public = public
+shared = shared
