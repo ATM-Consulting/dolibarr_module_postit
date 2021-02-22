@@ -62,8 +62,6 @@ class postitbox extends ModeleBoxes
 
         $this->max = $max;
 
-        //include_once DOL_DOCUMENT_ROOT . "/postit/class/postit.class.php";
-
         $text = $langs->trans("MyBoxDescription", $max);
         $this->info_box_head = array(
             'text' => $text,
