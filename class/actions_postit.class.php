@@ -51,16 +51,16 @@ class Actionspostit
 	}
 
 	function note($fk_object, $type_object) {
-
+		
 		global $langs, $user, $db, $conf;
 
 			if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
-
+		
 			$langs->load('postit@postit');
-
+		
 			$form=new Form($db);
 			$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
-
+			
 			$aStyle = 'position:absolute; top:0px; display:block; ';
 			$imgStyle = 'width:32px; height:32px;';
 
@@ -69,76 +69,76 @@ class Actionspostit
 			    $aStyle .= " left:-30px; ";
 
 				if(intval(DOL_VERSION) >= 11)
-				{
+			{
 					$aStyle .= " top:+10px; ";
 				}
 			}
-
+			
 			$a = '<a id="addNote" href="javascript:createNote(0)" style="'.$aStyle.'">'.img_picto('', 'post-it.png@postit',' style="'.$imgStyle.'" ').'</a>';
-
+			
 			// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
 			if($conf->theme == 'evolution'){
 			    $a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
 			}
-
+			
 			$aDelete =' <span rel="delete">'.img_delete().'</span>';
 			$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
-
+			
 			?>
 			<script language="javascript">
 				$(document).ready(function() {
-
+					
 					<?php
 					if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
-
+						
 					?>
-
+					
 					$a = $('<?php echo $a ?>');
 					$('div.login_block_other').prepend($a);
 					<?php
-					}
+					}					
 					?>
-
+					
 					$.ajax({
 						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 						,data: {
 							get:'postit-of-object'
 							,fk_object:<?php echo $fk_object ?>
 							,type_object:"<?php echo $type_object ?>"
-
+						
 						}
 						,dataType:"json"
 					}).done(function(Tab) {
 						for(x in Tab) {
 							addNote(Tab[x]);
 						}
-
+						
 					});
-
-
+					
+									
 				});
-
+				
 				function setStatus(id,status) {
 					//status = status.trim();
 					var fk_user = <?php echo $user->id ?>;
-
+					
 					if(status=='')status='private';
-
-					var $el = $('div#postit-'+id);
+					
+					var $el = $('div#postit-'+id); 
 					$el.attr('status',status);
 					var author = parseInt( $el.attr('author') );
 					var $el2 = $el.find('[rel=status]');
-
+					
 					if(status == 'public') {
-						$el2.html("<?php echo addslashes(img_picto($langs->trans('PublicNote'), 'public.png@postit')); ?>");
-
+						$el2.html("<?php echo addslashes(img_picto($langs->trans('PublicNoteHelp'), 'public.png@postit')); ?>");
+						
 						//if(author!=fk_user) {
 							$el.removeClass('yellowPaper greenPaper');
 							$el.addClass('bluePaper');
 						//}
 					}
 					else if(status == 'shared') {
-						$el2.html("<?php echo addslashes(img_picto($langs->trans('SharedNote'), 'shared.png@postit')); ?>");
+						$el2.html("<?php echo addslashes(img_picto($langs->trans('SharedNoteHelp'), 'shared.png@postit')); ?>");
 
 						//if(author!=fk_user) {
 							$el.removeClass('yellowPaper bluePaper');
@@ -146,23 +146,23 @@ class Actionspostit
 						//}
 					}
 					else {
-						$el2.html("<?php echo addslashes(img_picto($langs->trans('PrivateNote'), 'private.png@postit')); ?>");
+						$el2.html("<?php echo addslashes(img_picto($langs->trans('PrivateNoteHelp'), 'private.png@postit')); ?>");
 						$el.removeClass('bluePaper greenPaper');
 						$el.addClass('yellowPaper');
-
+					
 					}
-
+					
 					var txtPublic = '<?php echo $langs->transnoentitiesnoconv('shortPublicNote'); ?>';
 					var txtShared = '<?php echo $langs->transnoentitiesnoconv('shortSharedNote'); ?>';
 					var txtPrivate = '<?php echo $langs->transnoentitiesnoconv('shortPrivateNote'); ?>';
-
+					
 					if (status == 'public') $el.find('span.statusText').text(txtPublic);
 					else if (status == 'shared') $el.find('span.statusText').text(txtShared);
 					else $el.find('span.statusText').text(txtPrivate);
 				}
-
+				
 				function saveNote($div, data) {
-
+					
 					var idPostit = $div.attr('id-post-it');
 					var fk_postit= $div.attr('fk-postit');
 
@@ -171,7 +171,7 @@ class Actionspostit
 					data.fk_postit=fk_postit;
 					data.fk_object=<?php echo $fk_object ?>;
 					data.type_object="<?php echo $type_object ?>";
-
+							
 					$.ajax({
 						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 						,data: data
@@ -179,12 +179,12 @@ class Actionspostit
 					}).done(function(postit) {
 						$div.attr('id-post-it', postit.id);
 					});
-
-
+					
+					
 				}
-
+				
 				function createNote(fk_postit) {
-
+					
 					$.ajax({
 						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 						,data: {
@@ -199,40 +199,40 @@ class Actionspostit
 						addNote(postit);
 					});
 				}
-
+				
 				function addNote(postit) {
 					var $a = $('#addNote');
-
+					
 					pos = $a.offset();
 					if(!pos) {
 						pos={};
 						pos.top=0;
 						pos.left=0;
 					}
-
+					
 					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><div rel="actions"></div><div rel="postit-title" class="ifempty"></div><div rel="postit-comment" class="ifempty"></div><div rel="postit-author"></div></div></div>');
 
-					$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");
+					$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");						
 					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
 					$div.find('[rel=actions]').append("<?php echo addslashes($aResponse); ?>");
 					$div.find('[rel=actions]').append("<span class='statusText' style='font-size:11px;'></span>");
-
+					
 					$div.css('width',  100);
 					<?php if($conf->theme !== 'eldy') print '$div.css("z-index", 100);' ?>
 					$div.css('height', 200);
 					$div.css('top', pos.top + 20);
-					$div.css('left', pos.left <?php $conf->theme !== 'eldy' ? print '' : '-50'; ?>);
+					$div.css('left', pos.left <?php $conf->theme !== 'eldy' ? print '' : '-50'; ?>);   
 					$div.hide();
-
+					
 					$('body').append($div);
 					$div.fadeIn(100);
-
+				
 					if(postit) {
 						$div.attr('id-post-it', postit.id);
 						$div.attr('id','postit-'+postit.id);
 						$div.attr('author',postit.fk_user);
 						if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
-
+						
 						if(postit.position_width<=0)postit.position_width= 200;
 						if(postit.position_height<=0)postit.position_height = 200;
 						if(postit.position_top<=0)postit.position_top = pos.top + $('#id-top').height() + 10;
@@ -240,19 +240,19 @@ class Actionspostit
 
 						$div.find('[rel=postit-title]').html(postit.title);
 						$div.find('[rel=postit-comment]').html(postit.comment);
-
+						
 						$div.css('top',  postit.position_top);
 						$div.css('left',  postit.position_left);
 						$div.css('width',  postit.position_width);
 						$div.css('height',  postit.position_height);
 						$div.find('[rel=postit-author]').html(postit.author);
-
+						
 						setStatus(postit.id, postit.status);
-
+						
 						if(postit.fk_user==<?php echo $user->id ?>) {
 								$div.find('[rel=postit-author]').remove();
 						}
-
+						
 						if(!postit.rightToDelete) $div.find('[rel=delete]').remove();
 						if(!postit.rightToSetStatus) $div.find('[rel=status]').remove();
 						if(!postit.rightResponse) $div.find('[rel=response]').remove();
@@ -261,19 +261,19 @@ class Actionspostit
 						postit={
 							rightEdit : 1
 						};
-
+						
 					}
-
-
+					
+					
 					$div.find('[rel=response]').click(function() {
 						$div = $(this).closest('div.postit');
-
+						
 						var idPostit = $div.attr('id-post-it');
-
+						
 						createNote(idPostit);
-
+						
 					});
-
+					  					
 					$div.find('[rel=delete]').click(function() {
 						if(window.confirm("<?php echo str_replace('"', '\\"', $langs->transnoentities('AreYouSureYouWantToDeleteThisNote')); ?>")) {
 							var $div = $(this).closest('div.postit');
@@ -283,55 +283,55 @@ class Actionspostit
 								,data: {
 									put:'delete'
 									,id:idPostit
-
+									
 								}
 								,method:'post'
 							}).done(function(postit) {
 								$div.remove();
 							});
-
+							
 						}
 					});
-
-
-
+					
+					
+						  					
 					$div.find('[rel=status]').click(function() {
-
+					
 						var $div = $(this).closest('div.postit');
 						var idPostit = $div.attr('id-post-it');
 						var status = $div.attr('status');
-
+						
 						$.ajax({
 							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 							,data: {
 								put:'change-status'
 								,id:idPostit
 								,current:status
-
+								
 							}
 							,method:'post'
 						}).done(function(status) {
 							setStatus(idPostit,status)
 						});
-
-
+						
+					
 					});
+					
 
-
-
+					
 					$div.draggable({
 						containment : containment
 						,stop:function(event, ui) {
-
+							
 							var $div = $(this);
 							if(postit.rightEdit) {
 								saveNote($div, {top: ui.position.top, left:ui.position.left});
 							}
-
+							
 						}
 					});
-
-
+							
+				
 					//todo factorise
 					if(postit.rightEdit) {
 								$div.find('[rel=postit-title]').editable({
@@ -340,12 +340,12 @@ class Actionspostit
 										  var $div = data.$el.closest('div.postit');
 										  if( data.content ) {
 											    saveNote($div,{title:data.content});
-
+						
 										  }
 			      					 }
-
+								     
 							    });
-
+								
 								$div.find('[rel=postit-comment]').editable({
 									event:'click'
 									 ,callback : function( data ) {
@@ -354,13 +354,13 @@ class Actionspostit
 											  saveNote($div, {
 											  	comment:data.content
 											  });
-
+										  	
 										  }
-
+										 
 			      					 }
-
+								     
 							    });
-
+									
 								var containment = "window";
 								if($div.attr('fk-postit')) {
 								//	containment = '#postit-'+$div.attr('fk-postit');
@@ -372,25 +372,25 @@ class Actionspostit
 										$parent.css("box-shadow","5px 5px 5px 0px #666;");
 									});
 								}
-
-
+								
+								
 								$div.resizable({
 									stop:function(event, ui) {
-
+										
 										var $div = $(this);
 										saveNote($div,{top: ui.position.top, left:ui.position.left, width:ui.size.width, height:ui.size.height});
-
+										
 									}
 								});
-
+		
 					}
-
+					
 				}
-
-
+				
+				
 			</script>
 			<?php
-
+		
 	}
 
 	/**
@@ -403,25 +403,25 @@ class Actionspostit
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
 	function addStatisticLine($parameters, &$object, &$action, $hookmanager) {
-
+		
 		if (in_array('index', explode(':', $parameters['context'])))
 		{
-
+			
 			$this->note(-1, 'global');
-
+	
 		}
-
+			
 	}
-
+	
 	function formObjectOptions($parameters, &$object, &$action, $hookmanager)
 	{
 		$error = 0; // Error counter
-
+		
 		if (in_array('globalcard', explode(':', $parameters['context'])) && $object->id>0)
 		{
-
+					
 			$this->note($object->id, $object->element);
-
+			
 		}
 
 		if (! $error)

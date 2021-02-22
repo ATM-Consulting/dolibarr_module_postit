@@ -17,6 +17,10 @@ PublicNote=État actuel : public
 SharedNote=État actuel : partagé
 PrivateNote=État actuel : privé
 
+PublicNoteHelp=État actuel : public, la note n'apparaît que sur la fiche de ce document pour tous les utilisateurs.
+SharedNoteHelp=État actuel : partagé, la note apparaît pour toutes les fiches (de ce type de document) et pour tous les utilisateurs.
+PrivateNoteHelp=État actuel : privé, la note n'apparaît que sur la fiche de ce document et elle n'est visible que par vous.
+
 shortPublicNote=(état public)
 shortSharedNote=(état partagé)
 shortPrivateNote=(état privé)
