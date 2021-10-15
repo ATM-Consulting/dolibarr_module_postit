@@ -122,14 +122,14 @@ class Actionspostit
 					//status = status.trim();
 					var fk_user = <?php echo $user->id ?>;
 
-					if(status=='')status='private';
+					if (status === '') status = 'private';
 
 					var $el = $('div#postit-'+id);
-					$el.attr('status',status);
-					var author = parseInt( $el.attr('author') );
+					$el.attr('status', status);
+					var author = parseInt($el.attr('author'));
 					var $el2 = $el.find('[rel=status]');
 
-					if(status == 'public') {
+					if (status === 'public') {
 						$el2.html("<?php echo addslashes(img_picto($langs->trans('PublicNoteHelp'), 'public.png@postit')); ?>");
 
 						//if(author!=fk_user) {
@@ -137,7 +137,7 @@ class Actionspostit
 							$el.addClass('bluePaper');
 						//}
 					}
-					else if(status == 'shared') {
+					else if(status === 'shared') {
 						$el2.html("<?php echo addslashes(img_picto($langs->trans('SharedNoteHelp'), 'shared.png@postit')); ?>");
 
 						//if(author!=fk_user) {
@@ -176,8 +176,16 @@ class Actionspostit
 						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
 						,data: data
 						,method:'post'
+						,dataType:"json"
 					}).done(function(postit) {
-						$div.attr('id-post-it', postit.id);
+						let postitOriginal = $div.data('original');
+						console.log(postit, postitOriginal);
+						if (postitOriginal.comment === postit.comment && postitOriginal.title === postit.title) {
+							// si le contenu n'a pas changé, on ne recharge pas tout
+							return;
+						}
+						$div.remove();
+						addNote(postit);
 					});
 
 
@@ -203,14 +211,32 @@ class Actionspostit
 				function addNote(postit) {
 					var $a = $('#addNote');
 
-					pos = $a.offset();
-					if(!pos) {
+					let pos = $a.offset();
+					if (!pos) {
 						pos={};
 						pos.top=0;
 						pos.left=0;
 					}
 
-					$div = $('<div class="yellowPaperTemporary postit"><div rel="content"><div rel="actions"></div><div rel="postit-title" class="ifempty"></div><div rel="postit-comment" class="ifempty"></div><div rel="postit-author"></div></div></div>');
+					let dateFormatPHP = '<?php echo $langs->trans('FormatDateHourShort') ?>';
+					// PHP (Dolibarr): "%d.%m.%Y %H:%M", JS (Dolibarr): "yyyy-MM-dd HH:mm"
+					// Note: some date placeholders may be missing for the php-to-js translation
+					let dateFormatEquiv = {d: "dd", m: "MM", Y: "yyyy", y: 'yy', H: "HH", M: "mm", S: "ss"};
+					let dateFormatJS = dateFormatPHP.replace(/(%[dmyYHMS])/g, (m) => dateFormatEquiv[m[1]]);
+					let TMS = new Date(postit.tms * 1000);
+					TMS = formatDate(TMS, dateFormatJS);
+					let $div = $(
+						'<div class="yellowPaperTemporary postit">'
+						+'  <div rel="content">'
+						+'    <div rel="actions"></div>'
+						+'    <div rel="postit-title" class="ifempty"></div>'
+						+'    <div rel="postit-comment" class="ifempty"></div>'
+						+'    <div rel="postit-author"></div>'
+						+'    <div rel="postit-tms">' + TMS + '</div>'
+						+'  </div>'
+						+'</div>'
+					);
+					$div.data('original', postit);
 
 					$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");
 					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
@@ -239,7 +265,7 @@ class Actionspostit
 						if(postit.position_left<=0)postit.position_left = pos.left - postit.position_width;
 
 						$div.find('[rel=postit-title]').html(postit.title);
-						$div.find('[rel=postit-comment]').html(postit.comment);
+						$div.find('[rel=postit-comment]').html(postit.comment.replace(/\n/g, '<br>'));
 
 						$div.css('top',  postit.position_top);
 						$div.css('left',  postit.position_left);
