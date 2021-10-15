@@ -88,7 +88,7 @@ else header('Cache-Control: no-cache');
 	font-weight:bold;
 
 }
-.postit div[rel=content] div[rel=postit-author] {
+.postit div[rel=content] div[rel=postit-author], .postit div[rel=content] div[rel=postit-tms] {
 	text-align: right;
 	font-size: 9px;
 	color:#333;
