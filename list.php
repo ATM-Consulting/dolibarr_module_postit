@@ -22,7 +22,8 @@ $postItUser = new User($db);
 $action = GETPOST('action', 'alpha');
 $id = GETPOST('id', 'int');
 
-if($postItUser->fetch($user->id, '', '', 10) < 1 ){
+$testId = !empty($id) ? $id : $user->id;
+if($postItUser->fetch($testId, '', '', 10) < 1 ){
 	accessforbidden();
 }
 
