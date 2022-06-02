@@ -437,7 +437,7 @@ class Actionspostit
 	}
 
 	/**
-	 * Overloading the addOpenElementsDashboardLine function : replacing the parent's function with the one below
+	 * Overloading the beforeBodyClose function : replacing the parent's function with the one below
 	 *
 	 * @param   array()         $parameters     Hook metadatas (context, etc...)
 	 * @param   CommonObject    &$object        The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
@@ -445,11 +445,13 @@ class Actionspostit
 	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
-	function addOpenElementsDashboardLine($parameters, &$object, &$action, $hookmanager) {
+	function beforeBodyClose($parameters, &$object, &$action, $hookmanager) {
 		// we use this hook starting from 14.0 instead of addStatisticLine
 		if (version_compare(DOL_VERSION, '14.0', '>=')) {
 			$this->_injectPostitScriptInIndexPage($parameters);
 		};
+
+		return 0;
 	}
 
 	function formObjectOptions($parameters, &$object, &$action, $hookmanager)
@@ -480,9 +482,7 @@ class Actionspostit
 	protected function _injectPostitScriptInIndexPage($parameters) {
 		if (in_array('index', explode(':', $parameters['context'])))
 		{
-
 			$this->note(-1, 'global');
-
 		}
 	}
 }
