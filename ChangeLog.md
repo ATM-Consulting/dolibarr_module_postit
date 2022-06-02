@@ -4,6 +4,7 @@
 
 ## Version 1.5
 
+- FIX: Compatibility V16 : newToken - *02/06/2022* - 1.5.5
 - FIX: Dolibarr 15 compatibility hook usage - *2022-06-01* - 1.5.4
 - NEW: modification date - *2021-07-06* - 1.5.3
 - FIX:
