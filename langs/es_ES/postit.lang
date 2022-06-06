@@ -15,7 +15,7 @@ NewResponse=Responder a la nota anterior
 
 PublicNote=État actuel : Público usuarios
 SharedNote=État actuel : Compartido
-PrivateNote=État actuel : Privado 
+PrivateNote=État actuel : Privado
 
 shortPublicNote=(Estado actual Público, todos los usuarios, este objeto)
 shortSharedNote=(Estado actual Compartido entre objetos para todos los usuarios)
