@@ -176,7 +176,7 @@ class PostIt extends CommonObject
 	 * @param User $user
 	 * @return Hex color
 	 */
-	static function getcolor($code, $user = false){
+	public static function getcolor($code, $user = false){
 		global  $conf;
 		$default = '#ffff88';
 
@@ -208,7 +208,7 @@ class PostIt extends CommonObject
 	 * @param int $fk_user
 	 * @return PostIt[]
 	 */
-	static function getPostit($fk_object, $type_object, $fk_user) {
+	public static function getPostit($fk_object, $type_object, $fk_user) {
 
 		global $db;
 

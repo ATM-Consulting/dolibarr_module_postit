@@ -3,6 +3,8 @@
  * Script créant et vérifiant que les champs requis s'ajoutent bien
  */
 
+// Ce fichier est maintenant déprécié
+
 if(!defined('INC_FROM_DOLIBARR')) {
 	define('INC_FROM_CRON_SCRIPT', true);
 }
