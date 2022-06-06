@@ -1,6 +1,5 @@
 <?php
-/* <one line to give the program's name and a brief idea of what it does.>
- * Copyright (C) 2015 ATM Consulting <support@atm-consulting.fr>
+/* Copyright (C) 2022 SuperAdmin
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,21 +12,38 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
- * \file    class/actions_postit.class.php
+ * \file    postit/class/actions_postit.class.php
  * \ingroup postit
- * \brief   This file is an example hook overload class file
- *          Put some comments here
+ * \brief   Example hook overload.
+ *
+ * Put detailed description here.
  */
 
 /**
- * Class Actionspostit
+ * Class ActionsPostIt
  */
-class Actionspostit
+class ActionsPostIt
 {
+	/**
+	 * @var DoliDB Database handler.
+	 */
+	public $db;
+
+	/**
+	 * @var string Error code (or message)
+	 */
+	public $error = '';
+
+	/**
+	 * @var array Errors
+	 */
+	public $errors = array();
+
+
 	/**
 	 * @var array Hook results. Propagated to $hookmanager->resArray for later reuse
 	 */
@@ -38,384 +54,385 @@ class Actionspostit
 	 */
 	public $resprints;
 
-	/**
-	 * @var array Errors
-	 */
-	public $errors = array();
 
 	/**
 	 * Constructor
+	 *
+	 *  @param		DoliDB		$db      Database handler
 	 */
-	public function __construct()
+	public function __construct($db)
 	{
+		$this->db = $db;
 	}
 
-	function note($fk_object, $type_object) {
+	public function note($fk_object, $type_object) {
 
 		global $langs, $user, $db, $conf;
 
-			if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
+		if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
 
-			$langs->load('postit@postit');
+		$langs->load('postit@postit');
 
-			$form=new Form($db);
-			$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
+		$form=new Form($db);
+		$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
 
-			$aStyle = 'position:absolute; top:0px; display:block; ';
-			$imgStyle = 'width:32px; height:32px;';
-			if($conf->theme == 'eldy')
-			{
-			    $aStyle .= " left:-30px; ";
-			}
-			elseif($conf->theme == 'evolution')
-			{
-			    // TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
-			    $aStyle = 'position:relative; display:inline-block; line-height: 50px; height: 50px';
-			    $imgStyle .= 'vertical-align:middle;';
-			}
-
-			$a = '<a id="addNote" href="javascript:createNote(0)" style="'.$aStyle.'">'.img_picto('', 'post-it.png@postit',' style="'.$imgStyle.'" ').'</a>';
-
+		$aStyle = 'position:absolute; top:0px; display:block; ';
+		$imgStyle = 'width:32px; height:32px;';
+		if($conf->theme == 'eldy')
+		{
+			$aStyle .= " left:-30px; ";
+		}
+		elseif($conf->theme == 'evolution')
+		{
 			// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
-			if($conf->theme == 'evolution'){
-			    $a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
-			}
+			$aStyle = 'position:relative; display:inline-block; line-height: 50px; height: 50px';
+			$imgStyle .= 'vertical-align:middle;';
+		}
 
-			$aDelete =' <span rel="delete">'.img_delete().'</span>';
-			$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
+		$a = '<a id="addNote" href="javascript:createNote(0)" style="'.$aStyle.'">'.img_picto('', 'post-it.png@postit',' style="'.$imgStyle.'" ').'</a>';
 
-			?>
-			<script language="javascript">
-				$(document).ready(function() {
+		// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
+		if($conf->theme == 'evolution'){
+			$a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
+		}
 
-					<?php
-					if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
+		$aDelete =' <span rel="delete">'.img_delete().'</span>';
+		$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
 
-					?>
+		?>
+		<script language="javascript">
+            $(document).ready(function() {
 
-					$a = $('<?php echo $a ?>');
-					$('div.login_block_other').append($a);
-					<?php
-					}
-					?>
+				<?php
+				if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
 
-					$.ajax({
-						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-						,data: {
-							get:'postit-of-object'
-							,fk_object:<?php echo $fk_object ?>
-							,type_object:"<?php echo $type_object ?>"
+				?>
 
-						}
-						,dataType:"json"
-					}).done(function(Tab) {
-						for(x in Tab) {
-							addNote(Tab[x]);
-						}
-
-					});
-
-
-				});
-
-				function setStatus(id,status) {
-					//status = status.trim();
-					var fk_user = <?php echo $user->id ?>;
-
-					if (status === '') status = 'private';
-
-					var $el = $('div#postit-'+id);
-					$el.attr('status', status);
-					var author = parseInt($el.attr('author'));
-					var $el2 = $el.find('[rel=status]');
-
-					if (status === 'public') {
-						$el2.html("<?php echo addslashes(img_picto($langs->trans('PublicNoteHelp'), 'public.png@postit')); ?>");
-
-						//if(author!=fk_user) {
-							$el.removeClass('yellowPaper greenPaper');
-							$el.addClass('bluePaper');
-						//}
-					}
-					else if(status === 'shared') {
-						$el2.html("<?php echo addslashes(img_picto($langs->trans('SharedNoteHelp'), 'shared.png@postit')); ?>");
-
-						//if(author!=fk_user) {
-							$el.removeClass('yellowPaper bluePaper');
-							$el.addClass('greenPaper');
-						//}
-					}
-					else {
-						$el2.html("<?php echo addslashes(img_picto($langs->trans('PrivateNoteHelp'), 'private.png@postit')); ?>");
-						$el.removeClass('bluePaper greenPaper');
-						$el.addClass('yellowPaper');
-
-					}
-
-					var txtPublic = '<?php echo $langs->transnoentitiesnoconv('shortPublicNote'); ?>';
-					var txtShared = '<?php echo $langs->transnoentitiesnoconv('shortSharedNote'); ?>';
-					var txtPrivate = '<?php echo $langs->transnoentitiesnoconv('shortPrivateNote'); ?>';
-
-					if (status == 'public') $el.find('span.statusText').text(txtPublic);
-					else if (status == 'shared') $el.find('span.statusText').text(txtShared);
-					else $el.find('span.statusText').text(txtPrivate);
+                $a = $('<?php echo $a ?>');
+                $('div.login_block_other').append($a);
+				<?php
 				}
+				?>
 
-				function saveNote($div, data) {
+                $.ajax({
+                    url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+                    ,data: {
+                        get:'postit-of-object'
+                        ,fk_object:<?php echo $fk_object ?>
+                        ,type_object:"<?php echo $type_object ?>"
 
-					var idPostit = $div.attr('id-post-it');
-					var fk_postit= $div.attr('fk-postit');
+                    }
+                    ,dataType:"json"
+                }).done(function(Tab) {
+                    for(x in Tab) {
+                        addNote(Tab[x]);
+                    }
 
-					data.put = 'postit';
-					data.id = idPostit;
-					data.fk_postit=fk_postit;
-					data.fk_object=<?php echo $fk_object ?>;
-					data.type_object="<?php echo $type_object ?>";
-
-					$.ajax({
-						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-						,data: data
-						,method:'post'
-						,dataType:"json"
-					}).done(function(postit) {
-						let postitOriginal = $div.data('original');
-						console.log(postit, postitOriginal);
-						if (postitOriginal.comment === postit.comment && postitOriginal.title === postit.title) {
-							// si le contenu n'a pas changé, on ne recharge pas tout
-							return;
-						}
-						$div.remove();
-						addNote(postit);
-					});
+                });
 
 
-				}
+            });
 
-				function createNote(fk_postit) {
+            function setStatus(id,status) {
+                //status = status.trim();
+                var fk_user = <?php echo $user->id ?>;
 
-					$.ajax({
-						url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-						,data: {
-							put:'postit'
-							,fk_postit:fk_postit
-							,fk_object:<?php echo $fk_object ?>
-							,type_object:"<?php echo $type_object ?>"
-						}
-						,method:'post'
-						,dataType:'json'
-					}).done(function(postit) {
-						addNote(postit);
-					});
-				}
+                if (status === '') status = 'private';
 
-				function addNote(postit) {
-					var $a = $('#addNote');
+                var $el = $('div#postit-'+id);
+                $el.attr('status', status);
+                var author = parseInt($el.attr('author'));
+                var $el2 = $el.find('[rel=status]');
 
-					let pos = $a.offset();
-					if (!pos) {
-						pos={};
-						pos.top=0;
-						pos.left=0;
-					}
+                if (status === 'public') {
+                    $el2.html("<?php echo addslashes(img_picto($langs->trans('PublicNoteHelp'), 'public.png@postit')); ?>");
 
-					let dateFormatPHP = '<?php echo $langs->trans('FormatDateHourShort') ?>';
-					// PHP (Dolibarr): "%d.%m.%Y %H:%M", JS (Dolibarr): "yyyy-MM-dd HH:mm"
-					// Note: some date placeholders may be missing for the php-to-js translation
-					let dateFormatEquiv = {d: "dd", m: "MM", Y: "yyyy", y: 'yy', H: "HH", M: "mm", S: "ss"};
-					let dateFormatJS = dateFormatPHP.replace(/(%[dmyYHMS])/g, (m) => dateFormatEquiv[m[1]]);
-					let TMS = new Date(postit.tms * 1000);
-					TMS = formatDate(TMS, dateFormatJS);
-					let $div = $(
-						'<div class="yellowPaperTemporary postit">'
-						+'  <div rel="content">'
-						+'    <div rel="actions"></div>'
-						+'    <div rel="postit-title" class="ifempty"></div>'
-						+'    <div rel="postit-comment" class="ifempty"></div>'
-						+'    <div rel="postit-author"></div>'
-						+'    <div rel="postit-tms">' + TMS + '</div>'
-						+'  </div>'
-						+'</div>'
-					);
-					$div.data('original', postit);
+                    //if(author!=fk_user) {
+                    $el.removeClass('yellowPaper greenPaper');
+                    $el.addClass('bluePaper');
+                    //}
+                }
+                else if(status === 'shared') {
+                    $el2.html("<?php echo addslashes(img_picto($langs->trans('SharedNoteHelp'), 'shared.png@postit')); ?>");
 
-					$div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");
-					$div.find('[rel=actions]').append("<span rel=\"status\"></span>");
-					$div.find('[rel=actions]').append("<?php echo addslashes($aResponse); ?>");
-					$div.find('[rel=actions]').append("<span class='statusText' style='font-size:11px;'></span>");
+                    //if(author!=fk_user) {
+                    $el.removeClass('yellowPaper bluePaper');
+                    $el.addClass('greenPaper');
+                    //}
+                }
+                else {
+                    $el2.html("<?php echo addslashes(img_picto($langs->trans('PrivateNoteHelp'), 'private.png@postit')); ?>");
+                    $el.removeClass('bluePaper greenPaper');
+                    $el.addClass('yellowPaper');
 
-					$div.css('width',  100);
-					<?php if($conf->theme !== 'eldy') print '$div.css("z-index", 100);' ?>
-					$div.css('height', 200);
-					$div.css('top', pos.top + 20);
-					$div.css('left', pos.left <?php $conf->theme !== 'eldy' ? print '' : '-50'; ?>);
-					$div.hide();
+                }
 
-					$('body').append($div);
-					$div.fadeIn(100);
+                var txtPublic = '<?php echo $langs->transnoentitiesnoconv('shortPublicNote'); ?>';
+                var txtShared = '<?php echo $langs->transnoentitiesnoconv('shortSharedNote'); ?>';
+                var txtPrivate = '<?php echo $langs->transnoentitiesnoconv('shortPrivateNote'); ?>';
 
-					if(postit) {
-						$div.attr('id-post-it', postit.id);
-						$div.attr('id','postit-'+postit.id);
-						$div.attr('author',postit.fk_user);
-						if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
+                if (status == 'public') $el.find('span.statusText').text(txtPublic);
+                else if (status == 'shared') $el.find('span.statusText').text(txtShared);
+                else $el.find('span.statusText').text(txtPrivate);
+            }
 
-						if(postit.position_width<=0)postit.position_width= 200;
-						if(postit.position_height<=0)postit.position_height = 200;
-						if(postit.position_top<=0)postit.position_top = pos.top + $('#id-top').height() + 10;
-						if(postit.position_left<=0)postit.position_left = pos.left - postit.position_width;
+            function saveNote($div, data) {
 
-						$div.find('[rel=postit-title]').html(postit.title);
-						$div.find('[rel=postit-comment]').html(postit.comment.replace(/\n/g, '<br>'));
+                var idPostit = $div.attr('id-post-it');
+                var fk_postit= $div.attr('fk-postit');
 
-						$div.css('top',  postit.position_top);
-						$div.css('left',  postit.position_left);
-						$div.css('width',  postit.position_width);
-						$div.css('height',  postit.position_height);
-						$div.find('[rel=postit-author]').html(postit.author);
+                data.put = 'postit';
+                data.id = idPostit;
+                data.fk_postit=fk_postit;
+                data.fk_object=<?php echo $fk_object ?>;
+                data.type_object="<?php echo $type_object ?>";
 
-						setStatus(postit.id, postit.status);
-
-						if(postit.fk_user==<?php echo $user->id ?>) {
-								$div.find('[rel=postit-author]').remove();
-						}
-
-						if(!postit.rightToDelete) $div.find('[rel=delete]').remove();
-						if(!postit.rightToSetStatus) $div.find('[rel=status]').remove();
-						if(!postit.rightResponse) $div.find('[rel=response]').remove();
-					}
-					else{
-						postit={
-							rightEdit : 1
-						};
-
-					}
+                $.ajax({
+                    url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+                    ,data: data
+                    ,method:'post'
+                    ,dataType:"json"
+                }).done(function(postit) {
+                    let postitOriginal = $div.data('original');
+                    console.log(postit, postitOriginal);
+                    if (postitOriginal.comment === postit.comment && postitOriginal.title === postit.title) {
+                        // si le contenu n'a pas changé, on ne recharge pas tout
+                        return;
+                    }
+                    $div.remove();
+                    addNote(postit);
+                });
 
 
-					$div.find('[rel=response]').click(function() {
-						$div = $(this).closest('div.postit');
+            }
 
-						var idPostit = $div.attr('id-post-it');
+            function createNote(fk_postit) {
 
-						createNote(idPostit);
+                $.ajax({
+                    url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+                    ,data: {
+                        put:'postit'
+                        ,height:200
+                        ,width:200
+                        ,fk_postit:fk_postit
+                        ,fk_object:<?php echo $fk_object ?>
+                        ,type_object:"<?php echo $type_object ?>"
+                    }
+                    ,method:'post'
+                    ,dataType:'json'
+                }).done(function(postit) {
+                    addNote(postit);
+                });
+            }
 
-					});
+            function addNote(postit) {
+                var $a = $('#addNote');
 
-					$div.find('[rel=delete]').click(function() {
-						if(window.confirm("<?php echo str_replace('"', '\\"', $langs->transnoentities('AreYouSureYouWantToDeleteThisNote')); ?>")) {
-							var $div = $(this).closest('div.postit');
-							var idPostit = $div.attr('id-post-it');
-							$.ajax({
-								url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-								,data: {
-									put:'delete'
-									,id:idPostit
+                let pos = $a.offset();
+                if (!pos) {
+                    pos={};
+                    pos.top=0;
+                    pos.left=0;
+                }
 
-								}
-								,method:'post'
-							}).done(function(postit) {
-								$div.remove();
-							});
+                let dateFormatPHP = '<?php echo $langs->trans('FormatDateHourShort') ?>';
+                // PHP (Dolibarr): "%d.%m.%Y %H:%M", JS (Dolibarr): "yyyy-MM-dd HH:mm"
+                // Note: some date placeholders may be missing for the php-to-js translation
+                let dateFormatEquiv = {d: "dd", m: "MM", Y: "yyyy", y: 'yy', H: "HH", M: "mm", S: "ss"};
+                let dateFormatJS = dateFormatPHP.replace(/(%[dmyYHMS])/g, (m) => dateFormatEquiv[m[1]]);
+                let TMS = new Date(postit.tms * 1000);
+                TMS = formatDate(TMS, dateFormatJS);
+                let $div = $(
+                    '<div class="yellowPaperTemporary postit">'
+                    +'  <div rel="content">'
+                    +'    <div rel="actions"></div>'
+                    +'    <div rel="postit-title" class="ifempty"></div>'
+                    +'    <div rel="postit-comment" class="ifempty"></div>'
+                    +'    <div rel="postit-author"></div>'
+                    +'    <div rel="postit-tms">' + TMS + '</div>'
+                    +'  </div>'
+                    +'</div>'
+                );
+                $div.data('original', postit);
 
-						}
-					});
+                $div.find('[rel=actions]').append("<?php echo addslashes($aDelete); ?>");
+                $div.find('[rel=actions]').append("<span rel=\"status\"></span>");
+                $div.find('[rel=actions]').append("<?php echo addslashes($aResponse); ?>");
+                $div.find('[rel=actions]').append("<span class='statusText' style='font-size:11px;'></span>");
 
+                $div.css('width',  100);
+				<?php if($conf->theme !== 'eldy') print '$div.css("z-index", 100);' ?>
+                $div.css('height', 200);
+                $div.css('top', pos.top + 20);
+                $div.css('left', pos.left <?php $conf->theme !== 'eldy' ? print '' : '-50'; ?>);
+                $div.hide();
 
+                $('body').append($div);
+                $div.fadeIn(100);
 
-					$div.find('[rel=status]').click(function() {
+                if(postit) {
+                    $div.attr('id-post-it', postit.id);
+                    $div.attr('id','postit-'+postit.id);
+                    $div.attr('author',postit.fk_user);
+                    if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
 
-						var $div = $(this).closest('div.postit');
-						var idPostit = $div.attr('id-post-it');
-						var status = $div.attr('status');
+                    if(postit.position_width<=0)postit.position_width= 200;
+                    if(postit.position_height<=0)postit.position_height = 200;
+                    if(postit.position_top<=0)postit.position_top = pos.top + $('#id-top').height() + 10;
+                    if(postit.position_left<=0)postit.position_left = pos.left - postit.position_width;
 
-						$.ajax({
-							url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
-							,data: {
-								put:'change-status'
-								,id:idPostit
-								,current:status
+                    $div.find('[rel=postit-title]').html(postit.title);
+                    $div.find('[rel=postit-comment]').html(postit.comment.replace(/\n/g, '<br>'));
 
-							}
-							,method:'post'
-						}).done(function(status) {
-							setStatus(idPostit,status)
-						});
+                    $div.css('top',  postit.position_top);
+                    $div.css('left',  postit.position_left);
+                    $div.css('width',  postit.position_width);
+                    $div.css('height',  postit.position_height);
+                    $div.find('[rel=postit-author]').html(postit.author);
 
+                    setStatus(postit.id, postit.status);
 
-					});
+                    if(postit.fk_user==<?php echo $user->id ?>) {
+                        $div.find('[rel=postit-author]').remove();
+                    }
 
+                    if(!postit.rightToDelete) $div.find('[rel=delete]').remove();
+                    if(!postit.rightToSetStatus) $div.find('[rel=status]').remove();
+                    if(!postit.rightResponse) $div.find('[rel=response]').remove();
+                }
+                else{
+                    postit={
+                        rightEdit : 1
+                    };
 
-
-					$div.draggable({
-						containment : containment
-						,stop:function(event, ui) {
-
-							var $div = $(this);
-							if(postit.rightEdit) {
-								saveNote($div, {top: ui.position.top, left:ui.position.left});
-							}
-
-						}
-					});
-
-
-					//todo factorise
-					if(postit.rightEdit) {
-								$div.find('[rel=postit-title]').editable({
-									 event:'click'
-									 ,callback : function( data ) {
-										  var $div = data.$el.closest('div.postit');
-										  if( data.content ) {
-											    saveNote($div,{title:data.content});
-
-										  }
-			      					 }
-
-							    });
-
-								$div.find('[rel=postit-comment]').editable({
-									event:'click'
-									 ,callback : function( data ) {
-										  var $div = data.$el.closest('div.postit');
-										  if(data.content) {
-											  saveNote($div, {
-											  	comment:data.content
-											  });
-
-										  }
-
-			      					 }
-
-							    });
-
-								var containment = "window";
-								if($div.attr('fk-postit')) {
-								//	containment = '#postit-'+$div.attr('fk-postit');
-									$div.mouseenter(function() {
-										$parent = $('#postit-'+$div.attr('fk-postit'));
-										$parent.css("box-shadow","5px 5px 5px 0px #ff0000;");
-									}).mouseleave(function() {
-										$parent = $('#postit-'+$div.attr('fk-postit'));
-										$parent.css("box-shadow","5px 5px 5px 0px #666;");
-									});
-								}
+                }
 
 
-								$div.resizable({
-									stop:function(event, ui) {
+                $div.find('[rel=response]').click(function() {
+                    $div = $(this).closest('div.postit');
 
-										var $div = $(this);
-										saveNote($div,{top: ui.position.top, left:ui.position.left, width:ui.size.width, height:ui.size.height});
+                    var idPostit = $div.attr('id-post-it');
 
-									}
-								});
+                    createNote(idPostit);
 
-					}
+                });
 
-				}
+                $div.find('[rel=delete]').click(function() {
+                    if(window.confirm("<?php echo str_replace('"', '\\"', $langs->transnoentities('AreYouSureYouWantToDeleteThisNote')); ?>")) {
+                        var $div = $(this).closest('div.postit');
+                        var idPostit = $div.attr('id-post-it');
+                        $.ajax({
+                            url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+                            ,data: {
+                                put:'delete'
+                                ,id:idPostit
+
+                            }
+                            ,method:'post'
+                        }).done(function(postit) {
+                            $div.remove();
+                        });
+
+                    }
+                });
 
 
-			</script>
-			<?php
+
+                $div.find('[rel=status]').click(function() {
+
+                    var $div = $(this).closest('div.postit');
+                    var idPostit = $div.attr('id-post-it');
+                    var status = $div.attr('status');
+
+                    $.ajax({
+                        url:"<?php echo dol_buildpath('/postit/script/interface.php',1) ?>"
+                        ,data: {
+                            put:'change-status'
+                            ,id:idPostit
+                            ,current:status
+
+                        }
+                        ,method:'post'
+                    }).done(function(status) {
+                        setStatus(idPostit,status)
+                    });
+
+
+                });
+
+
+
+                $div.draggable({
+                    containment : containment
+                    ,stop:function(event, ui) {
+
+                        var $div = $(this);
+                        if(postit.rightEdit) {
+                            saveNote($div, {top: ui.position.top, left:ui.position.left});
+                        }
+
+                    }
+                });
+
+
+                //todo factorise
+                if(postit.rightEdit) {
+                    $div.find('[rel=postit-title]').editable({
+                        event:'click'
+                        ,callback : function( data ) {
+                            var $div = data.$el.closest('div.postit');
+                            if( data.content ) {
+                                saveNote($div,{title:data.content});
+
+                            }
+                        }
+
+                    });
+
+                    $div.find('[rel=postit-comment]').editable({
+                        event:'click'
+                        ,callback : function( data ) {
+                            var $div = data.$el.closest('div.postit');
+                            if(data.content) {
+                                saveNote($div, {
+                                    comment:data.content
+                                });
+
+                            }
+
+                        }
+
+                    });
+
+                    var containment = "window";
+                    if($div.attr('fk-postit')) {
+                        //	containment = '#postit-'+$div.attr('fk-postit');
+                        $div.mouseenter(function() {
+                            $parent = $('#postit-'+$div.attr('fk-postit'));
+                            $parent.css("box-shadow","5px 5px 5px 0px #ff0000;");
+                        }).mouseleave(function() {
+                            $parent = $('#postit-'+$div.attr('fk-postit'));
+                            $parent.css("box-shadow","5px 5px 5px 0px #666;");
+                        });
+                    }
+
+
+                    $div.resizable({
+                        stop:function(event, ui) {
+
+                            var $div = $(this);
+                            saveNote($div,{top: ui.position.top, left:ui.position.left, width:ui.size.width, height:ui.size.height});
+
+                        }
+                    });
+
+                }
+
+            }
+
+
+		</script>
+		<?php
 
 	}
 
@@ -445,7 +462,7 @@ class Actionspostit
 	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
-	function beforeBodyClose($parameters, &$object, &$action, $hookmanager) {
+	public function beforeBodyClose($parameters, &$object, &$action, $hookmanager) {
 		// we use this hook starting from 14.0 instead of addStatisticLine
 		if (version_compare(DOL_VERSION, '14.0', '>=')) {
 			$this->_injectPostitScriptInIndexPage($parameters);
@@ -454,7 +471,17 @@ class Actionspostit
 		return 0;
 	}
 
-	function formObjectOptions($parameters, &$object, &$action, $hookmanager)
+
+	/**
+	 * Overloading the formObjectOptions function : replacing the parent's function with the one below
+	 *
+	 * @param   array()         $parameters     Hook metadatas (context, etc...)
+	 * @param   CommonObject    &$object        The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param   string          &$action        Current action (if set). Generally create or edit or null
+	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
+	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
+	 */
+	public function formObjectOptions($parameters, &$object, &$action, $hookmanager)
 	{
 		$error = 0; // Error counter
 
