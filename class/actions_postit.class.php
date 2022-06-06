@@ -454,23 +454,6 @@ class ActionsPostIt
 	}
 
 	/**
-	 * Overloading the addOpenElementsDashboardLine function : replacing the parent's function with the one below
-	 *
-	 * @param   array()         $parameters     Hook metadatas (context, etc...)
-	 * @param   CommonObject    &$object        The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
-	 * @param   string          &$action        Current action (if set). Generally create or edit or null
-	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
-	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
-	 */
-	public function addOpenElementsDashboardLine($parameters, &$object, &$action, $hookmanager) {
-		// we use this hook starting from 14.0 instead of addStatisticLine
-		if (version_compare(DOL_VERSION, '14.0', '>=')) {
-			$this->_injectPostitScriptInIndexPage($parameters);
-		};
-	}
-
-
-	/**
 	 * Overloading the beforeBodyClose function : replacing the parent's function with the one below
 	 *
 	 * @param   array()         $parameters     Hook metadatas (context, etc...)
@@ -479,7 +462,26 @@ class ActionsPostIt
 	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
-	public function beforeBodyClose($parameters, &$object, &$action, $hookmanager)
+	function beforeBodyClose($parameters, &$object, &$action, $hookmanager) {
+		// we use this hook starting from 14.0 instead of addStatisticLine
+		if (version_compare(DOL_VERSION, '14.0', '>=')) {
+			$this->_injectPostitScriptInIndexPage($parameters);
+		};
+
+		return 0;
+	}
+
+
+	/**
+	 * Overloading the formObjectOptions function : replacing the parent's function with the one below
+	 *
+	 * @param   array()         $parameters     Hook metadatas (context, etc...)
+	 * @param   CommonObject    &$object        The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
+	 * @param   string          &$action        Current action (if set). Generally create or edit or null
+	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
+	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
+	 */
+	public function formObjectOptions($parameters, &$object, &$action, $hookmanager)
 	{
 		$error = 0; // Error counter
 
