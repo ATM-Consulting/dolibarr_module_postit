@@ -3,23 +3,15 @@
  * Script créant et vérifiant que les champs requis s'ajoutent bien
  */
 
+// Ce fichier est maintenant déprécié
+
 if(!defined('INC_FROM_DOLIBARR')) {
 	define('INC_FROM_CRON_SCRIPT', true);
-
-	require('../config.php');
-
 }
-
-
-
-
 
 dol_include_once('/postit/class/postit.class.php');
 
 global $db;
-
-$o=new PostIt($db);
-$o->init_db_by_vars();
 
 $db->query("ALTER TABLE ".MAIN_DB_PREFIX."postit CHANGE rowid rowid int(11) NOT NULL AUTO_INCREMENT FIRST");
 

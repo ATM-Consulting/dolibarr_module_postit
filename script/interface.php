@@ -3,7 +3,36 @@
 if (!defined('NOCSRFCHECK')) define('NOCSRFCHECK', 1);
 if (!defined('NOTOKENRENEWAL')) define('NOTOKENRENEWAL', 1);
 
-require '../config.php';
+// Load Dolibarr environment
+$res = 0;
+// Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
+if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
+	$res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
+}
+// Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
+$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME']; $tmp2 = realpath(__FILE__); $i = strlen($tmp) - 1; $j = strlen($tmp2) - 1;
+while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
+	$i--; $j--;
+}
+if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) {
+	$res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
+}
+if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) {
+	$res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
+}
+// Try main.inc.php using relative path
+if (!$res && file_exists("../main.inc.php")) {
+	$res = @include "../main.inc.php";
+}
+if (!$res && file_exists("../../main.inc.php")) {
+	$res = @include "../../main.inc.php";
+}
+if (!$res && file_exists("../../../main.inc.php")) {
+	$res = @include "../../../main.inc.php";
+}
+if (!$res) {
+	die("Include of main fails");
+}
 
 dol_include_once('/postit/class/postit.class.php');
 
@@ -11,14 +40,14 @@ $langs->load('postit@postit');
 $put = GETPOST('put');
 $get = GETPOST('get');
 
-$top = (int)GETPOST('top');
-$left = (int)GETPOST('left');
-$width = (int)GETPOST('width');
-$height = (int)GETPOST('height');
-$fk_postit = (int)GETPOST('fk_postit');
-$id = (int)GETPOST('id');
+$top = GETPOST('top', 'int');
+$left = GETPOST('left', 'int');
+$width = GETPOST('width', 'int');
+$height = GETPOST('height', 'int');
+$fk_postit = GETPOST('fk_postit', 'int');
+$id = GETPOST('id', 'int');
 
-$fk_object = (int)GETPOST('fk_object');
+$fk_object = GETPOST('fk_object', 'int');
 $type_object = GETPOST('type_object');
 
 $title = GETPOST('title');
@@ -76,7 +105,7 @@ switch ($get) {
 			$p = (object)$newP;
 		}
 
-		__out($Tab, 'json');
+		print json_encode($Tab);
 
 		break;
 
@@ -89,7 +118,7 @@ switch ($get) {
 			foreach ($serializeOnlyTheseFields as $fieldName) {
 				$newP[$fieldName] = $p->{$fieldName};
 			}
-			__out($newP, 'json');
+			print json_encode($newP);
 		}
 
 		break;
@@ -148,7 +177,7 @@ switch ($put) {
 		}
 		$res = $p->id > 0 ? $p->update($author) : $p->create($author);
 		if ($res <= 0) {
-			__out(array('errors' => $p->errors, 'error' => $p->error/*, 'dberror' => $db->lasterror()*/));
+			print serialize(array('errors' => $p->errors, 'error' => $p->error));
 			exit;
 		}
 
@@ -166,7 +195,7 @@ switch ($put) {
 		foreach ($serializeOnlyTheseFields as $fieldName) {
 			$newP[$fieldName] = $p->{$fieldName};
 		}
-		__out($newP, 'json');
+		print json_encode($newP);
 
 		break;
 

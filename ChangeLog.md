@@ -1,12 +1,13 @@
 # ChangeLog for postit
 
 ## UNRELEASED
-- NEW : Ajout de la class TechATM pour l'affichage de la page "A propos" *10/05/2022* 1.6.0
+
+NEW : Refonte du module sur le modèle module builder *02/06/2022* - 2.0.0
+NEW : Ajout de la class TechATM pour l'affichage de la page "A propos" 10/05/2022 1.6.0
 
 ## Version 1.5
 
 - FIX: Compatibility V16 : newToken - *02/06/2022* - 1.5.5
-- FIX: Dolibarr 15 compatibility hook usage - *2022-06-01* - 1.5.4
 - NEW: modification date - *2021-07-06* - 1.5.3
 - FIX:
   - restrict what is sent over the network in ajax calls (esp. `$db`)

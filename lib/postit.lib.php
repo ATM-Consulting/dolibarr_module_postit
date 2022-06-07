@@ -1,6 +1,5 @@
 <?php
-/* <one line to give the program's name and a brief idea of what it does.>
- * Copyright (C) 2015 ATM Consulting <support@atm-consulting.fr>
+/* Copyright (C) 2022 SuperAdmin
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,44 +12,55 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
- *	\file		lib/postit.lib.php
- *	\ingroup	postit
- *	\brief		This file is an example module library
- *				Put some comments here
+ * \file    postit/lib/postit.lib.php
+ * \ingroup postit
+ * \brief   Library files with common functions for PostIt
  */
 
+/**
+ * Prepare admin pages header
+ *
+ * @return array
+ */
 function postitAdminPrepareHead()
 {
-    global $langs, $conf;
+	global $langs, $conf;
 
-    $langs->load("postit@postit");
+	$langs->load("postit@postit");
 
-    $h = 0;
-    $head = array();
+	$h = 0;
+	$head = array();
 
-    $head[$h][0] = dol_buildpath("/postit/admin/postit_setup.php", 1);
-    $head[$h][1] = $langs->trans("Parameters");
-    $head[$h][2] = 'settings';
-    $h++;
-    $head[$h][0] = dol_buildpath("/postit/admin/postit_about.php", 1);
-    $head[$h][1] = $langs->trans("About");
-    $head[$h][2] = 'about';
-    $h++;
+	$head[$h][0] = dol_buildpath("/postit/admin/setup.php", 1);
+	$head[$h][1] = $langs->trans("Settings");
+	$head[$h][2] = 'settings';
+	$h++;
 
-    // Show more tabs from modules
-    // Entries must be declared in modules descriptor with line
-    //$this->tabs = array(
-    //	'entity:+tabname:Title:@postit:/postit/mypage.php?id=__ID__'
-    //); // to add new tab
-    //$this->tabs = array(
-    //	'entity:-tabname:Title:@postit:/postit/mypage.php?id=__ID__'
-    //); // to remove a tab
-    complete_head_from_modules($conf, $langs, $object, $head, $h, 'postit');
+	/*
+	$head[$h][0] = dol_buildpath("/postit/admin/myobject_extrafields.php", 1);
+	$head[$h][1] = $langs->trans("ExtraFields");
+	$head[$h][2] = 'myobject_extrafields';
+	$h++;
+	*/
 
-    return $head;
+	$head[$h][0] = dol_buildpath("/postit/admin/about.php", 1);
+	$head[$h][1] = $langs->trans("About");
+	$head[$h][2] = 'about';
+	$h++;
+
+	// Show more tabs from modules
+	// Entries must be declared in modules descriptor with line
+	//$this->tabs = array(
+	//	'entity:+tabname:Title:@postit:/postit/mypage.php?id=__ID__'
+	//); // to add new tab
+	//$this->tabs = array(
+	//	'entity:-tabname:Title:@postit:/postit/mypage.php?id=__ID__'
+	//); // to remove a tab
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'postit');
+
+	return $head;
 }
-
