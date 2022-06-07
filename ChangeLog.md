@@ -7,6 +7,7 @@ NEW : Ajout de la class TechATM pour l'affichage de la page "A propos" 10/05/202
 
 ## Version 1.5
 
+- FIX: Compatibility V16 : newToken - *02/06/2022* - 1.5.5
 - NEW: modification date - *2021-07-06* - 1.5.3
 - FIX:
   - restrict what is sent over the network in ajax calls (esp. `$db`)

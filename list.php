@@ -76,6 +76,7 @@ $postItUser = new User($db);
 
 $id = GETPOST('id', 'int');
 $ref = GETPOST('ref', 'alpha');
+$newToken = function_exists('newToken') ? newToken() : $_SESSION['newtoken'];
 
 $testId = !empty($id) ? $id : $user->id;
 if($postItUser->fetch($testId, '', '', 10) < 1 ){
@@ -460,7 +461,7 @@ print '<form method="POST" id="searchFormList" action="'.$_SERVER["PHP_SELF"].'"
 if ($optioncss != '') {
 	print '<input type="hidden" name="optioncss" value="'.$optioncss.'">';
 }
-print '<input type="hidden" name="token" value="'.newToken().'">';
+print '<input type="hidden" name="token" value="'.$newToken.'">';
 print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
 print '<input type="hidden" name="action" value="list">';
 print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
@@ -530,7 +531,7 @@ if(function_exists('dol_set_user_param')) // A partir de la version 8 de Dolibar
 		print '<td align="center" width="20">&nbsp;</td>';
 		print '<td align="right" width="300">';
 		print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-		print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+		print '<input type="hidden" name="token" value="'.$newToken.'">';
 		print '<input type="hidden" name="action" value="set_'.$confkey.'">';
 		print '<input type="hidden" name="id" value="'.$id.'">';
 		print '<input type="hidden" name="ref" value="'.$ref.'">';
@@ -553,7 +554,7 @@ print '<form action="'.$_SERVER["PHP_SELF"].'" method="post" name="formulaire">'
 if ($optioncss != '') {
 	print '<input type="hidden" name="optioncss" value="'.$optioncss.'">';
 }
-print '<input type="hidden" name="token" value="'.newToken().'">';
+print '<input type="hidden" name="token" value="'.$newToken.'">';
 print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
 print '<input type="hidden" name="action" value="list">';
 print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
