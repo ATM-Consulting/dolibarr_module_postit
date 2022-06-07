@@ -21,6 +21,7 @@ $postItUser = new User($db);
 
 $action = GETPOST('action', 'alpha');
 $id = GETPOST('id', 'int');
+$newToken = function_exists('newToken') ? newToken() : $_SESSION['newtoken'];
 
 $testId = !empty($id) ? $id : $user->id;
 if($postItUser->fetch($testId, '', '', 10) < 1 ){
@@ -141,7 +142,7 @@ if(function_exists('dol_set_user_param')) // A partir de la version 8 de Dolibar
             print '<td align="center" width="20">&nbsp;</td>';
             print '<td align="right" width="300">';
             print '<form method="POST" action="'.$_SERVER['PHP_SELF'].'">';
-            print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+            print '<input type="hidden" name="token" value="'.$newToken.'">';
             print '<input type="hidden" name="action" value="set_'.$confkey.'">';
             print '<input '.$metascompil.'  />';
 
