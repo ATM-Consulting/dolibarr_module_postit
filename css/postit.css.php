@@ -55,13 +55,8 @@ else header('Cache-Control: no-cache');
 ?>
 
 
-@font-face {
-    font-family: "dakotaHand";
-    src: url("handwriting-dakota.ttf")  format('truetype');
-}
-
 .postit {
-    font-family:    'sans-serif','dakotaHand', cursive; /* 'chilanka', */
+    font-family:    'sans-serif', cursive; /* 'chilanka', */
 
     position:absolute;
     padding:3px;
