@@ -56,8 +56,6 @@ else header('Cache-Control: no-cache');
 
 
 .postit {
-    font-family:    'sans-serif', cursive; /* 'chilanka', */
-
     position:absolute;
     padding:3px;
     transform: rotate(-2deg);
