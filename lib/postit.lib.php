@@ -24,9 +24,10 @@
 /**
  * Prepare admin pages header
  *
+ * @param $object CommonObject
  * @return array
  */
-function postitAdminPrepareHead()
+function postitAdminPrepareHead($object)
 {
 	global $langs, $conf;
 
