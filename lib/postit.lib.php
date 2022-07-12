@@ -24,7 +24,6 @@
 /**
  * Prepare admin pages header
  *
- * @param $object CommonObject
  * @return array
  */
 function postitAdminPrepareHead()
