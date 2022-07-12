@@ -153,3 +153,10 @@ else header('Cache-Control: no-cache');
 .greenPaper {
     background-color:<?php print PostIt::getcolor('shared', $user); ?> !important;
 }
+
+#addNote[data-theme="eldy"]{
+	transition: transform 0.2s ease-in-out;
+}
+#addNote[data-theme="eldy"]:hover{
+	transform: scale(1.1);
+}
