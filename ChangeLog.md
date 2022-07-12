@@ -4,6 +4,7 @@
 
 ## Version 2.0
 
+- FIX : Missing icon *02/06/2022* - 2.0.2
 - NEW : Refonte du module sur le modèle module builder *02/06/2022* - 2.0.0
 - NEW : Ajout de la class TechATM pour l'affichage de la page "A propos" 10/05/2022 1.6.0
 

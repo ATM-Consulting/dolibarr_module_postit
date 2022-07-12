@@ -78,21 +78,21 @@ class ActionsPostIt
 
 		$aStyle = 'position:absolute; top:0px; display:block; ';
 		$imgStyle = 'width:32px; height:32px;';
-		if($conf->theme == 'eldy')
+		if($conf->theme == 'eldy' && intval(DOL_VERSION) > 12)
+		{
+			$aStyle = 'position:relative; display:inline-block;';
+			$imgStyle = 'height:25px; vertical-align:middle;';
+		}
+		elseif($conf->theme == 'eldy')
 		{
 			$aStyle .= " left:-30px; ";
 		}
-		elseif($conf->theme == 'evolution')
-		{
-			// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
-			$aStyle = 'position:relative; display:inline-block; line-height: 50px; height: 50px';
-			$imgStyle .= 'vertical-align:middle;';
-		}
 
-		$a = '<a id="addNote" href="javascript:createNote(0)" style="'.$aStyle.'">'.img_picto('', 'post-it.png@postit',' style="'.$imgStyle.'" ').'</a>';
+
+		$a = '<a id="addNote" href="javascript:createNote(0)" title="'.dol_escape_htmltag($langs->trans('NewStickyNote')).'" data-theme="'.dol_escape_htmltag($conf->theme).'" style="'.$aStyle.'">'.img_picto('', 'menu-icon.svg@postit',' style="'.$imgStyle.'" ').'</a>';
 
 		// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
-		if($conf->theme == 'evolution'){
+		if($conf->theme == 'eldy' && intval(DOL_VERSION) > 12){
 			$a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
 		}
 
@@ -109,7 +109,7 @@ class ActionsPostIt
 				?>
 
                 $a = $('<?php echo $a ?>');
-                $('div.login_block_other').append($a);
+                $('div.login_block_other').prepend($a);
 				<?php
 				}
 				?>

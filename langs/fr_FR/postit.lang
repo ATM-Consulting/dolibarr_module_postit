@@ -39,3 +39,4 @@ POSTIT_COLOR_PRIVATE=Couleur de fond d'une note privée
 POSTIT_COLOR_PUBLIC=Couleur de fond d'une note publique
 POSTIT_COLOR_SHARED=Couleur de fond d'une note partagée
 AbricotNeedUpdate=Le module abricot doit être mis à jour.
+NewStickyNote = Ajouter une nouvelle note
