@@ -127,6 +127,9 @@ class PostIt extends CommonObject
 	public $comment;
 	public $title;
 	public $color;
+	public $author;
+	public $to_delete;
+	public $rightResponse;
 	// END MODULEBUILDER PROPERTIES
 
 	/**
