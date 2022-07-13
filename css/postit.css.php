@@ -77,7 +77,7 @@ else header('Cache-Control: no-cache');
     -moz-transition:-moz-transform .15s linear;
     -o-transition:-o-transform .15s linear;
     -webkit-transition:-webkit-transform .15s linear;
-	transition: box-shadow 0.3s ease-in-out 0s, transform  .15s linear;
+	transition: box-shadow 0.15s linear, transform  .15s linear;
 
 }
 .postit:hover {
