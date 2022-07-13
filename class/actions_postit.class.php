@@ -96,7 +96,7 @@ class ActionsPostIt
 			$a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
 		}
 
-		$aDelete =' <span rel="delete">'.img_delete().'</span>';
+		$aDelete =' <span rel="delete"><span class="fa fa-trash-o postit-icon"></span></span>';
 		$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
 
 		?>
@@ -145,7 +145,7 @@ class ActionsPostIt
                 var $el2 = $el.find('[rel=status]');
 
                 if (status === 'public') {
-                    $el2.html("<?php echo addslashes(img_picto($langs->trans('PublicNoteHelp'), 'public.png@postit')); ?>");
+					$el2.html('<span class="fa fa-users postit-icon --' + status + '"></span>');
 
                     //if(author!=fk_user) {
                     $el.removeClass('yellowPaper greenPaper');
@@ -153,7 +153,7 @@ class ActionsPostIt
                     //}
                 }
                 else if(status === 'shared') {
-                    $el2.html("<?php echo addslashes(img_picto($langs->trans('SharedNoteHelp'), 'shared.png@postit')); ?>");
+                    $el2.html('<span class="fa fa-users postit-icon  --' + status + '"></span> <span class="fa fa-share-alt postit-icon --' + status + '"></span>');
 
                     //if(author!=fk_user) {
                     $el.removeClass('yellowPaper bluePaper');
@@ -161,7 +161,7 @@ class ActionsPostIt
                     //}
                 }
                 else {
-                    $el2.html("<?php echo addslashes(img_picto($langs->trans('PrivateNoteHelp'), 'private.png@postit')); ?>");
+                    $el2.html('<span class="fa fa-user-secret postit-icon  --' + status + '"></span>');
                     $el.removeClass('bluePaper greenPaper');
                     $el.addClass('yellowPaper');
 

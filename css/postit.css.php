@@ -72,15 +72,18 @@ else header('Cache-Control: no-cache');
 
     -moz-box-shadow:2px 2px 7px rgba(0,0,0,.5);
     -webkit-box-shadow: 2px 2px 7px rgba(0,0,0,.5);
-    box-shadow: 2px 2px 7px rgba(0,0,0,.5);
+    box-shadow: 2px 2px 4px rgba(0,0,0,.2);
 
     -moz-transition:-moz-transform .15s linear;
     -o-transition:-o-transform .15s linear;
     -webkit-transition:-webkit-transform .15s linear;
+	transition: box-shadow 0.3s ease-in-out 0s, transform  .15s linear;
 
 }
 .postit:hover {
     transform: rotate(0)  scale(1.1);
+	box-shadow: 10px 10px 7px rgba(0,0,0,.2);
+	z-index: 9999;
 }
 .postit div[rel=content] {
     position:relative;
@@ -94,10 +97,10 @@ else header('Cache-Control: no-cache');
     bottom:0;
     left:0;
     display:none;
-
 }
 .postit:hover div[rel=actions] {
     display:block;
+	animation: postit-action-slide-up 0.2s forwards, fade-in 0.2ms forwards;
 }
 .postit div[rel=actions] span {
     cursor: pointer;
@@ -152,4 +155,29 @@ else header('Cache-Control: no-cache');
 
 .greenPaper {
     background-color:<?php print PostIt::getcolor('shared', $user); ?> !important;
+}
+
+#addNote[data-theme="eldy"]{
+	transition: transform 0.2s ease-in-out;
+}
+#addNote[data-theme="eldy"]:hover{
+	transform: scale(1.1);
+}
+
+
+@keyframes postit-action-slide-up {
+	0% {
+		transform: translate(0, 100%);
+	}
+	100% {
+		transform: translate(0, 0%);
+	}
+}
+
+.postit-icon, .statusText{
+	color: rgba(0,0,0,0.5);
+}
+
+.postit-icon:hover{
+	color: rgba(0,0,0,1);
 }
