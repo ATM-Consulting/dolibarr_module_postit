@@ -181,4 +181,3 @@ else header('Cache-Control: no-cache');
 .postit-icon:hover{
 	color: rgba(0,0,0,1);
 }
->>>>>>> Stashed changes
