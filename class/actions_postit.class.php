@@ -78,7 +78,7 @@ class ActionsPostIt
 
 		$aStyle = 'position:absolute; top:0px; display:block; ';
 		$imgStyle = 'width:32px; height:32px;';
-		if($conf->theme == 'eldy' && intval(DOL_VERSION) > 12)
+		if($conf->theme == 'eldy' && intval(DOL_VERSION) >= 12)
 		{
 			$aStyle = 'position:relative; display:inline-block;';
 			$imgStyle = 'height:25px; vertical-align:middle;';
@@ -92,7 +92,7 @@ class ActionsPostIt
 		$a = '<a id="addNote" href="javascript:createNote(0)" title="'.dol_escape_htmltag($langs->trans('NewStickyNote')).'" data-theme="'.dol_escape_htmltag($conf->theme).'" style="'.$aStyle.'">'.img_picto('', 'menu-icon.svg@postit',' style="'.$imgStyle.'" ').'</a>';
 
 		// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
-		if($conf->theme == 'eldy' && intval(DOL_VERSION) > 12){
+		if($conf->theme == 'eldy' && intval(DOL_VERSION) >= 12){
 			$a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
 		}
 
