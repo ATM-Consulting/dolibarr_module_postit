@@ -74,19 +74,13 @@ else header('Cache-Control: no-cache');
 
     padding:1em;
 
-    -moz-box-shadow:2px 2px 4px rgba(0,0,0,.4);
-    -webkit-box-shadow: 2px 2px 4px rgba(0,0,0,.4);
-    box-shadow: 2px 2px 2px rgba(0,0,0,.4);
-
-    -moz-transition:-moz-transform .15s linear;
-    -o-transition:-o-transform .15s linear;
-    -webkit-transition:-webkit-transform .15s linear;
+    box-shadow: -1px -1px 1px rgba(0,0,0,0), 1px 1px 4px rgba(0,0,0,.4); /* Utilisation de 2 shadow pour mieux délimiter les postits lorsque qu'ils se chevauchent */
 	transition: box-shadow 0.15s linear, transform  .15s linear;
 
 }
 .postit:hover {
     transform: rotate(0)  scale(1.1);
-	box-shadow: 10px 10px 7px rgba(0,0,0,.2);
+	box-shadow: -1px -1px 1px rgba(0,0,0,.1), 10px 10px 7px rgba(0,0,0,.2); /* Utilisation de 2 shadow pour mieux délimiter les postits lorsque qu'ils se chevauchent */
 	z-index: 9999;
 }
 .postit div[rel=content] {
