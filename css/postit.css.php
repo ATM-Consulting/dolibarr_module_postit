@@ -68,6 +68,10 @@ else header('Cache-Control: no-cache');
     display:block;
     height:10em;
     width:10em;
+
+	min-width: 200px;
+	min-height:200px ;
+
     padding:1em;
 
     -moz-box-shadow:2px 2px 7px rgba(0,0,0,.5);
@@ -88,7 +92,6 @@ else header('Cache-Control: no-cache');
 .postit div[rel=content] {
     position:relative;
     height:100%;
-
 }
 
 
@@ -123,6 +126,15 @@ else header('Cache-Control: no-cache');
     position:relative;
     margin-bottom:2px;
 }
+
+
+.postit div[rel=postit-comment] {
+	max-height: calc(100% - 64px);
+	overflow: auto;
+}
+
+
+
 .postit div[rel=content] div.ifempty:empty {
     min-height: 20px;
     border:1px dashed #eee;
@@ -131,6 +143,41 @@ else header('Cache-Control: no-cache');
 .postit[rel=status]{
     margin-left: 10px;
 }
+
+
+
+
+	/*
+	* Scroll barr
+	 */
+.postit{
+	--scrollbar-size : 4px;
+	--scrollbar-track-color : rgba(0, 0, 0, 0.05);
+	--scrollbar-thumb-color : rgba(0,0,0, 0.2);
+}
+
+.postit ::-webkit-scrollbar {
+	width: var(--scrollbar-size);
+	height: var(--scrollbar-size);
+}
+
+.postit ::-webkit-scrollbar-track {
+	background-color: var(--scrollbar-track-color);
+	border-radius:  10px;
+}
+
+.postit ::-webkit-scrollbar-thumb {
+	border-radius:  10px;
+	background: var(--scrollbar-thumb-color);
+}
+
+.postit ::-webkit-scrollbar-corner{
+	background: rgba(0, 0, 0, 0.1);
+}
+
+/*::-webkit-scrollbar-thumb:window-inactive {*/
+/*	background: rgba(0, 0, 0, 0.1)*/
+/*}*/
 
 /*
 .postit input, .postit textarea {
