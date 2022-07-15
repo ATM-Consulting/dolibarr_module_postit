@@ -132,6 +132,24 @@ else header('Cache-Control: no-cache');
 	max-height: calc(100% - 64px);
 	overflow: auto;
 	font-size: 13.3333px; /* FIX :  wierd behavior jquery editable add allways this font size so it make an display change */
+
+
+
+	background:
+		/* Shadow covers */
+		linear-gradient(var(--postit-color) 30%, rgba(255,255,255,0)),
+		linear-gradient(rgba(255,255,255,0), var(--postit-color) 70%) 0 100%,
+
+		/* Shadows */
+		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+	background-repeat: no-repeat;
+	background-color: rgba(0,0,0,0);
+	background-size: 100% 35px, 100% 35px, 100% 12px, 100% 12px;
+
+	/* Opera doesn't support this in the shorthand */
+	background-attachment: local, local, scroll, scroll;
+
 }
 
 .postit div[rel=postit-comment] textarea {
@@ -210,20 +228,24 @@ else header('Cache-Control: no-cache');
 */
 
 .yellowPaperTemporary {
-    background-color: <?php print PostIt::getcolor('default', $user); ?>; /* Old browsers */
+	--postit-color : <?php print PostIt::getcolor('default', $user); ?>;
+    background-color: var(--postit-color); /* Old browsers */
     background-image: linear-gradient(135deg, rgba(255,255,255,0) , rgba(255,255,255,0) 90%, rgba(255,255,255,0.1) 93%,rgba(255,255,255,0.4) 100%); /* W3C */
 }
 
 .yellowPaper {
-    background: <?php print PostIt::getcolor('private', $user); ?> !important;
+	--postit-color : <?php print PostIt::getcolor('private', $user); ?>;
+	background: var(--postit-color) !important;
 }
 
 .bluePaper {
-    background-color:<?php print PostIt::getcolor('public', $user); ?> !important; /*#7FC6BC;*/
+	--postit-color : <?php print PostIt::getcolor('public', $user); ?>; /*#7FC6BC;*/
+	background-color: var(--postit-color) !important;
 }
 
 .greenPaper {
-    background-color:<?php print PostIt::getcolor('shared', $user); ?> !important;
+	--postit-color : <?php print PostIt::getcolor('shared', $user); ?>;
+	background-color: var(--postit-color)  !important;
 }
 
 #addNote[data-theme="eldy"]{

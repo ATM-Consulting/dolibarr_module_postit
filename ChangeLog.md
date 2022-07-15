@@ -4,7 +4,8 @@
 
 ## Version 2.0
 
-- FIX : Css and icons  *13/07/2022* - 2.0.3
+- FIX : Card overflow displays and live edit style *15/07/2022* - 2.0.4
+- FIX : Css and icons *13/07/2022* - 2.0.3
 - FIX : Missing icon *02/06/2022* - 2.0.2
 - FIX : PHP 8 Compatibility - Undefined variables - *12/07/2022* - 2.0.1
 - NEW : Refonte du module sur le modèle module builder *02/06/2022* - 2.0.0
