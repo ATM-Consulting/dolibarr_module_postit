@@ -487,9 +487,7 @@ class ActionsPostIt
 
 		if (in_array('globalcard', explode(':', $parameters['context'])) && $object->id>0)
 		{
-
 			$this->note($object->id, $object->element);
-
 		}
 
 		if (! $error)
@@ -509,9 +507,7 @@ class ActionsPostIt
 	protected function _injectPostitScriptInIndexPage($parameters) {
 		if (in_array('index', explode(':', $parameters['context'])))
 		{
-
 			$this->note(-1, 'global');
-
 		}
 	}
 }

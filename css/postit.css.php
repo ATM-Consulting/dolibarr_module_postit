@@ -63,7 +63,7 @@ else header('Cache-Control: no-cache');
 
 
     text-decoration:none;
-    color:#000;
+    color: rgba(0, 0, 0, 0.90);
     background:#ffc;
     display:block;
     height:10em;
@@ -74,9 +74,9 @@ else header('Cache-Control: no-cache');
 
     padding:1em;
 
-    -moz-box-shadow:2px 2px 7px rgba(0,0,0,.5);
-    -webkit-box-shadow: 2px 2px 7px rgba(0,0,0,.5);
-    box-shadow: 2px 2px 4px rgba(0,0,0,.2);
+    -moz-box-shadow:2px 2px 4px rgba(0,0,0,.4);
+    -webkit-box-shadow: 2px 2px 4px rgba(0,0,0,.4);
+    box-shadow: 2px 2px 2px rgba(0,0,0,.4);
 
     -moz-transition:-moz-transform .15s linear;
     -o-transition:-o-transform .15s linear;
@@ -115,7 +115,7 @@ else header('Cache-Control: no-cache');
 }
 .postit [rel=postit-title] {
     font-weight:bold;
-
+	font-size: 13.3333px; /* FIX :  wierd behavior jquery editable add allways this font size so it make an display change */
 }
 .postit div[rel=content] div[rel=postit-author], .postit div[rel=content] div[rel=postit-tms] {
     text-align: right;
@@ -131,6 +131,28 @@ else header('Cache-Control: no-cache');
 .postit div[rel=postit-comment] {
 	max-height: calc(100% - 64px);
 	overflow: auto;
+	font-size: 13.3333px; /* FIX :  wierd behavior jquery editable add allways this font size so it make an display change */
+}
+
+.postit div[rel=postit-comment] textarea {
+	border: none;
+	padding: 0;
+	margin: 0;
+	background: none;
+	height: 100%;
+	width: 100%;
+	line-height: 1.4;
+}
+
+.postit div[rel=postit-title] textarea {
+	border: none;
+	padding: 0;
+	margin: 0;
+	background: none;
+	height: 100%;
+	width: 100%;
+	font-weight: bold;
+	line-height: 1.4;
 }
 
 
