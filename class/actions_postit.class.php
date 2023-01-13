@@ -462,7 +462,7 @@ class ActionsPostIt
 	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
-	function beforeBodyClose($parameters, &$object, &$action, $hookmanager) {
+	function printTopRightMenu($parameters, &$object, &$action, $hookmanager) {
 		// we use this hook starting from 14.0 instead of addStatisticLine
 		if (version_compare(DOL_VERSION, '14.0', '>=')) {
 			$this->_injectPostitScriptInIndexPage($parameters);
