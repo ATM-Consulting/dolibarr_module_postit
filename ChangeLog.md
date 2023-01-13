@@ -4,6 +4,7 @@
 
 ## Version 2.0
 
+- FIX : postit ne s'affiche plus sur l'index en 14 en raison du hook "beforeBodyClose" qui n'existe pas *13/01/2023* - 2.0.5
 - FIX : Card overflow displays and live edit style *15/07/2022* - 2.0.4
 - FIX : Css and icons *13/07/2022* - 2.0.3
 - FIX : Missing icon *02/06/2022* - 2.0.2
