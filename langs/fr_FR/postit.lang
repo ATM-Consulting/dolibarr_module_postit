@@ -40,3 +40,4 @@ POSTIT_COLOR_PUBLIC=Couleur de fond d'une note publique
 POSTIT_COLOR_SHARED=Couleur de fond d'une note partagée
 AbricotNeedUpdate=Le module abricot doit être mis à jour.
 NewStickyNote = Ajouter une nouvelle note
+POSTIT_MULTICOMPANY_SHARED=Partage si le module MultiCompany est est present sur l'instance

@@ -465,14 +465,16 @@ class modPostIt extends DolibarrModules
 			'active' => true,  // for setEntity() function
 		));
 
-		//@todo parfaire cet endroit
-		if (isset($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
-			//$ret = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
-			$ret = $postitMulticonpany;
-		}else{
-			$ret = $postitMulticonpany;
+		if ($conf->multicompany->enabled && $conf->global->POSTIT_MULTICOMPANY_SHARED){
+			if (isset($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
+				//@todo et si un autre module s'en sert de celui là ... on doit concatener les values'
+				//$ret = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+				$ret = $postitMulticonpany;
+			}else{
+				$ret = $postitMulticonpany;
+			}
+			dolibarr_set_const($this->db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($ret)), 'chaine', 0, '', 0);
 		}
-		dolibarr_set_const($this->db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($ret)), 'chaine', 0, '', 0);
 
 		$result = $this->_load_tables('/postit/sql/');
 		if ($result < 0) {

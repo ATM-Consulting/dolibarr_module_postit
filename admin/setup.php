@@ -120,6 +120,16 @@ $item->nameText = $item->getNameText();
 $item->fieldInputOverride = '';
 
 
+// Setup conf POSTIT_MULTICOMPANY_SHARED
+if ($conf->multicompany->enabled){
+	$item = $formSetup->newItem('POSTIT_MULTICOMPANY_SHARED');
+	$item->setAsYesNo();
+	$item->defaultFieldValue = 0;
+	$item->nameText = $item->getNameText();
+	$item->fieldInputOverride = '';
+}
+
+
 $setupnotempty =+ count($formSetup->items);
 
 
