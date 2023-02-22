@@ -184,7 +184,7 @@ class TechATM
 		return $this->data;
 	}
 
-	public static function http_response_code_msg($code = NULL)
+	public static function httpResponsecodeMsg($code = NULL)
 	{
 		if ($code !== NULL) {
 
