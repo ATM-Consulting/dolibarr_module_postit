@@ -467,8 +467,10 @@ class modPostIt extends DolibarrModules
 
 		if ($conf->multicompany->enabled && $conf->global->POSTIT_MULTICOMPANY_SHARED){
 			if (isset($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
-				//@todo et si un autre module s'en sert de celui là ... on doit concatener les values'
+				//@todo et si un autre module s'en sert de celui là ... on doit concatener les values' ... ?
 				//$ret = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+				// array merge
+
 				$ret = $postitMulticonpany;
 			}else{
 				$ret = $postitMulticonpany;
