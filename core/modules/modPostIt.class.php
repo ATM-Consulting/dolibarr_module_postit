@@ -72,11 +72,9 @@ class modPostIt extends DolibarrModules
 		$this->editor_url = 'https://www.atm-consulting.fr';
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
-<<<<<<< Updated upstream
-		$this->version = '2.0.5';
-=======
+
 		$this->version = '2.1.0';
->>>>>>> Stashed changes
+
 		// Url to the file with your last numberversion of this module
 		require_once __DIR__ . '/../../class/techatm.class.php';
 		$this->url_last_version = \postit\TechATM::getLastModuleVersionUrl($this);
@@ -457,7 +455,25 @@ class modPostIt extends DolibarrModules
 	{
 		global $conf, $langs;
 
-		//$result = $this->_load_tables('/install/mysql/', 'postit');
+		//@todo à definir avec une conf dans le module
+		//prise en compte de multicompany pour les postit
+		$postitMulticonpany = array();
+		$postitMulticonpany['addzero'] = 'user';
+		$postitMulticonpany['sharingelements'] = array('postit' => array(
+			'type' => 'element',
+			'icon' => 'building',
+			'active' => true,  // for setEntity() function
+		));
+
+		//@todo parfaire cet endroit
+		if (isset($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
+			//$ret = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+			$ret = $postitMulticonpany;
+		}else{
+			$ret = $postitMulticonpany;
+		}
+		dolibarr_set_const($this->db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($ret)), 'chaine', 0, '', 0);
+
 		$result = $this->_load_tables('/postit/sql/');
 		if ($result < 0) {
 			return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
