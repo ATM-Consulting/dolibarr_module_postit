@@ -98,7 +98,7 @@ class ActionsPostIt
 
 		$aDelete =' <span rel="delete"><span class="fa fa-trash-o postit-icon"></span></span>';
 		$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
-
+		//var_dump($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
 		?>
 		<script language="javascript">
             $(document).ready(function() {
@@ -124,8 +124,10 @@ class ActionsPostIt
                     }
                     ,dataType:"json"
                 }).done(function(Tab) {
+					console.log(Tab);
                     for(x in Tab) {
                         addNote(Tab[x]);
+						console.log(Tab[x]);
                     }
 
                 });

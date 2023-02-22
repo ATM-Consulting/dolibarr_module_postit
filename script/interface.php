@@ -59,6 +59,7 @@ $serializeOnlyTheseFields = array(
 	'rightEdit',
 	'author',
 	'id',
+	'entity',
 	'status',
 	'date_creation',
 	'tms',
@@ -73,7 +74,7 @@ $serializeOnlyTheseFields = array(
 	'to_delete',
 	'rightResponse',
 );
-
+global $conf;
 switch ($get) {
 	case 'postit-of-object':
 
@@ -171,9 +172,11 @@ switch ($put) {
 			$p->tms = dol_now();
 			$p->author = $user->getFullName($langs);
 			$p->fk_user = $user->id;
+			$p->entity = $conf->entity;
 		} elseif ($p->fk_user > 0) {
 			$author = new User($db);
 			$author->fetch($p->fk_user);
+			$p->entity = $conf->entity;
 		}
 		$res = $p->id > 0 ? $p->update($author) : $p->create($author);
 		if ($res <= 0) {

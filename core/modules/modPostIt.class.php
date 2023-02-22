@@ -72,7 +72,11 @@ class modPostIt extends DolibarrModules
 		$this->editor_url = 'https://www.atm-consulting.fr';
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
+<<<<<<< Updated upstream
 		$this->version = '2.0.5';
+=======
+		$this->version = '2.1.0';
+>>>>>>> Stashed changes
 		// Url to the file with your last numberversion of this module
 		require_once __DIR__ . '/../../class/techatm.class.php';
 		$this->url_last_version = \postit\TechATM::getLastModuleVersionUrl($this);
