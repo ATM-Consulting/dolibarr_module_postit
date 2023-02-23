@@ -216,13 +216,20 @@ class PostIt extends CommonObject
 	 */
 	public static function getPostit($fk_object, $type_object, $fk_user) {
 
-		global $db;
+		global $db, $conf;
 		// ON DOIT ajouter un param a multi-compagny
 		$sql  = " SELECT rowid FROM " . MAIN_DB_PREFIX . "postit";
+		// je suis l'utilisateur à l'origine de la création de la note ou la note est public ou la note et shared
 		$sql .= " WHERE (fk_user=" . $fk_user . " OR fk_user_todo=" . $fk_user . " OR status='" . self::STATUS_PUBLIC . "' OR  status='" . self::STATUS_SHARED . "')";
-		$sql .= " AND (fk_object=" . $fk_object . " AND  ( status='" . self::STATUS_SHARED . "' AND entity in ( ".getEntity('postit')." ) ))";
-		$sql .= " AND type_object='" . $type_object . "' ORDER BY rowid";
 
+		// si pas d'activation de la conf partage des postits
+		if(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED)){
+			$sql .= " AND ( fk_object=" . $fk_object . " OR  ( status='" . self::STATUS_SHARED . "' AND entity in ( ".getEntity('postit')." ) ))";
+		}else{
+			$sql .= " AND  fk_object=" . $fk_object . " OR   status='" . self::STATUS_SHARED;
+		}
+
+		$sql .= " AND type_object='" . $type_object . "' ORDER BY rowid";
 		$res = $db->query($sql);
 
 		$TPostit = array();

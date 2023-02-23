@@ -121,12 +121,49 @@ $item->fieldInputOverride = '';
 
 
 // Setup conf POSTIT_MULTICOMPANY_SHARED
+//var_dump($conf->global->POSTIT_MULTICOMPANY_SHARED);
 if ($conf->multicompany->enabled){
 	$item = $formSetup->newItem('POSTIT_MULTICOMPANY_SHARED');
 	$item->setAsYesNo();
 	$item->defaultFieldValue = 0;
 	$item->nameText = $item->getNameText();
 	$item->fieldInputOverride = '';
+}
+
+/**
+ * On donne la possibolité au module multi-company de gerer le partage entre entité des post-its
+ * si cette optio n'est pas activée le partage par entités n'est pas actif.
+ */
+// le module multicompany est present et activé
+// la conf postit POSTIT_MULTICOMPANY_SHARED est activé
+if (!empty($conf->global->POSTIT_MULTICOMPANY_SHARED)){
+
+
+	//prise en compte de multicompany pour les postit
+	$postitMulticonpany = array();
+	$postitMulticonpany['addzero'] = 'user';
+	$postitMulticonpany['sharingelements'] = array('postit' => array(
+		'type' => 'element',
+		'icon' => 'building',
+		'active' => true,  // for setEntity() function
+	));
+
+	if (!empty($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
+			//@todo et si un autre module s'en sert de celui là ... on doit concatener les values' ... ?
+			//$ret = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+
+			// verifier si pas déjà dedans
+
+			// array merge et json encode  et set const
+			$ret = $postitMulticonpany;
+	}else{
+
+			$ret = $postitMulticonpany;
+			//en
+	}
+
+
+	dolibarr_set_const($this->db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($ret)), 'chaine', 0, '', 0);
 }
 
 

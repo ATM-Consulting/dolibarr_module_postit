@@ -455,32 +455,23 @@ class modPostIt extends DolibarrModules
 	{
 		global $conf, $langs;
 
-		//@todo à definir avec une conf dans le module
-		//prise en compte de multicompany pour les postit
-		$postitMulticonpany = array();
-		$postitMulticonpany['addzero'] = 'user';
-		$postitMulticonpany['sharingelements'] = array('postit' => array(
-			'type' => 'element',
-			'icon' => 'building',
-			'active' => true,  // for setEntity() function
-		));
-
-		if ($conf->multicompany->enabled && $conf->global->POSTIT_MULTICOMPANY_SHARED){
-			if (isset($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
-				//@todo et si un autre module s'en sert de celui là ... on doit concatener les values' ... ?
-				//$ret = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
-				// array merge
-
-				$ret = $postitMulticonpany;
-			}else{
-				$ret = $postitMulticonpany;
-			}
-			dolibarr_set_const($this->db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($ret)), 'chaine', 0, '', 0);
-		}
-
+		$result = $langs->load('postit@postit');
 		$result = $this->_load_tables('/postit/sql/');
 		if ($result < 0) {
 			return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
+		}
+
+
+		$transkey1 		= 'POSTITSharing';
+		$transvalue1 	= 'Partage des Stick-its';
+		$transkey2 		= 'POSTITSharingDescription';
+		$transvalue2 	= 'Sélection des entités qui partagerons leurs stick-its (en mode partagés) avec cette entité';
+
+		$sql =" INSERT INTO ".MAIN_DB_PREFIX."overwrite_trans(lang, transkey, transvalue, entity)";
+		$sql .=" VALUES ('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey1)."','".$this->db->escape($transvalue1)."', ".$this->db->escape($conf->entity)."),('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey2)."','".$this->db->escape($transvalue2)."', ".$this->db->escape($conf->entity).")";
+		$result = $this->db->query($sql);
+		if ($result > 0) {
+			$this->db->commit();
 		}
 
 		// Create extrafields during init
