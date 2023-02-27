@@ -222,10 +222,10 @@ class PostIt extends CommonObject
 		// je suis l'utilisateur à l'origine de la création de la note ou la note est public ou la note et shared
 		$sql .= " WHERE (fk_user=" . $fk_user . " OR fk_user_todo=" . $fk_user . " OR status='" . self::STATUS_PUBLIC . "' OR  status='" . self::STATUS_SHARED . "')";
 
-		// si pas d'activation de la conf partage des postits
+		// si activation de la conf partage des postits
 		if(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED)){
 			$sql .= " AND ( fk_object=" . $fk_object . " OR  ( status='" . self::STATUS_SHARED . "' AND entity in ( ".getEntity('postit')." ) ))";
-		}else{
+		}else{ // sinon comportement std de stick-it, quand el status est partagé il n'y a pas de filtre sur les entities
 			$sql .= " AND  fk_object=" . $fk_object . " OR   status='" . self::STATUS_SHARED;
 		}
 

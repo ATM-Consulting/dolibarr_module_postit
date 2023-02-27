@@ -64,3 +64,47 @@ function postitAdminPrepareHead()
 
 	return $head;
 }
+
+
+function removePostitFromMultiConf(){
+	global $conf,$db;
+
+
+	if (!empty($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
+		$currentConf = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+		// verifier si pas déjà valoriré
+		foreach ($currentConf as $key => $element){
+
+			if($element->sharingelements->postit){
+				unset( $currentConf[$key]);
+
+				dolibarr_del_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING',  0);
+
+				if (count($currentConf) > 0)
+					dolibarr_set_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($currentConf)), 'chaine', 0, '', 0);
+				break;
+			}
+		}
+	}
+
+}
+
+
+/**
+ * @param $arr
+ * @return bool
+ */
+
+function isModuleEntryExist($arr){
+	$postitAllreadyIn = false;
+
+	if (is_array($arr)){
+		foreach ($arr as $element){
+			if($element->sharingelements->postit){
+				$postitAllreadyIn = true;
+				break;
+			}
+		}
+	}
+	return $postitAllreadyIn;
+}
