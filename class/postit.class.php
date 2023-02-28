@@ -228,8 +228,8 @@ class PostIt extends CommonObject
 		$TPostit = array();
 		while ($obj = $db->fetch_object($res)) {
 			$add = false;
-			// je suis sur l'entity qui a créée le post it le comportement est standard
-			if ($conf->entity == $obj->entity){
+			// je suis sur l'entity qui a créée le post it // ou la conf n'est pas activée // le comportement est standard
+			if ($conf->entity == $obj->entity || empty($conf->global->POSTIT_MULTICOMPANY_SHARED)){
 				$add = true;
 				// si postit-multicompany handle // et que le status est shared // et que cette entité est dans la liste de partage multicompany
 			}elseif(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED) && $obj->status == "shared" && in_array( $obj->entity, explode(",",getEntity('postit')) )){
