@@ -217,26 +217,39 @@ class PostIt extends CommonObject
 	public static function getPostit($fk_object, $type_object, $fk_user) {
 
 		global $db, $conf;
-		// ON DOIT ajouter un param a multi-compagny
-		$sql  = " SELECT rowid FROM " . MAIN_DB_PREFIX . "postit";
-		// je suis l'utilisateur à l'origine de la création de la note ou la note est public ou la note et shared
-		$sql .= " WHERE (fk_user=" . $fk_user . " OR fk_user_todo=" . $fk_user . " OR status='" . self::STATUS_PUBLIC . "' OR  status='" . self::STATUS_SHARED . "')";
 
-		// si activation de la conf partage des postits
-		if(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED)){
-			$sql .= " AND ( fk_object=" . $fk_object . " OR  ( status='" . self::STATUS_SHARED . "' AND entity in ( ".getEntity('postit')." ) ))";
-		}else{ // sinon comportement std de stick-it, quand el status est partagé il n'y a pas de filtre sur les entities
-			$sql .= " AND  fk_object=" . $fk_object . " OR   status='" . self::STATUS_SHARED;
-		}
+		$sql = "SELECT rowid, entity, status FROM " . MAIN_DB_PREFIX . "postit ";
+		$sql .=" WHERE (fk_user=" . $fk_user . " OR fk_user_todo=" . $fk_user . " OR status='" . self::STATUS_PUBLIC . "' OR status='" . self::STATUS_SHARED . "') ";
+		$sql .=" AND (fk_object=" . $fk_object . " OR status='" . self::STATUS_SHARED . "') AND type_object='" . $type_object . "' ORDER BY rowid";
 
-		$sql .= " AND type_object='" . $type_object . "' ORDER BY rowid";
+
 		$res = $db->query($sql);
 
 		$TPostit = array();
 		while ($obj = $db->fetch_object($res)) {
-			$p = new PostIt($db);
+
+			// je suis sur l'entity qui a créée le post it le comportement est standard
+			if ($conf->entity == $obj->entity){
+				$p = new PostIt($db);
+				$p->fetch($obj->rowid);
+				if ($p > 0) $TPostit[] = $p;
+			}else{
+				// si postit-multicompany handle
+				// et que le status est shared
+				// et que cette entité est dans la liste de partage multicompany
+				if(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED) && $obj->status == "shared"
+					&& in_array( $obj->entity, explode(",",getEntity('postit')) )){
+					$p = new PostIt($db);
+					$p->fetch($obj->rowid);
+					if ($p > 0) $TPostit[] = $p;
+				}
+			}
+
+
+			// si c'est ok
+			/*$p = new PostIt($db);
 			$p->fetch($obj->rowid);
-			if ($p > 0) $TPostit[] = $p;
+			if ($p > 0) $TPostit[] = $p;*/
 		}
 
 		return $TPostit;

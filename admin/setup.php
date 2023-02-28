@@ -131,6 +131,7 @@ if ($conf->multicompany->enabled){
 	$itemMC->defaultFieldValue = 0;
 	$itemMC->nameText = $itemMC->getNameText();
 	$itemMC->fieldInputOverride = '';
+	$itemMC->entity = 0;
 }
 
 /**
@@ -166,30 +167,30 @@ $testElement['sharingelements'] = array('LEAVEIT' => array(
 $currentConf  = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
 // conf à zero ou inexistante on supprime le module de la conf multiCompany
 $multi = GETPOST('POSTIT_MULTICOMPANY_SHARED','int');
-if ( empty($multi) || $multi == 0){
+if ( $action == 'update' ){
+	if ( empty($multi) || $multi == 0){
+		removePostitFromMultiConf();
+	}else{
 
-	removePostitFromMultiConf();
-
-}else{
-
-	//prise en compte de multicompany pour les postit
-	$postitMulticonpany = array();
-	$postitMulticonpany['addzero'] = 'user';
-	$postitMulticonpany['sharingelements'] = array('postit' => array(
-		'type' => 'element',
-		'icon' => 'building',
-		'active' => true,
-	));
-
-	// si le module n'est pas present dans la conf multiCompany
-	if (!isModuleEntryExist($currentConf)){
-		$currentConf[] = $postitMulticonpany;
+		//prise en compte de multicompany pour les postit
+		$postitMulticonpany = array();
+		$postitMulticonpany['addzero'] = 'user';
+		$postitMulticonpany['sharingelements'] = array('postit' => array(
+			'type' => 'element',
+			'icon' => 'building',
+			'active' => true,
+		));
+		$postitMulticonpany['sharingmodulename'] = array('postit' => 'postit');
+		// si le module n'est pas present dans la conf multiCompany
+		if (!isModuleEntryExist($currentConf)){
+			$currentConf[] = $postitMulticonpany;
+			// on réecrit la conf
+			dolibarr_set_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode($currentConf), 'chaine', 0, '', 0);
+			setEventMessages($langs->trans('FeatureAddedToMultiCompany'),[],'warnings');
+		}
 	}
-	// on réecrit la conf
-	dolibarr_set_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode($currentConf), 'chaine', 0, '', 0);
-	setEventMessages($langs->trans('FeatureAddedToMultiCompany'),[],'warnings');
-
 }
+
 
 
 

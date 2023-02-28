@@ -502,6 +502,7 @@ class ActionsPostIt
 		}
 	}
 
+
 	/**
 	 * Check that we are in the `index` context and call `$this->note()`.
 	 * @param $parameters
@@ -512,4 +513,6 @@ class ActionsPostIt
 			$this->note(-1, 'global');
 		}
 	}
+
+
 }

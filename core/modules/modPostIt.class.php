@@ -100,7 +100,8 @@ class modPostIt extends DolibarrModules
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
 			'hooks' => array(
 				'index',
-				'globalcard'
+				'globalcard',
+				'main'
 			)
 		);
 
@@ -468,7 +469,7 @@ class modPostIt extends DolibarrModules
 		$transvalue2 	= 'Sélection des entités qui partagerons leurs stick-its (en mode partagés) avec cette entité';
 
 		$sql =" INSERT INTO ".MAIN_DB_PREFIX."overwrite_trans(lang, transkey, transvalue, entity)";
-		$sql .=" VALUES ('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey1)."','".$this->db->escape($transvalue1)."', ".$this->db->escape($conf->entity)."),('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey2)."','".$this->db->escape($transvalue2)."', ".$this->db->escape($conf->entity).")";
+		$sql .=" VALUES ('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey2)."','".$this->db->escape($transvalue2)."', ".$this->db->escape($conf->entity)."),('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey1)."','".$this->db->escape($transvalue1)."', ".$this->db->escape($conf->entity).")";
 		$result = $this->db->query($sql);
 		if ($result > 0) {
 			$this->db->commit();
