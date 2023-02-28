@@ -227,31 +227,20 @@ class PostIt extends CommonObject
 
 		$TPostit = array();
 		while ($obj = $db->fetch_object($res)) {
-
+			$add = false;
 			// je suis sur l'entity qui a créée le post it le comportement est standard
 			if ($conf->entity == $obj->entity){
+				$add = true;
+				// si postit-multicompany handle // et que le status est shared // et que cette entité est dans la liste de partage multicompany
+			}elseif(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED) && $obj->status == "shared" && in_array( $obj->entity, explode(",",getEntity('postit')) )){
+					$add = true;
+			}
+			if ($add){
 				$p = new PostIt($db);
 				$p->fetch($obj->rowid);
 				if ($p > 0) $TPostit[] = $p;
-			}else{
-				// si postit-multicompany handle
-				// et que le status est shared
-				// et que cette entité est dans la liste de partage multicompany
-				if(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED) && $obj->status == "shared"
-					&& in_array( $obj->entity, explode(",",getEntity('postit')) )){
-					$p = new PostIt($db);
-					$p->fetch($obj->rowid);
-					if ($p > 0) $TPostit[] = $p;
-				}
 			}
-
-
-			// si c'est ok
-			/*$p = new PostIt($db);
-			$p->fetch($obj->rowid);
-			if ($p > 0) $TPostit[] = $p;*/
 		}
-
 		return $TPostit;
 	}
 
