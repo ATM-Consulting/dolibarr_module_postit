@@ -16,7 +16,8 @@
 
 CREATE TABLE llx_postit(
 	-- BEGIN MODULEBUILDER FIELDS
-	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL, 
+	rowid integer AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    entity integer DEFAULT 1 NOT NULL,
 	label varchar(255),
 	fk_object integer NOT NULL,
     fk_actioncomm integer NOT NULL,
