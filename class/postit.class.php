@@ -221,10 +221,7 @@ class PostIt extends CommonObject
 		$sql = "SELECT rowid, entity, status FROM " . MAIN_DB_PREFIX . "postit ";
 		$sql .=" WHERE (fk_user=" . $fk_user . " OR fk_user_todo=" . $fk_user . " OR status='" . self::STATUS_PUBLIC . "' OR status='" . self::STATUS_SHARED . "') ";
 		$sql .=" AND (fk_object=" . $fk_object . " OR status='" . self::STATUS_SHARED . "') AND type_object='" . $type_object . "' ORDER BY rowid";
-
-
 		$res = $db->query($sql);
-
 		$TPostit = array();
 		while ($obj = $db->fetch_object($res)) {
 			$add = false;
@@ -232,9 +229,7 @@ class PostIt extends CommonObject
 			if ($conf->entity == $obj->entity || empty($conf->global->POSTIT_MULTICOMPANY_SHARED)){
 				$add = true;
 				// si postit-multicompany handle // et que le status est shared ou plublic//  // et que cette entité est dans la liste de partage multicompany
-			}elseif(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED)
-				&& ( $obj->status == self::STATUS_SHARED || $obj->status == self::STATUS_PUBLIC )
-				&& in_array( $obj->entity, explode(",",getEntity('postit')) )){
+			}elseif(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED) && ( $obj->status == self::STATUS_SHARED || $obj->status == self::STATUS_PUBLIC ) && in_array( $obj->entity, explode(",",getEntity('postit')) )){
 					$add = true;
 			}
 			if ($add){
