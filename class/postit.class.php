@@ -225,8 +225,6 @@ class PostIt extends CommonObject
 		    $sql .= " AND entity IN (".getEntity('postit').") AND (entity=".$conf->entity." OR status IN('".self::STATUS_SHARED."', '".self::STATUS_PUBLIC."'))";
 		 }
 		$sql .= " ORDER BY rowid";
-
-		//var_dump($sql);exit();
 		$res = $db->query($sql);
 		$TPostit = array();
 		while ($obj = $db->fetch_object($res)) {
