@@ -98,7 +98,6 @@ class ActionsPostIt
 
 		$aDelete =' <span rel="delete"><span class="fa fa-trash-o postit-icon"></span></span>';
 		$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
-
 		?>
 		<script language="javascript">
             $(document).ready(function() {
@@ -124,6 +123,7 @@ class ActionsPostIt
                     }
                     ,dataType:"json"
                 }).done(function(Tab) {
+
                     for(x in Tab) {
                         addNote(Tab[x]);
                     }
@@ -500,6 +500,7 @@ class ActionsPostIt
 		}
 	}
 
+
 	/**
 	 * Check that we are in the `index` context and call `$this->note()`.
 	 * @param $parameters
@@ -509,5 +510,19 @@ class ActionsPostIt
 		{
 			$this->note(-1, 'global');
 		}
+	}
+
+	/**
+	 * @param $parameters
+	 * @param $object
+	 * @param $action
+	 * @param $hookmanager
+	 * @return void
+	 */
+	public function addHtmlHeader ($parameters, &$object, &$action, $hookmanager){
+		global $langs;
+		$langs->load('postit@postit');
+
+
 	}
 }

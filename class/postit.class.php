@@ -38,6 +38,8 @@ class PostIt extends CommonObject
 	 * @var string ID to identify managed object.
 	 */
 	public $element = 'postit';
+
+	public $entity;
 	/**
 	 * @var string Name of table without prefix where object is stored. This is also the key used for extrafields management.
 	 */
@@ -93,6 +95,7 @@ class PostIt extends CommonObject
 	 */
 	public $fields = array(
 		'rowid' => array('type' => 'integer', 'index' => true)
+		, 'entity' =>array('type'=>'integer', 'label'=>'Entity', 'default'=>1, 'enabled'=>1, 'visible'=>-2, 'notnull'=>1, 'position'=>20, 'index'=>1)
 		, 'date_creation' => array('type' => 'date')
 		, 'tms' => array('type' => 'date')
 		, 'fk_object' => array('type' => 'integer', 'index' => true, 'notnull' => 1)
@@ -213,14 +216,16 @@ class PostIt extends CommonObject
 	 */
 	public static function getPostit($fk_object, $type_object, $fk_user) {
 
-		global $db;
+		global $db, $conf;
 
-		$sql = "SELECT rowid FROM " . MAIN_DB_PREFIX . "postit
-		WHERE (fk_user=" . $fk_user . " OR fk_user_todo=" . $fk_user . " OR status='" . self::STATUS_PUBLIC . "' OR status='" . self::STATUS_SHARED . "')
-		AND (fk_object=" . $fk_object . " OR status='" . self::STATUS_SHARED . "') AND type_object='" . $type_object . "' ORDER BY rowid";
-
+		$sql = "SELECT rowid, entity, status FROM " . MAIN_DB_PREFIX . "postit ";
+		$sql .=" WHERE (fk_user=" . $fk_user . " OR fk_user_todo=" . $fk_user . " OR status='" . self::STATUS_PUBLIC . "' OR status='" . self::STATUS_SHARED . "') ";
+		$sql .=" AND (fk_object=" . $fk_object . " OR status='" . self::STATUS_SHARED . "') AND type_object='" . $type_object . "'";
+		if(!empty($conf->global->POSTIT_MULTICOMPANY_SHARED)) {
+		    $sql .= " AND entity IN (".getEntity('postit').") AND (entity=".$conf->entity." OR status IN('".self::STATUS_SHARED."', '".self::STATUS_PUBLIC."'))";
+		 }
+		$sql .= " ORDER BY rowid";
 		$res = $db->query($sql);
-
 		$TPostit = array();
 		while ($obj = $db->fetch_object($res)) {
 			$p = new PostIt($db);

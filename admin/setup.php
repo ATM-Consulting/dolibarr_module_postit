@@ -120,6 +120,50 @@ $item->nameText = $item->getNameText();
 $item->fieldInputOverride = '';
 
 
+if ($conf->multicompany->enabled){
+	$itemMC = $formSetup->newItem('POSTIT_MULTICOMPANY_SHARED')->setAsSelect(array(0 => $langs->transnoentities('No'), 1 => $langs->transnoentities('Yes')));
+	$itemMC->defaultFieldValue = 0;
+	$itemMC->nameText = $itemMC->getNameText();
+	$itemMC->fieldInputOverride = '';
+	$itemMC->entity = 0;
+}
+
+/**
+ * On donne la possibilité au module multi-company de gerer le partage entre entité des post-its
+ * si cette optio n'est pas activée le partage par entités n'est pas actif.
+ */
+$currentConf  = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+// conf à zero ou inexistante on supprime le module de la conf multiCompany
+$multi = GETPOST('POSTIT_MULTICOMPANY_SHARED','int');
+if ( $action == 'update' ){
+	if ( empty($multi) || $multi == 0){
+		removePostitFromMultiConf();
+
+	}else{
+
+		//prise en compte de multicompany pour les postit
+		$postitMulticonpany = array();
+		$postitMulticonpany['addzero'] = 'user';
+		$postitMulticonpany['sharingelements'] = array('postit' => array(
+			'type' => 'element',
+			'icon' => 'building',
+			'active' => true,
+		));
+		$postitMulticonpany['sharingmodulename'] = array('postit' => 'postit');
+		// si le module n'est pas present dans la conf multiCompany
+		if (!isModuleEntryExist($currentConf)){
+			$currentConf[] = $postitMulticonpany;
+			// on réecrit la conf
+			dolibarr_set_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode($currentConf), 'chaine', 0, '', 0);
+			dolibarr_set_const($db, 'MULTICOMPANY_POSTIT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
+			setEventMessages($langs->trans('FeatureAddedToMultiCompany'),[],'warnings');
+		}
+	}
+}
+
+
+
+
 $setupnotempty =+ count($formSetup->items);
 
 
@@ -134,6 +178,8 @@ $dirmodels = array_merge(array('/'), (array) $conf->modules_parts['models']);
 if ( versioncompare(explode('.', DOL_VERSION), array(15)) < 0 && $action == 'update' && !empty($user->admin)) {
 	$formSetup->saveConfFromPost();
 }
+
+
 
 include DOL_DOCUMENT_ROOT.'/core/actions_setmoduleoptions.inc.php';
 
@@ -180,3 +226,4 @@ print dol_get_fiche_end();
 
 llxFooter();
 $db->close();
+

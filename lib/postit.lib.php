@@ -64,3 +64,52 @@ function postitAdminPrepareHead()
 
 	return $head;
 }
+
+/**
+ * @return void
+ */
+function removePostitFromMultiConf(){
+	global $conf,$db;
+
+	if (!empty($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
+		$currentConf = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+		// verifier si pas déjà valoriré
+		foreach ($currentConf as $key => $element){
+
+			if($element->sharingelements->postit){
+				unset( $currentConf[$key]);
+				// on retire les configurations existantes
+				dolibarr_del_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING',  0);
+
+				// sert pour l'affichage de la ligne de configuration du module dans multicompany
+				dolibarr_del_const($db, 'MULTICOMPANY_POSTIT_SHARING_ENABLED');
+
+				// on réecrit la conf existante sans notre module
+				if (count($currentConf) > 0)
+					dolibarr_set_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($currentConf)), 'chaine', 0, '', 0);
+				break;
+			}
+		}
+	}
+
+}
+
+
+/**
+ * @param $arr
+ * @return bool
+ */
+
+function isModuleEntryExist($arr){
+	$postitAllreadyIn = false;
+
+	if (is_array($arr)){
+		foreach ($arr as $element){
+			if($element->sharingelements->postit){
+				$postitAllreadyIn = true;
+				break;
+			}
+		}
+	}
+	return $postitAllreadyIn;
+}
