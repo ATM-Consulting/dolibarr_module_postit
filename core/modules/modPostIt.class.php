@@ -462,19 +462,6 @@ class modPostIt extends DolibarrModules
 			return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
 		}
 
-
-		$transkey1 		= 'POSTITSharing';
-		$transvalue1 	= 'Partage des Stick-its';
-		$transkey2 		= 'POSTITSharingDescription';
-		$transvalue2 	= 'Sélection des entités qui partagerons leurs stick-its (en mode partagés) avec cette entité';
-
-		$sql =" INSERT INTO ".MAIN_DB_PREFIX."overwrite_trans(lang, transkey, transvalue, entity)";
-		$sql .=" VALUES ('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey2)."','".$this->db->escape($transvalue2)."', ".$this->db->escape($conf->entity)."),('".$this->db->escape('fr_FR')."','".$this->db->escape($transkey1)."','".$this->db->escape($transvalue1)."', ".$this->db->escape($conf->entity).")";
-		$result = $this->db->query($sql);
-		if ($result > 0) {
-			$this->db->commit();
-		}
-
 		// Create extrafields during init
 		//include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 		//$extrafields = new ExtraFields($this->db);

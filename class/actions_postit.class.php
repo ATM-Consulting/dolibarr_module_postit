@@ -123,10 +123,9 @@ class ActionsPostIt
                     }
                     ,dataType:"json"
                 }).done(function(Tab) {
-					console.log(Tab);
+
                     for(x in Tab) {
                         addNote(Tab[x]);
-						console.log(Tab[x]);
                     }
 
                 });
@@ -513,5 +512,17 @@ class ActionsPostIt
 		}
 	}
 
+	/**
+	 * @param $parameters
+	 * @param $object
+	 * @param $action
+	 * @param $hookmanager
+	 * @return void
+	 */
+	public function addHtmlHeader ($parameters, &$object, &$action, $hookmanager){
+		global $langs;
+		$langs->load('postit@postit');
 
+
+	}
 }

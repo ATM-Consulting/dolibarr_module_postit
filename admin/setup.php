@@ -57,9 +57,6 @@ require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
 require_once '../lib/postit.lib.php';
 dol_include_once('postit/class/postit.class.php');
 
-// Libraries
-require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
-
 // Translations
 $langs->loadLangs(array("admin", "postit@postit"));
 
@@ -134,35 +131,9 @@ if ($conf->multicompany->enabled){
 }
 
 /**
- * simulation d'object instancié par un autre module
- */
-/*$testElement = array();
-$testElement['addzero'] = 'user';
-$testElement['sharingelements'] = array('LEAVEIT' => array(
-	'type' => 'element',
-	'icon' => 'building',
-	'active' => true,  // for setEntity() function
-));*/
-
-//echo '<pre>' . var_export(json_encode($allreadySet), true) . '</pre>';exit;
-//var_dump(json_encode($allreadySet));exit;
-//dolibarr_del_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING',  0);
-//dolibarr_set_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode(array($testElement)), 'chaine', 0, '', 0);
-/**
- * FIN simulation d'object instancié par un autre module
- */
-
-
-
-/**
  * On donne la possibilité au module multi-company de gerer le partage entre entité des post-its
  * si cette optio n'est pas activée le partage par entités n'est pas actif.
  */
-// le module multicompany est present et activé
-// la conf postit POSTIT_MULTICOMPANY_SHARED est activé
-//var_dump($conf->global->POSTIT_MULTICOMPANY_SHARED);
-//var_dump($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
-
 $currentConf  = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
 // conf à zero ou inexistante on supprime le module de la conf multiCompany
 $multi = GETPOST('POSTIT_MULTICOMPANY_SHARED','int');
