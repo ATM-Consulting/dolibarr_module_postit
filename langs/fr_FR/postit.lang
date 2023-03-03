@@ -43,5 +43,5 @@ NewStickyNote = Ajouter une nouvelle note
 POSTIT_MULTICOMPANY_SHARED=Partage des stick-its (au statut : partagé et public ) entre les entités
 POSTITSharing=Partage des Stick-its
 POSTITSharingDescription=Sélection des entités qui partagerons leurs stick-its (au statut partagés et publics) avec cette entité.
-Stickit-Multicompany=Gestion des stick-it multi-company
+Stickit-Multicompany=Gestion des stick-its multi-company
 FeatureAddedToMultiCompany=Les stick-its ne sont plus partagés.<br>Le partage des stick-its (au statut partagés et publics) entre les entités est maintenant accessible via le module multicompany puis édition de l'entité désirée.
