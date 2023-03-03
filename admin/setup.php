@@ -170,6 +170,7 @@ $multi = GETPOST('POSTIT_MULTICOMPANY_SHARED','int');
 if ( $action == 'update' ){
 	if ( empty($multi) || $multi == 0){
 		removePostitFromMultiConf();
+
 	}else{
 
 		//prise en compte de multicompany pour les postit
@@ -186,6 +187,7 @@ if ( $action == 'update' ){
 			$currentConf[] = $postitMulticonpany;
 			// on réecrit la conf
 			dolibarr_set_const($db, 'MULTICOMPANY_EXTERNAL_MODULES_SHARING', json_encode($currentConf), 'chaine', 0, '', 0);
+			dolibarr_set_const($db, 'MULTICOMPANY_POSTIT_SHARING_ENABLED', 1, 'chaine', 0, '', 0);
 			setEventMessages($langs->trans('FeatureAddedToMultiCompany'),[],'warnings');
 		}
 	}
