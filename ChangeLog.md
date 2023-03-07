@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+## Version 2.1
+- NEW : séparation par entité et gestion du partage multi-société - *07/03/2023* - 2.1.0
+
 ## Version 2.0
 
 - FIX : postit ne s'affiche plus sur l'index en 14 en raison du hook "beforeBodyClose" qui n'existe pas *13/01/2023* - 2.0.5
