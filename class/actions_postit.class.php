@@ -524,6 +524,6 @@ class ActionsPostIt
 		global $langs;
 		$langs->load('postit@postit');
 
-
+		return 0;
 	}
 }
