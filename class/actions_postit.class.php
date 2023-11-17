@@ -73,8 +73,9 @@ class ActionsPostIt
 
 		$langs->load('postit@postit');
 
-		$form=new Form($db);
-		$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
+		// FIXME $select_user is not used and create a conflict with hook of others modules
+		//$form=new Form($db);
+		//$select_user = $form->select_dolusers($user->id, 'fk_user', 1);
 
 		$aStyle = 'position:absolute; top:0px; display:block; ';
 		$imgStyle = 'width:32px; height:32px;';
@@ -523,6 +524,6 @@ class ActionsPostIt
 		global $langs;
 		$langs->load('postit@postit');
 
-
+		return 0;
 	}
 }
