@@ -153,7 +153,7 @@ class modPostIt extends DolibarrModules
 
 		// Array to add new pages in new tabs
 		$this->tabs = array(
-			'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php?id=__ID__'
+			'user:+postit:Postit:postit@postit:$user->hasRights("postit","myaction","read"):/postit/list.php?id=__ID__'
 		);
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@postit:$user->rights->postit->read:/postit/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1

@@ -69,7 +69,7 @@ class ActionsPostIt
 
 		global $langs, $user, $db, $conf;
 
-		if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
+		if(!$user->hasRight('postit','myaction','read') && !$user->hasRights('postit','allaction','write')) return false;
 
 		$langs->load('postit@postit');
 
@@ -104,7 +104,7 @@ class ActionsPostIt
             $(document).ready(function() {
 
 				<?php
-				if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
+				if($user->hasRights('postit','allaction','write') || $user->hasRights('postit','myaction','write')) {
 
 				?>
 

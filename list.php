@@ -61,7 +61,7 @@ require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
 dol_include_once('core/lib/functions2.lib.php');
 
 // vérifie les droits en lecture
-if(empty($user->rights->postit->myaction->read)) accessforbidden();
+if(!$user->hasRight('postit','myaction','read')) accessforbidden();
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT."/core/lib/admin.lib.php";
@@ -170,12 +170,12 @@ $arrayfields = dol_sort_array($arrayfields, 'position');
 // Set $enablepermissioncheck to 1 to enable a minimum low level of checks
 $enablepermissioncheck = 0;
 if ($enablepermissioncheck) {
-	$permissiontoread = $user->rights->postit->postit->read;
-	$permissiontoadd = $user->rights->postit->postit->write;
-	$permissiontodelete = $user->rights->postit->postit->delete;
+	$permissiontoread   = $user->hasRight('postit','postit','read');
+	$permissiontoadd    = $user->hasRight('postit','postit','write');
+	$permissiontodelete = $user->hasRight('postit','postit','delete');
 } else {
-	$permissiontoread = 1;
-	$permissiontoadd = 1;
+	$permissiontoread   = 1;
+	$permissiontoadd    = 1;
 	$permissiontodelete = 1;
 }
 
@@ -205,7 +205,7 @@ if ($reshook < 0) {
 
 if (empty($reshook)) {
 
-	if($action == 'del_postit' && $user->rights->postit->myaction->write){
+	if($action == 'del_postit' && $user->hasRights('postit','myaction','write')){
 		$object->fetch($id);
 		$object->delete($user);
 	}
@@ -393,7 +393,7 @@ llxHeader('', $langs->trans('PostitList'), '', '');
 
 $linkback = '';
 
-if ($user->rights->user->user->lire || $user->admin) {
+if ($user->hasRights('user','user','lire') || $user->admin) {
 	$linkback = '<a href="'.DOL_URL_ROOT.'/user/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
 }
 
@@ -401,7 +401,7 @@ if($postItUser->id > 0) {
 	$head = user_prepare_head($postItUser);
 
 	dol_fiche_head($head, 'postit', $langs->trans("User"), 0, 'user');
-	dol_banner_tab($postItUser, 'id', $linkback, $user->rights->user->user->lire || $user->admin);
+	dol_banner_tab($postItUser, 'id', $linkback, $user->hasRights('user','user','lire') || $user->admin);
 }
 
 $arrayofselected = is_array($toselect) ? $toselect : array();
