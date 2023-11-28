@@ -71,8 +71,8 @@ function postitAdminPrepareHead()
 function removePostitFromMultiConf(){
 	global $conf,$db;
 
-	if (!empty($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING)){
-		$currentConf = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+	if (!empty(getDolGlobalString('MULTICOMPANY_EXTERNAL_MODULES_SHARING'))){
+		$currentConf = json_decode(getDolGlobalString('MULTICOMPANY_EXTERNAL_MODULES_SHARING'));
 		// verifier si pas déjà valoriré
 		foreach ($currentConf as $key => $element){
 

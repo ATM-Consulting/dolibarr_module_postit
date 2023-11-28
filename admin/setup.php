@@ -96,7 +96,7 @@ if (!class_exists('FormSetup')) {
 $formSetup = new FormSetup($db);
 
 // Setup conf POSTIT_COLOR_PRIVATE
-if(empty($conf->global->POSTIT_COLOR_PRIVATE)){ $conf->global->POSTIT_COLOR_PRIVATE = PostIt::getcolor('private'); }
+if(empty(getDolGlobalString('POSTIT_COLOR_PRIVATE'))) { $conf->global->POSTIT_COLOR_PRIVATE = PostIt::getcolor('private'); }
 $item = $formSetup->newItem('POSTIT_COLOR_PRIVATE');
 $item->setAsColor();
 $item->defaultFieldValue = '#FF0000';
@@ -104,7 +104,7 @@ $item->nameText = $item->getNameText();
 $item->fieldInputOverride = '';
 
 // Setup conf POSTIT_COLOR_PUBLIC
-if(empty($conf->global->POSTIT_COLOR_PUBLIC)){ $conf->global->POSTIT_COLOR_PUBLIC = PostIt::getcolor('public'); }
+if(empty(getDolGlobalString('POSTIT_COLOR_PUBLIC'))){ $conf->global->POSTIT_COLOR_PUBLIC = PostIt::getcolor('public'); }
 $item = $formSetup->newItem('POSTIT_COLOR_PUBLIC');
 $item->setAsColor();
 $item->defaultFieldValue = '#FF0000';
@@ -112,7 +112,7 @@ $item->nameText = $item->getNameText();
 $item->fieldInputOverride = '';
 
 // Setup conf POSTIT_COLOR_SHARED
-if(empty($conf->global->POSTIT_COLOR_SHARED)){ $conf->global->POSTIT_COLOR_SHARED = PostIt::getcolor('shared'); }
+if(empty(getDolGlobalString('POSTIT_COLOR_SHARED'))){ $conf->global->POSTIT_COLOR_SHARED = PostIt::getcolor('shared'); }
 $item = $formSetup->newItem('POSTIT_COLOR_SHARED');
 $item->setAsColor();
 $item->defaultFieldValue = '#FF0000';
@@ -132,7 +132,7 @@ if ($conf->multicompany->enabled){
  * On donne la possibilité au module multi-company de gerer le partage entre entité des post-its
  * si cette optio n'est pas activée le partage par entités n'est pas actif.
  */
-$currentConf  = json_decode($conf->global->MULTICOMPANY_EXTERNAL_MODULES_SHARING);
+$currentConf  = json_decode(getDolGlobalString('MULTICOMPANY_EXTERNAL_MODULES_SHARING'));
 // conf à zero ou inexistante on supprime le module de la conf multiCompany
 $multi = GETPOST('POSTIT_MULTICOMPANY_SHARED','int');
 if ( $action == 'update' ){

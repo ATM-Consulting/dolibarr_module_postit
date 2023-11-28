@@ -145,7 +145,7 @@ class PostIt extends CommonObject
 
 		$this->db = $db;
 
-		if (empty($conf->global->MAIN_SHOW_TECHNICAL_ID) && isset($this->fields['rowid'])) {
+		if (empty(getDolGlobalString('MAIN_SHOW_TECHNICAL_ID')) && isset($this->fields['rowid'])) {
 			$this->fields['rowid']['visible'] = 0;
 		}
 		if (empty($conf->multicompany->enabled) && isset($this->fields['entity'])) {
@@ -189,9 +189,9 @@ class PostIt extends CommonObject
 		$confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
 
 		$Tcode = array(
-			'private' => !empty( $conf->global->POSTIT_COLOR_PRIVATE)? $conf->global->POSTIT_COLOR_PRIVATE : '#FEFE01',
-			'public'  => !empty( $conf->global->POSTIT_COLOR_PUBLIC )? $conf->global->POSTIT_COLOR_PUBLIC  : '#90c6ff',
-			'shared'  => !empty( $conf->global->POSTIT_COLOR_SHARED )? $conf->global->POSTIT_COLOR_SHARED  : '#B5E655',
+			'private' => !empty( getDolGlobalString('POSTIT_COLOR_PRIVATE') )? $conf->global->POSTIT_COLOR_PRIVATE : '#FEFE01',
+			'public'  => !empty( getDolGlobalString('POSTIT_COLOR_PUBLIC') )? $conf->global->POSTIT_COLOR_PUBLIC  : '#90c6ff',
+			'shared'  => !empty( getDolGlobalString('POSTIT_COLOR_SHARED') )? $conf->global->POSTIT_COLOR_SHARED  : '#B5E655',
 		);
 
 		if(!empty($user->conf->{$confkey}))
