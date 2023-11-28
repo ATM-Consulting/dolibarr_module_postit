@@ -205,7 +205,7 @@ if ($reshook < 0) {
 
 if (empty($reshook)) {
 
-	if($action == 'del_postit' && $user->hasRights('postit','myaction','write')){
+	if($action == 'del_postit' && $user->hasRight('postit','myaction','write')){
 		$object->fetch($id);
 		$object->delete($user);
 	}
@@ -393,7 +393,7 @@ llxHeader('', $langs->trans('PostitList'), '', '');
 
 $linkback = '';
 
-if ($user->hasRights('user','user','lire') || $user->admin) {
+if ($user->hasRight('user','user','lire') || $user->admin) {
 	$linkback = '<a href="'.DOL_URL_ROOT.'/user/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
 }
 
@@ -401,7 +401,7 @@ if($postItUser->id > 0) {
 	$head = user_prepare_head($postItUser);
 
 	dol_fiche_head($head, 'postit', $langs->trans("User"), 0, 'user');
-	dol_banner_tab($postItUser, 'id', $linkback, $user->hasRights('user','user','lire') || $user->admin);
+	dol_banner_tab($postItUser, 'id', $linkback, $user->hasRight('user','user','lire') || $user->admin);
 }
 
 $arrayofselected = is_array($toselect) ? $toselect : array();
