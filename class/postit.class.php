@@ -240,10 +240,11 @@ class PostIt extends CommonObject
 	 * @param	int    	$id				Id object
 	 * @param	string 	$ref			Ref
 	 * @param	string	$morewhere		More SQL filters (' AND ...')
+     * @param   int     $noextrafields  0=Default to load extrafields, 1=No extrafields
 	 * @return 	int         			<0 if KO, 0 if not found, >0 if OK
 	 */
-	public function fetch($id, $ref = null, $morewhere = '') {
-		return parent::fetchCommon($id, $ref, $morewhere);
+	public function fetch($id, $ref = null, $morewhere = '', $noextrafields = 0) {
+		return parent::fetchCommon($id, $ref, $morewhere, $noextrafields);
 	}
 
 	/**
