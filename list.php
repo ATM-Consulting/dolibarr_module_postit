@@ -294,6 +294,7 @@ if($result){
 // Build and execute select
 // --------------------------------------------------------------------
 $sql = 'SELECT DISTINCT t.rowid, t.fk_user, t.title, t.comment, t.status, \'\' as Page, \'\' as Action';
+$sql.= ', t.fk_actioncomm, t.position_top, t.position_left, t.position_width, t.position_height, t.fk_postit, t.fk_user_todo, t.fk_object, t.tms, t.date_creation';
 $sql.= ' FROM '.MAIN_DB_PREFIX.'postit t';
 $sql.= ' WHERE (t.fk_user='.$postItUser->id . ' OR t.status!=\'private\')';
 
