@@ -99,7 +99,7 @@ class ActionsPostIt extends CommonHookActions
 			$a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
 		}
 
-		$aDelete =' <span rel="delete"><span class="fa fa-trash-o postit-icon"></span></span>';
+		$aDelete =' <span rel="delete"><span class="fa fa-trash postit-icon"></span></span>';
 		$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
 		?>
 		<script language="javascript">
