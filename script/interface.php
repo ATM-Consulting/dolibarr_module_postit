@@ -184,7 +184,7 @@ switch ($put) {
 			exit;
 		}
 
-		if ($user->hasRights('postit','allaction','write') || ($user->hasRights('postit','myaction','write') && $p->fk_user == $user->id)) {
+		if ($user->hasRight('postit','allaction','write') || ($user->hasRight('postit','myaction','write') && $p->fk_user == $user->id)) {
 			$p->rightToDelete = 1;
 			$p->rightToSetStatus = 1;
 			$p->rightEdit = 1;

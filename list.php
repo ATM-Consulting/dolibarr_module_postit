@@ -649,7 +649,7 @@ $totalarray['nbfield'] = 0;
 // Fields title label
 // --------------------------------------------------------------------
 print '<tr class="liste_titre">';
-if (!empty(getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN')) {
+if (!empty(getDolGlobalString('MAIN_CHECKBOX_LEFT_COLUMN'))) {
 	print getTitleFieldOfList(($mode != 'kanban' ? $selectedfields : ''), 0, $_SERVER["PHP_SELF"], '', '', '', '', $sortfield, $sortorder, 'center maxwidthsearch ')."\n";
 }
 foreach ($object->fields as $key => $val) {
