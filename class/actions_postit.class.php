@@ -26,7 +26,9 @@
 /**
  * Class ActionsPostIt
  */
-class ActionsPostIt
+require_once DOL_DOCUMENT_ROOT.'/core/class/commonhookactions.class.php';
+
+class ActionsPostIt extends CommonHookActions
 {
 	/**
 	 * @var DoliDB Database handler.
