@@ -2,6 +2,9 @@
 
 ## UNRELEASED
 
+# Version 2.2
+- NEW: compatibilité dolibarr 19 / php 8.2 - *28/11/2023* - 2.2.0
+
 ## Version 2.1
 - FIX : missing hook function return *17/11/2023* - 2.1.1
 - NEW : séparation par entité et gestion du partage multi-société *07/03/2023* - 2.1.0
