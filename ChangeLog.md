@@ -2,7 +2,6 @@
 
 ## UNRELEASED
 
-# Version 2.2
 - NEW: compatibilité dolibarr 19 / php 8.2 - *28/11/2023* - 2.2.0
 
 ## Version 2.1
