@@ -1,4 +1,7 @@
 <?php
+
+namespace postit;
+
 /* Copyright (C) 2023 Laurent Destailleur  <eldy@users.sourceforge.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,18 +25,26 @@
  */
 
 
-/**
- *	Parent class of all other hook actions classes
- */
-abstract class CommonHookActions
-{
-	/**
-	 * @var string	String of results.
-	 */
-	public $resprints;
+if (file_exists(DOL_DOCUMENT_ROOT . 'htdocs/core/class/commonhookactions.class.php')){
+    require_once DOL_DOCUMENT_ROOT . '/htdocs/core/class/commonhookactions.class.php';
+    /**
+     *	Parent class of all other hook actions classes
+     */
+    abstract class RetroCompatCommonHookActions extends \CommonHookActions { }
+} else {
+    /**
+     *	Parent class of all other hook actions classes
+     */
+    abstract class RetroCompatCommonHookActions
+    {
+        /**
+         * @var string	String of results.
+         */
+        public $resprints;
 
-	/**
-	 * @var array 	Array of results.
-	 */
-	public $results = array();
+        /**
+         * @var array 	Array of results.
+         */
+        public $results = array();
+    }
 }

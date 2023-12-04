@@ -26,12 +26,9 @@
 /**
  * Class ActionsPostIt
  */
-$commonhookactionsclassfileDolibarr     = DOL_DOCUMENT_ROOT.'/core/class/commonhookactions.class.php';
-$commonhookactionsclassfileBackport     = __DIR__.'/../backport/v19/core/class/commonhookactions.class.php';
-$commonhookactionsclassfileToUse        = (file_exists($commonhookactionsclassfileDolibarr)) ? $commonhookactionsclassfileDolibarr : $commonhookactionsclassfileBackport;
-require_once $commonhookactionsclassfileToUse;
+require_once __DIR__ . '/../backport/v19/core/class/commonhookactions.class.php';
 
-class ActionsPostIt extends CommonHookActions
+class ActionsPostIt extends postit\RetroCompatCommonHookActions
 {
 	/**
 	 * @var DoliDB Database handler.
