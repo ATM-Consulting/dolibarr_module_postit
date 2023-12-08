@@ -26,7 +26,9 @@
 /**
  * Class ActionsPostIt
  */
-class ActionsPostIt
+require_once __DIR__ . '/../backport/v19/core/class/commonhookactions.class.php';
+
+class ActionsPostIt extends postit\RetroCompatCommonHookActions
 {
 	/**
 	 * @var DoliDB Database handler.
@@ -69,7 +71,7 @@ class ActionsPostIt
 
 		global $langs, $user, $db, $conf;
 
-		if(!$user->rights->postit->myaction->read && !$user->rights->postit->allaction->write) return false;
+		if(!$user->hasRight('postit','myaction','read') && !$user->hasRight('postit','allaction','write')) return false;
 
 		$langs->load('postit@postit');
 
@@ -97,14 +99,14 @@ class ActionsPostIt
 			$a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
 		}
 
-		$aDelete =' <span rel="delete"><span class="fa fa-trash-o postit-icon"></span></span>';
+		$aDelete =' <span rel="delete"><span class="fa fa-trash postit-icon"></span></span>';
 		$aResponse =' <span rel="response">'.img_picto('','response.png@postit').'</span>';
 		?>
 		<script language="javascript">
             $(document).ready(function() {
 
 				<?php
-				if($user->rights->postit->allaction->write || $user->rights->postit->myaction->write) {
+				if($user->hasRight('postit','allaction','write') || $user->hasRight('postit','myaction','write')) {
 
 				?>
 

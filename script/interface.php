@@ -83,7 +83,7 @@ switch ($get) {
 
 			$p->rightResponse = ($p->fk_user == $user->id) ? 0 : 1;
 
-			if ($user->rights->postit->allaction->write || ($user->rights->postit->myaction->write && $p->fk_user == $user->id)) {
+			if ($user->hasRight('postit','allaction','write') || ($user->hasRight('postit','myaction','write') && $p->fk_user == $user->id)) {
 				$p->rightToDelete = 1;
 				$p->rightToSetStatus = 1;
 				$p->rightEdit = 1;
@@ -184,7 +184,7 @@ switch ($put) {
 			exit;
 		}
 
-		if ($user->rights->postit->allaction->write || ($user->rights->postit->myaction->write && $p->fk_user == $user->id)) {
+		if ($user->hasRight('postit','allaction','write') || ($user->hasRight('postit','myaction','write') && $p->fk_user == $user->id)) {
 			$p->rightToDelete = 1;
 			$p->rightToSetStatus = 1;
 			$p->rightEdit = 1;

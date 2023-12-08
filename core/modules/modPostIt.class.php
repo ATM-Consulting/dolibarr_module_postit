@@ -73,7 +73,7 @@ class modPostIt extends DolibarrModules
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
 
-		$this->version = '2.1.1';
+		$this->version = '2.2.0';
 
 		// Url to the file with your last numberversion of this module
 		require_once __DIR__ . '/../../class/techatm.class.php';
@@ -124,8 +124,8 @@ class modPostIt extends DolibarrModules
 		$this->langfiles = array("postit@postit");
 
 		// Prerequisites
-		$this->phpmin = array(5,0); // Minimum version of PHP required by module
-		$this->need_dolibarr_version = array(3,0); // Minimum version of Dolibarr required by module
+		$this->phpmin = array(7,0); // Minimum version of PHP required by module
+		$this->need_dolibarr_version = array(15,0); // Minimum version of Dolibarr required by module
 
 		// Messages at activation
 		$this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','MX'='textmx'...)
@@ -153,7 +153,7 @@ class modPostIt extends DolibarrModules
 
 		// Array to add new pages in new tabs
 		$this->tabs = array(
-			'user:+postit:Postit:postit@postit:$user->rights->postit->myaction->read:/postit/list.php?id=__ID__'
+			'user:+postit:Postit:postit@postit:$user->hasRight("postit","myaction","read"):/postit/list.php?id=__ID__'
 		);
 		// Example:
 		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@postit:$user->rights->postit->read:/postit/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
