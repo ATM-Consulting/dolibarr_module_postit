@@ -2,13 +2,18 @@
 
 ## UNRELEASED
 
+
+
+## Release 2.2
+
 - NEW: compatibilité dolibarr 19 / php 8.2 - *28/11/2023* - 2.2.0
 
-## Version 2.1
+## Release 2.1
+
 - FIX : missing hook function return *17/11/2023* - 2.1.1
 - NEW : séparation par entité et gestion du partage multi-société *07/03/2023* - 2.1.0
 
-## Version 2.0
+## Release 2.0
 
 - FIX : Postit ne s'affiche plus sur l'index en 14 en raison du hook "beforeBodyClose" qui n'existe pas *13/01/2023* - 2.0.5
 - FIX : Card overflow displays and live edit style *15/07/2022* - 2.0.4
@@ -18,7 +23,7 @@
 - NEW : Refonte du module sur le modèle module builder *02/06/2022* - 2.0.0
 - NEW : Ajout de la class TechATM pour l'affichage de la page "A propos" *10/05/2022* - 1.6.0
 
-## Version 1.5
+## Release 1.5
 
 - FIX: Compatibility V16 : newToken *02/06/2022* - 1.5.5
 - NEW: Modification date *2021-07-06* - 1.5.3
