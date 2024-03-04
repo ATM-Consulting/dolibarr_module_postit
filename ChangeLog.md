@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-
+- NEW: Translation to spanish Mexico (es_MX) - *04/03/2024* - 2.3.0
 
 ## Release 2.2
 
