@@ -28,4 +28,20 @@ public = Público
 shared = Compartido
 
 PostitList = Lista de PostIt
-Home = Accueil
+Home = AccueilPostItSetup = Configuración del módulo Postit
+PostItAbout = Acerca del módulo Postit
+PostitUserParameters = Configuración del usuario
+PublicNoteHelp = Estado actual: público, la nota sólo aparece en la ficha de este documento para todos los usuarios.
+SharedNoteHelp = Estado actual: compartido, la nota aparece para todos los registros (de este tipo de documento) y para todos los usuarios.
+PrivateNoteHelp = Estado actual: privado, la nota sólo aparece en el archivo del documento y sólo es visible para usted.
+POSTIT_COLOR_PRIVATE = Color de fondo de la nota privada
+POSTIT_COLOR_PUBLIC = Color de fondo de una nota pública
+POSTIT_COLOR_SHARED = Color de fondo de una nota compartida
+AbricotNeedUpdate = Hay que actualizar el módulo de albaricoque.
+NewStickyNote = Añadir una nueva nota
+POSTIT_MULTICOMPANY_SHARED = Compartir stick-its (estado: compartido y público) entre entidades
+POSTITSharing = Compartir Stick-its
+POSTITSharingDescription = Selección de las entidades que compartirán sus stick-its (con estado compartido y público) con esta entidad.
+Stickit-Multicompany = Gestión de stick-its multiempresa
+FeatureAddedToMultiCompany = Los stick-its ya no se comparten.<br>Compartir stick-its (con estado compartido y público) entre entidades es ahora accesible a través del módulo multiempresa y editando después la entidad deseada.
+PostItSetup = Configuración del módulo Postit

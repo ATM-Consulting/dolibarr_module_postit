@@ -21,4 +21,25 @@ shortPublicNote=(stato pubblico)
 shortSharedNote=(stato condiviso)
 shortPrivateNote=(stato privato)
 
-AreYouSureYouWantToDeleteThisNote=Sei sicuro di voler eliminare questa nota?
+AreYouSureYouWantToDeleteThisNote=Sei sicuro di voler eliminare questa nota?PostItSetup = Configurazione del modulo Postit
+PostItAbout = Informazioni sul modulo Postit
+PostitUserParameters = Impostazioni utente
+PublicNoteHelp = Stato attuale: pubblico, la nota appare solo nel record di questo documento per tutti gli utenti.
+SharedNoteHelp = Stato attuale: condiviso, la nota appare per tutti i record (di questo tipo di documento) e per tutti gli utenti.
+PrivateNoteHelp = Stato attuale: privato, la nota appare solo nel file del documento ed è visibile solo all'utente.
+private = Privato
+public = Pubblico
+shared = Condiviso
+PostitList = Elenco PostIt
+Home = Casa
+POSTIT_COLOR_PRIVATE = Colore di sfondo della nota privata
+POSTIT_COLOR_PUBLIC = Colore di sfondo di una nota pubblica
+POSTIT_COLOR_SHARED = Colore di sfondo di una nota condivisa
+AbricotNeedUpdate = Il modulo albicocca deve essere aggiornato.
+NewStickyNote = Aggiungere una nuova nota
+POSTIT_MULTICOMPANY_SHARED = Condivisione di stick-it (stato: condiviso e pubblico) tra entità
+POSTITSharing = Condividere gli stick-it
+POSTITSharingDescription = Selezione delle entità che condivideranno i loro stick-it (con stato condiviso e pubblico) con questa entità.
+Stickit-Multicompany = Gestione di stick-it multiaziendali
+FeatureAddedToMultiCompany = Gli stick-it non sono più condivisi.<br>La condivisione degli stick-it (con stato condiviso e pubblico) tra entità è ora accessibile tramite il modulo multiaziendale e la modifica dell'entità desiderata.
+PostItSetup = Configurazione del modulo Postit

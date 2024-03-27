@@ -33,4 +33,20 @@ PostitList = Post-it Notes List
 Home = Home
 
 # TAB
-Postit = Post-its
+Postit = Post-itsPostItSetup = Postit module configuration
+PostItAbout = About the Postit module
+PostitUserParameters = User settings
+PublicNoteHelp = Current status: public, the note only appears in the document file for all users.
+SharedNoteHelp = Current status: shared, the note appears for all records (of this document type) and for all users.
+PrivateNoteHelp = Current status: private, the note only appears in the document file and is only visible to you.
+POSTIT_COLOR_PRIVATE = Private note background color
+POSTIT_COLOR_PUBLIC = Background color for a public note
+POSTIT_COLOR_SHARED = Shared note background color
+AbricotNeedUpdate = The apricot module needs updating.
+NewStickyNote = Add a new note
+POSTIT_MULTICOMPANY_SHARED = Sharing stick-its (status: shared and public) between entities
+POSTITSharing = Sharing Stick-its
+POSTITSharingDescription = Selection of entities that will share their stick-its (in shared and public status) with this entity.
+Stickit-Multicompany = Multi-company stick-its management
+FeatureAddedToMultiCompany = Stick-its are no longer shared.<br>Sharing stick-its (in shared and public status) between entities is now accessible via the multicompany module, then edit the desired entity.
+PostItSetup = Postit module configuration
