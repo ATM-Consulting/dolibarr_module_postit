@@ -73,7 +73,7 @@ class modPostIt extends DolibarrModules
 
 		// Possible values for version are: 'development', 'experimental', 'dolibarr', 'dolibarr_deprecated' or a version string like 'x.y.z'
 
-		$this->version = '2.3.0';
+		$this->version = '2.4.0';
 
 		// Url to the file with your last numberversion of this module
 		require_once __DIR__ . '/../../class/techatm.class.php';
@@ -125,7 +125,7 @@ class modPostIt extends DolibarrModules
 
 		// Prerequisites
 		$this->phpmin = array(7,0); // Minimum version of PHP required by module
-		$this->need_dolibarr_version = array(15,0); // Minimum version of Dolibarr required by module
+		$this->need_dolibarr_version = array(16,0); // Minimum version of Dolibarr required by module
 
 		// Messages at activation
 		$this->warnings_activation = array(); // Warning to show when we activate module. array('always'='text') or array('FR'='textfr','MX'='textmx'...)
@@ -146,7 +146,7 @@ class modPostIt extends DolibarrModules
 			'fr_FR:ParentCompany'=>'Maison mère ou revendeur'
 		)*/
 
-		if (!isset($conf->postit) || !isset($conf->postit->enabled)) {
+		if (!isset($conf->postit) || !isModEnabled('postit')) {
 			$conf->postit = new stdClass();
 			$conf->postit->enabled = 0;
 		}
