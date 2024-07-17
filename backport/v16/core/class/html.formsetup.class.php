@@ -847,7 +847,7 @@ class FormSetupItem
 		} elseif ($this->type == 'securekey') {
 			$out.= $this->generateInputFieldSecureKey();
 		} elseif ($this->type == 'product') {
-			if (!empty($conf->product->enabled) || !empty($conf->service->enabled)) {
+			if (isModEnabled('product') || isModEnabled('service')) {
 				$selected = (empty($this->fieldValue) ? '' : $this->fieldValue);
 				$out.= $this->form->select_produits($selected, $this->confKey, '', 0, 0, 1, 2, '', 0, array(), 0, '1', 0, $this->cssClass, 0, '', null, 1);
 			}
@@ -888,7 +888,7 @@ class FormSetupItem
 	{
 		global $conf;
 		require_once DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
-		$doleditor = new DolEditor($this->confKey, $this->fieldValue, '', 160, 'dolibarr_notes', '', false, false, $conf->fckeditor->enabled, ROWS_5, '90%');
+		$doleditor = new DolEditor($this->confKey, $this->fieldValue, '', 160, 'dolibarr_notes', '', false, false, isModEnabled('fckeditor'), ROWS_5, '90%');
 		return $doleditor->Create(1);
 	}
 

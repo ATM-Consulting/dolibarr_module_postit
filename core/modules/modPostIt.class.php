@@ -146,7 +146,7 @@ class modPostIt extends DolibarrModules
 			'fr_FR:ParentCompany'=>'Maison mère ou revendeur'
 		)*/
 
-		if (!isset($conf->postit) || !isset($conf->postit->enabled)) {
+		if (!isset($conf->postit) || !isModEnabled('postit')) {
 			$conf->postit = new stdClass();
 			$conf->postit->enabled = 0;
 		}
@@ -156,8 +156,8 @@ class modPostIt extends DolibarrModules
 			'user:+postit:Postit:postit@postit:$user->hasRight("postit","myaction","read"):/postit/list.php?id=__ID__'
 		);
 		// Example:
-		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@postit:$user->rights->postit->read:/postit/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
-		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@postit:$user->rights->othermodule->read:/postit/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
+		// $this->tabs[] = array('data'=>'objecttype:+tabname1:Title1:mylangfile@postit:$user->hasRight('postit', 'read'):/postit/mynewtab1.php?id=__ID__');  					// To add a new tab identified by code tabname1
+		// $this->tabs[] = array('data'=>'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@postit:$user->hasRight('othermodule', 'read'):/postit/mynewtab2.php?id=__ID__',  	// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
 		// $this->tabs[] = array('data'=>'objecttype:-tabname:NU:conditiontoremove');                                                     										// To remove an existing tab identified by code tabname
 		//
 		// Where objecttype can be
@@ -203,7 +203,7 @@ class modPostIt extends DolibarrModules
 			// Name of columns with primary key (try to always name it 'rowid')
 			'tabrowid'=>array("rowid", "rowid", "rowid"),
 			// Condition to show each dictionary
-			'tabcond'=>array($conf->postit->enabled, $conf->postit->enabled, $conf->postit->enabled)
+			'tabcond'=>array(isModEnabled('postit'), isModEnabled('postit'), isModEnabled('postit'))
 			// Help tooltip for each fields of the dictionary
 			'tabhelp'=>array(array('code'=>$langs->trans('CodeTooltipHelp')))
 		);
@@ -234,13 +234,13 @@ class modPostIt extends DolibarrModules
 			//      'frequency' => 2,
 			//      'unitfrequency' => 3600,
 			//      'status' => 0,
-			//      'test' => '$conf->postit->enabled',
+			//      'test' => 'isModEnabled('postit')',
 			//      'priority' => 50,
 			//  ),
 		);
 		// Example: $this->cronjobs=array(
-		//    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'$conf->postit->enabled', 'priority'=>50),
-		//    1=>array('label'=>'My label', 'jobtype'=>'command', 'command'=>'', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>1, 'unitfrequency'=>3600*24, 'status'=>0, 'test'=>'$conf->postit->enabled', 'priority'=>50)
+		//    0=>array('label'=>'My label', 'jobtype'=>'method', 'class'=>'/dir/class/file.class.php', 'objectname'=>'MyClass', 'method'=>'myMethod', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>2, 'unitfrequency'=>3600, 'status'=>0, 'test'=>'isModEnabled('postit')', 'priority'=>50),
+		//    1=>array('label'=>'My label', 'jobtype'=>'command', 'command'=>'', 'parameters'=>'param1, param2', 'comment'=>'Comment', 'frequency'=>1, 'unitfrequency'=>3600*24, 'status'=>0, 'test'=>'isModEnabled('postit')', 'priority'=>50)
 		// );
 
 		// Permissions provided by this module
@@ -252,19 +252,19 @@ class modPostIt extends DolibarrModules
 		$this->rights[$r][1] = 'Read'; // Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'myaction';
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->rights->postit->postit->read)
+		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->hasRight('postit', 'postit', 'read'))
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
 		$this->rights[$r][1] = 'Write'; // Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'myaction';
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->postit->postit->write)
+		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->hasRight('postit', 'postit', 'write'))
 		$r++;
 		$this->rights[$r][0] = $this->numero . sprintf("%02d", $r + 1); // Permission id (must not be already used)
 		$this->rights[$r][1] = 'Admin'; // Permission label
 		$this->rights[$r][3] = 0; 					// Permission by default for new user (0/1)
 		$this->rights[$r][4] = 'allaction';
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->rights->postit->postit->delete)
+		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->hasRight('postit', 'postit', 'delete'))
 		$r++;
 		/* END MODULEBUILDER PERMISSIONS */
 
@@ -283,8 +283,8 @@ class modPostIt extends DolibarrModules
 //			'url'=>'/postit/postitindex.php',
 //			'langs'=>'postit@postit', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 //			'position'=>1000 + $r,
-//			'enabled'=>'$conf->postit->enabled', // Define condition to show or hide menu entry. Use '$conf->postit->enabled' if entry must be visible if module is enabled.
-//			'perms'=>'1', // Use 'perms'=>'$user->rights->postit->postit->read' if you want your menu with a permission rules
+//			'enabled'=>'isModEnabled('postit')', // Define condition to show or hide menu entry. Use 'isModEnabled('postit')' if entry must be visible if module is enabled.
+//			'perms'=>'1', // Use 'perms'=>'$user->hasRight('postit', 'postit', 'read')' if you want your menu with a permission rules
 //			'target'=>'',
 //			'user'=>2, // 0=Menu for internal users, 1=external users, 2=both
 //		);
@@ -300,8 +300,8 @@ class modPostIt extends DolibarrModules
 			'url'=>'/postit/postitindex.php',
 			'langs'=>'postit@postit',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
-			'enabled'=>'$conf->postit->enabled',  // Define condition to show or hide menu entry. Use '$conf->postit->enabled' if entry must be visible if module is enabled.
-			'perms'=>'$user->rights->postit->postit->read',			                // Use 'perms'=>'$user->rights->postit->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'isModEnabled('postit')',  // Define condition to show or hide menu entry. Use 'isModEnabled('postit')' if entry must be visible if module is enabled.
+			'perms'=>'$user->hasRight('postit', 'postit', 'read')',			                // Use 'perms'=>'$user->hasRight('postit', 'level1', 'level2')' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
@@ -314,8 +314,8 @@ class modPostIt extends DolibarrModules
 			'url'=>'/postit/postit_list.php',
 			'langs'=>'postit@postit',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
-			'enabled'=>'$conf->postit->enabled',  // Define condition to show or hide menu entry. Use '$conf->postit->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->postit->postit->read',			                // Use 'perms'=>'$user->rights->postit->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'isModEnabled('postit')',  // Define condition to show or hide menu entry. Use 'isModEnabled('postit')' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->hasRight('postit', 'postit', 'read')',			                // Use 'perms'=>'$user->hasRight('postit', 'level1', 'level2')' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
@@ -328,8 +328,8 @@ class modPostIt extends DolibarrModules
 			'url'=>'/postit/postit_card.php?action=create',
 			'langs'=>'postit@postit',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>1000+$r,
-			'enabled'=>'$conf->postit->enabled',  // Define condition to show or hide menu entry. Use '$conf->postit->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms'=>'$user->rights->postit->postit->write',			                // Use 'perms'=>'$user->rights->postit->level1->level2' if you want your menu with a permission rules
+			'enabled'=>'isModEnabled('postit')',  // Define condition to show or hide menu entry. Use 'isModEnabled('postit')' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+			'perms'=>'$user->hasRight('postit', 'postit', 'write')',			                // Use 'perms'=>'$user->hasRight('postit', 'level1', 'level2')' if you want your menu with a permission rules
 			'target'=>'',
 			'user'=>2,				                // 0=Menu for internal users, 1=external users, 2=both
 		);
@@ -347,9 +347,9 @@ class modPostIt extends DolibarrModules
 //            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 //            'langs'=>'postit@postit',
 //            'position'=>1100+$r,
-//            // Define condition to show or hide menu entry. Use '$conf->postit->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'enabled'=>'$conf->postit->enabled',
-//            // Use 'perms'=>'$user->rights->postit->level1->level2' if you want your menu with a permission rules
+//            // Define condition to show or hide menu entry. Use 'isModEnabled('postit')' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+//            'enabled'=>'isModEnabled('postit')',
+//            // Use 'perms'=>'$user->hasRight('postit', 'level1', 'level2')' if you want your menu with a permission rules
 //            'perms'=>'1',
 //            'target'=>'',
 //            // 0=Menu for internal users, 1=external users, 2=both
@@ -367,9 +367,9 @@ class modPostIt extends DolibarrModules
 //            // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 //            'langs'=>'postit@postit',
 //            'position'=>1100+$r,
-//            // Define condition to show or hide menu entry. Use '$conf->postit->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-//            'enabled'=>'$conf->postit->enabled',
-//            // Use 'perms'=>'$user->rights->postit->level1->level2' if you want your menu with a permission rules
+//            // Define condition to show or hide menu entry. Use 'isModEnabled('postit')' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
+//            'enabled'=>'isModEnabled('postit')',
+//            // Use 'perms'=>'$user->hasRight('postit', 'level1', 'level2')' if you want your menu with a permission rules
 //            'perms'=>'1',
 //            'target'=>'',
 //            // 0=Menu for internal users, 1=external users, 2=both
@@ -465,11 +465,11 @@ class modPostIt extends DolibarrModules
 		// Create extrafields during init
 		//include_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 		//$extrafields = new ExtraFields($this->db);
-		//$result1=$extrafields->addExtraField('postit_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', '$conf->postit->enabled');
-		//$result2=$extrafields->addExtraField('postit_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', '$conf->postit->enabled');
-		//$result3=$extrafields->addExtraField('postit_myattr3', "New Attr 3 label", 'varchar', 1, 10, 'bank_account', 0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', '$conf->postit->enabled');
-		//$result4=$extrafields->addExtraField('postit_myattr4', "New Attr 4 label", 'select',  1,  3, 'thirdparty',   0, 1, '', array('options'=>array('code1'=>'Val1','code2'=>'Val2','code3'=>'Val3')), 1,'', 0, 0, '', '', 'postit@postit', '$conf->postit->enabled');
-		//$result5=$extrafields->addExtraField('postit_myattr5', "New Attr 5 label", 'text',    1, 10, 'user',         0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', '$conf->postit->enabled');
+		//$result1=$extrafields->addExtraField('postit_myattr1', "New Attr 1 label", 'boolean', 1,  3, 'thirdparty',   0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', 'isModEnabled('postit')');
+		//$result2=$extrafields->addExtraField('postit_myattr2', "New Attr 2 label", 'varchar', 1, 10, 'project',      0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', 'isModEnabled('postit')');
+		//$result3=$extrafields->addExtraField('postit_myattr3', "New Attr 3 label", 'varchar', 1, 10, 'bank_account', 0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', 'isModEnabled('postit')');
+		//$result4=$extrafields->addExtraField('postit_myattr4', "New Attr 4 label", 'select',  1,  3, 'thirdparty',   0, 1, '', array('options'=>array('code1'=>'Val1','code2'=>'Val2','code3'=>'Val3')), 1,'', 0, 0, '', '', 'postit@postit', 'isModEnabled('postit')');
+		//$result5=$extrafields->addExtraField('postit_myattr5', "New Attr 5 label", 'text',    1, 10, 'user',         0, 0, '', '', 1, '', 0, 0, '', '', 'postit@postit', 'isModEnabled('postit')');
 
 		// Permissions
 		$this->remove($options);
