@@ -181,7 +181,7 @@ if ($enablepermissioncheck) {
 
 // Security check (enable the most restrictive one)
 if ($user->socid > 0) accessforbidden();
-if (empty($conf->postit->enabled)) accessforbidden('Module not enabled');
+if (!isModEnabled('postit')) accessforbidden('Module not enabled');
 if (!$permissiontoread) accessforbidden();
 
 

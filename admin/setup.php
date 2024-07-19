@@ -120,7 +120,7 @@ $item->nameText = $item->getNameText();
 $item->fieldInputOverride = '';
 
 
-if ($conf->multicompany->enabled){
+if (isModEnabled('multicompany')){
 	$itemMC = $formSetup->newItem('POSTIT_MULTICOMPANY_SHARED')->setAsSelect(array(0 => $langs->transnoentities('No'), 1 => $langs->transnoentities('Yes')));
 	$itemMC->defaultFieldValue = 0;
 	$itemMC->nameText = $itemMC->getNameText();
