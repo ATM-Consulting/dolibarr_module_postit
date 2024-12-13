@@ -85,18 +85,15 @@ $setupnotempty = 0;
 $useFormSetup = 1;
 
 if (!class_exists('FormSetup')) {
-	// For retrocompatibility Dolibarr < 16.0
-	if (!class_exists('FormSetup')) {
-		require_once __DIR__.'/../backport/v16/core/class/html.formsetup.class.php';
-	} else {
-		require_once DOL_DOCUMENT_ROOT.'/core/class/html.formsetup.class.php';
-	}
+	require_once DOL_DOCUMENT_ROOT . '/core/class/html.formsetup.class.php';
 }
 
 $formSetup = new FormSetup($db);
 
 // Setup conf POSTIT_COLOR_PRIVATE
 if(empty(getDolGlobalString('POSTIT_COLOR_PRIVATE'))) { $conf->global->POSTIT_COLOR_PRIVATE = PostIt::getcolor('private'); }
+//xdebug_var_dump(getDolGlobalString('POSTIT_COLOR_PRIVATE'));
+//exit;
 $item = $formSetup->newItem('POSTIT_COLOR_PRIVATE');
 $item->setAsColor();
 $item->defaultFieldValue = '#FF0000';

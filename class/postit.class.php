@@ -189,24 +189,39 @@ class PostIt extends CommonObject
 		$confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
 
 		$Tcode = array(
-			'private' => !empty( getDolGlobalString('POSTIT_COLOR_PRIVATE') )? getDolGlobalString('POSTIT_COLOR_PRIVATE') : '#FEFE01',
-			'public'  => !empty( getDolGlobalString('POSTIT_COLOR_PUBLIC') )? getDolGlobalString('POSTIT_COLOR_PUBLIC')  : '#90c6ff',
-			'shared'  => !empty( getDolGlobalString('POSTIT_COLOR_SHARED') )? getDolGlobalString('POSTIT_COLOR_SHARED')  : '#B5E655',
+			'private' => getDolGlobalString('POSTIT_COLOR_PRIVATE', '#FEFE01'),
+			'public'  => getDolGlobalString('POSTIT_COLOR_PUBLIC','#90c6ff'),
+			'shared'  => getDolGlobalString('POSTIT_COLOR_SHARED', '#B5E655'),
 		);
 
 		if(!empty($user->conf->{$confkey}))
 		{
-			return $user->conf->{$confkey};
+			return self::addHashPrefix($user->conf->{$confkey});
 		}
 		elseif(!empty($Tcode[$code]))
 		{
-			return $Tcode[$code];
+			return self::addHashPrefix($Tcode[$code]);
 		}
 		else
 		{
 			return $default;
 		}
 	}
+
+
+	/**
+	 * Ajoute un caractère "#" au début d'une chaîne si celui-ci n'est pas déjà présent.
+	 *
+	 * Cette fonction vérifie le premier caractère de la chaîne à l'aide de `substr()`.
+	 * Si la chaîne est vide ou ne commence pas par "#", elle ajoute le caractère.
+	 *
+	 * @param string $string La chaîne à vérifier et à modifier si nécessaire.
+	 * @return string La chaîne avec le préfixe "#" garanti.
+	 */
+	private static function addHashPrefix(string $string): string {
+		return (substr($string, 0, 1) === '#') ? $string : '#' . $string;
+	}
+
 
 	/**
 	 * @param int $fk_object
