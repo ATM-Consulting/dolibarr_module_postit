@@ -92,8 +92,6 @@ $formSetup = new FormSetup($db);
 
 // Setup conf POSTIT_COLOR_PRIVATE
 if(empty(getDolGlobalString('POSTIT_COLOR_PRIVATE'))) { $conf->global->POSTIT_COLOR_PRIVATE = PostIt::getcolor('private'); }
-//xdebug_var_dump(getDolGlobalString('POSTIT_COLOR_PRIVATE'));
-//exit;
 $item = $formSetup->newItem('POSTIT_COLOR_PRIVATE');
 $item->setAsColor();
 $item->defaultFieldValue = '#FF0000';
