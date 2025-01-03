@@ -66,7 +66,7 @@ class PostIt extends CommonObject
 	 *         Note: Filter can be a string like "(t.ref:like:'SO-%') or (t.date_creation:<:'20160101') or (t.nature:is:NULL)"
 	 *  'label' the translation key.
 	 *  'picto' is code of a picto to show before value in forms
-	 *  'enabled' is a condition when the field must be managed (Example: 1 or '$conf->global->MY_SETUP_PARAM' or '!empty($conf->multicurrency->enabled)' ...)
+	 *  'enabled' is a condition when the field must be managed (Example: 1 or '$conf->global->MY_SETUP_PARAM' or 'isModEnabled("multicurrency")' ...)
 	 *  'position' is the sort order of field.
 	 *  'notnull' is set to 1 if not null in database. Set to -1 if we must set data to null if empty ('' or 0).
 	 *  'visible' says if field is visible in list (Examples: 0=Not visible, 1=Visible on list and create/update/view forms, 2=Visible on list only, 3=Visible on create/update/view form only (not list), 4=Visible on list and update/view form only (not create). 5=Visible on list and view only (not create/not update). Using a negative value means field is not shown by default on list but can be selected for viewing)
@@ -189,24 +189,39 @@ class PostIt extends CommonObject
 		$confkey = 'POSTIT_COLOR_' . strtoupper($code) ;
 
 		$Tcode = array(
-			'private' => !empty( getDolGlobalString('POSTIT_COLOR_PRIVATE') )? $conf->global->POSTIT_COLOR_PRIVATE : '#FEFE01',
-			'public'  => !empty( getDolGlobalString('POSTIT_COLOR_PUBLIC') )? $conf->global->POSTIT_COLOR_PUBLIC  : '#90c6ff',
-			'shared'  => !empty( getDolGlobalString('POSTIT_COLOR_SHARED') )? $conf->global->POSTIT_COLOR_SHARED  : '#B5E655',
+			'private' => getDolGlobalString('POSTIT_COLOR_PRIVATE', '#FEFE01'),
+			'public'  => getDolGlobalString('POSTIT_COLOR_PUBLIC','#90c6ff'),
+			'shared'  => getDolGlobalString('POSTIT_COLOR_SHARED', '#B5E655'),
 		);
 
 		if(!empty($user->conf->{$confkey}))
 		{
-			return $user->conf->{$confkey};
+			return self::addHashPrefix($user->conf->{$confkey});
 		}
 		elseif(!empty($Tcode[$code]))
 		{
-			return $Tcode[$code];
+			return self::addHashPrefix($Tcode[$code]);
 		}
 		else
 		{
 			return $default;
 		}
 	}
+
+
+	/**
+	 * Ajoute un caractère "#" au début d'une chaîne si celui-ci n'est pas déjà présent.
+	 *
+	 * Cette fonction vérifie le premier caractère de la chaîne à l'aide de `substr()`.
+	 * Si la chaîne est vide ou ne commence pas par "#", elle ajoute le caractère.
+	 *
+	 * @param string $string La chaîne à vérifier et à modifier si nécessaire.
+	 * @return string La chaîne avec le préfixe "#" garanti.
+	 */
+	private static function addHashPrefix(string $string): string {
+		return (substr($string, 0, 1) === '#') ? $string : '#' . $string;
+	}
+
 
 	/**
 	 * @param int $fk_object

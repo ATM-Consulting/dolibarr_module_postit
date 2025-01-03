@@ -81,21 +81,17 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
 
 		$aStyle = 'position:absolute; top:0px; display:block; ';
 		$imgStyle = 'width:32px; height:32px;';
-		if($conf->theme == 'eldy' && intval(DOL_VERSION) >= 12)
+		if($conf->theme == 'eldy')
 		{
 			$aStyle = 'position:relative; display:inline-block;';
 			$imgStyle = 'height:25px; vertical-align:middle;';
-		}
-		elseif($conf->theme == 'eldy')
-		{
-			$aStyle .= " left:-30px; ";
 		}
 
 
 		$a = '<a id="addNote" href="javascript:createNote(0)" title="'.dol_escape_htmltag($langs->trans('NewStickyNote')).'" data-theme="'.dol_escape_htmltag($conf->theme).'" style="'.$aStyle.'">'.img_picto('', 'menu-icon.svg@postit',' style="'.$imgStyle.'" ').'</a>';
 
 		// TODO: Appli this to Dolibarr v10 if Evolution design is merge in Eldy
-		if($conf->theme == 'eldy' && intval(DOL_VERSION) >= 12){
+		if($conf->theme == 'eldy'){
 			$a = '<div class="inline-block" ><div class="login_block_elem" >'.$a.'</div></div>';
 		}
 
@@ -439,22 +435,6 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
 
 	}
 
-	/**
-	 * Overloading the addStatisticLine function : replacing the parent's function with the one below
-	 *
-	 * @param   array()         $parameters     Hook metadatas (context, etc...)
-	 * @param   CommonObject    &$object        The object to process (an invoice if you are in invoice module, a propale in propale's module, etc...)
-	 * @param   string          &$action        Current action (if set). Generally create or edit or null
-	 * @param   HookManager     $hookmanager    Hook manager propagated to allow calling another hook
-	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
-	 */
-	function addStatisticLine($parameters, &$object, &$action, $hookmanager) {
-		// the hook call for `addStatisticLine` was removed from Dolibarr index in 14.0 (maybe it will be added back
-		// because this looks more like an omission than deliberate deletion)
-		if (version_compare(DOL_VERSION, '14.0', '<')) {
-			$this->_injectPostitScriptInIndexPage($parameters);
-		};
-	}
 
 	/**
 	 * Overloading the beforeBodyClose function : replacing the parent's function with the one below
@@ -466,11 +446,8 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
 	 * @return  int                             < 0 on error, 0 on success, 1 to replace standard code
 	 */
 	function printTopRightMenu($parameters, &$object, &$action, $hookmanager) {
-		// we use this hook starting from 14.0 instead of addStatisticLine
-		if (version_compare(DOL_VERSION, '14.0', '>=')) {
-			$this->_injectPostitScriptInIndexPage($parameters);
-		};
 
+		$this->_injectPostitScriptInIndexPage($parameters);
 		return 0;
 	}
 
