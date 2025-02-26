@@ -131,7 +131,6 @@ switch ($get) {
 
 switch ($put) {
 	case 'postit':
-
 		$p = new PostIt($db);
 		if ($id == 0 || $p->fetch($id) <= 0) {
 			$p->fk_object = $fk_object;
@@ -177,6 +176,7 @@ switch ($put) {
 			$author = new User($db);
 			$author->fetch($p->fk_user);
 			$p->entity = $conf->entity;
+			$p->tms = dol_now();
 		}
 		$res = $p->id > 0 ? $p->update($author) : $p->create($author);
 		if ($res <= 0) {

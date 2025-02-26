@@ -239,7 +239,7 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
                 // Note: some date placeholders may be missing for the php-to-js translation
                 let dateFormatEquiv = {d: "dd", m: "MM", Y: "yyyy", y: 'yy', H: "HH", M: "mm", S: "ss"};
                 let dateFormatJS = dateFormatPHP.replace(/(%[dmyYHMS])/g, (m) => dateFormatEquiv[m[1]]);
-                let TMS = new Date(postit.tms * 1000);
+				let TMS = new Date(Number(postit.tms) * 1000);
                 TMS = formatDate(TMS, dateFormatJS);
                 let $div = $(
                     '<div class="yellowPaperTemporary postit">'
@@ -274,11 +274,18 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
                     $div.attr('id','postit-'+postit.id);
                     $div.attr('author',postit.fk_user);
                     if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
-
+					<?php if ($conf->theme === 'eldy') : ?>
                     if(postit.position_width<=0)postit.position_width= 200;
                     if(postit.position_height<=0)postit.position_height = 200;
                     if(postit.position_top<=0)postit.position_top = pos.top + $('#id-top').height() + 10;
                     if(postit.position_left<=0)postit.position_left = pos.left - postit.position_width;
+					<?php endif; ?>
+					<?php if ($conf->theme !== 'eldy') : ?>
+					if(postit.position_width<=0)postit.position_width= 700;
+					if(postit.position_height<=0)postit.position_height = 200;
+					if(postit.position_top<=0)postit.position_top = pos.top + 100;
+					if(postit.position_left<=0)postit.position_left = parseInt(postit.position_top) + parseInt(postit.position_width);
+					<?php endif; ?>
 
                     $div.find('[rel=postit-title]').html(postit.title);
                     $div.find('[rel=postit-comment]').html(postit.comment.replace(/\n/g, '<br>'));
