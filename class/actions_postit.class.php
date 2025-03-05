@@ -260,7 +260,9 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
                 $div.find('[rel=actions]').append("<span class='statusText' style='font-size:11px;'></span>");
 
                 $div.css('width',  100);
-				<?php if($conf->theme !== 'eldy') print '$div.css("z-index", 100);' ?>
+				<?php if ($conf->theme !== 'eldy') { ?>
+				$div.css("z-index", 100);
+				<?php } ?>
                 $div.css('height', 200);
                 $div.css('top', pos.top + 20);
                 $div.css('left', pos.left <?php $conf->theme !== 'eldy' ? print '' : '-50'; ?>);
@@ -274,18 +276,18 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
                     $div.attr('id','postit-'+postit.id);
                     $div.attr('author',postit.fk_user);
                     if(postit.fk_postit) $div.attr('fk-postit',postit.fk_postit);
-					<?php if ($conf->theme === 'eldy') : ?>
+					<?php if ($conf->theme === 'eldy') { ?>
                     if(postit.position_width<=0)postit.position_width= 200;
                     if(postit.position_height<=0)postit.position_height = 200;
                     if(postit.position_top<=0)postit.position_top = pos.top + $('#id-top').height() + 10;
                     if(postit.position_left<=0)postit.position_left = pos.left - postit.position_width;
-					<?php endif; ?>
-					<?php if ($conf->theme !== 'eldy') : ?>
+					<?php } ?>
+					<?php if ($conf->theme !== 'eldy') { ?>
 					if(postit.position_width<=0)postit.position_width= 700;
 					if(postit.position_height<=0)postit.position_height = 200;
 					if(postit.position_top<=0)postit.position_top = pos.top + 100;
 					if(postit.position_left<=0)postit.position_left = parseInt(postit.position_top) + parseInt(postit.position_width);
-					<?php endif; ?>
+					<?php } ?>
 
                     $div.find('[rel=postit-title]').html(postit.title);
                     $div.find('[rel=postit-comment]').html(postit.comment.replace(/\n/g, '<br>'));
