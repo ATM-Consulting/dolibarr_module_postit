@@ -281,8 +281,7 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
                     if(postit.position_height<=0)postit.position_height = 200;
                     if(postit.position_top<=0)postit.position_top = pos.top + $('#id-top').height() + 10;
                     if(postit.position_left<=0)postit.position_left = pos.left - postit.position_width;
-					<?php } ?>
-					<?php if ($conf->theme !== 'eldy') { ?>
+					<?php } else { ?>
 					if(postit.position_width<=0)postit.position_width= 700;
 					if(postit.position_height<=0)postit.position_height = 200;
 					if(postit.position_top<=0)postit.position_top = pos.top + 100;
