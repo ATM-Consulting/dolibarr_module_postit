@@ -6,6 +6,7 @@
 
 ## Release 2.4
 
+- FIX: Position and date create postit - *26/02/2025* - 2.4.2
 - FIX: Compat v21  - *10/12/2024* - 2.4.1
 - FIX: Compat v20  : changed Dolibarr compatibility range to 16 min - 20 max - *18/07/2024* - 2.4.0
 
