@@ -5,7 +5,7 @@
 
 
 ## Release 2.4
-- FIX : Ensure 'addNote' element is not duplicated on prepend - *16/05/2025* - 2.4.3
+- FIX DA026513 : Ensure 'addNote' element is not duplicated on prepend - *16/05/2025* - 2.4.3
     -Added a conditional check to avoid appending the '$a' element multiple times to the 'login_block_other' div. This change prevents duplicate elements when the page is rendered.
 - FIX: Position and date create postit - *26/02/2025* - 2.4.2
 - FIX: Compat v21  - *10/12/2024* - 2.4.1
