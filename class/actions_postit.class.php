@@ -105,9 +105,10 @@ class ActionsPostIt extends postit\RetroCompatCommonHookActions
 				if($user->hasRight('postit','allaction','write') || $user->hasRight('postit','myaction','write')) {
 
 				?>
-
-                $a = $('<?php echo $a ?>');
-                $('div.login_block_other').prepend($a);
+				if ($('#addNote').length === 0) {
+					$a = $('<?php echo $a ?>');
+					$('div.login_block_other').prepend($a);
+				}
 				<?php
 				}
 				?>
