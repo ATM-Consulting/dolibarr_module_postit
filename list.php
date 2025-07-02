@@ -441,7 +441,7 @@ $param .= "&id=" . urlencode($id);
 // Add $param from hooks
 $parameters = array();
 $reshook = $hookmanager->executeHooks('printFieldListSearchParam', $parameters, $object); // Note that $action and $object may have been modified by hook
-$param .= $this->resprint;
+$param .= $hookmanager->resPrint;
 
 // List of mass actions available
 $arrayofmassactions = array(
@@ -807,7 +807,7 @@ $db->free($resql);
 
 $parameters = array('arrayfields'=>$arrayfields, 'sql'=>$sql);
 $reshook = $hookmanager->executeHooks('printFieldListFooter', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-print $this->resprint;
+print $hookmanager->resPrint;
 
 print '</table>'."\n";
 print '</div>'."\n";
